@@ -1,3 +1,8 @@
+## 1.19.0-beta.1
+
+- Features
+  - Support to get the offline message content which active app through the **getOfflineConversationInfo** API
+
 ## 1.18.13
 
 - Fix the issue that the chat list does not automatically jump to the bottom
