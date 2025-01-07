@@ -81,7 +81,7 @@ class ZIMKitCore
   // API
   Future<String> getVersion() async {
     final signalingVersion = await ZegoUIKitSignalingPlugin().getVersion();
-    return 'zego_zimkit:1.19.0-beta.1;plugin:$signalingVersion';
+    return 'zego_zimkit:1.19.0-beta.2;plugin:$signalingVersion';
   }
 
   Future<void> init({

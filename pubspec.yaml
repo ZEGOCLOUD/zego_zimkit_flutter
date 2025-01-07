@@ -1,6 +1,6 @@
 name: zego_zimkit
 description: A low-code plugin that provides a wrapper for IM widgets. Aims to simplify the development process by offering a user-friendly solution into applications.
-version: 1.19.0-beta.1
+version: 1.19.0-beta.2
 homepage: https://www.zegocloud.com/
 
 environment:
