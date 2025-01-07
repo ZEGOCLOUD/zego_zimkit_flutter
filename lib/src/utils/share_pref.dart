@@ -27,7 +27,7 @@ Future<void> setPreferenceString(
     targetValue = _encodeString(value);
   }
 
-  ZIMKitLogger.info('setPreferenceString, key:$key, value:$value.');
+  ZIMKitLogger.logInfo('setPreferenceString, key:$key, value:$value.');
 
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(key, targetValue);
@@ -47,7 +47,7 @@ Future<String> getPreferenceString(
 }
 
 Future<void> removePreferenceValue(String key) async {
-  ZIMKitLogger.info('removePreferenceValue, key:$key.');
+  ZIMKitLogger.logInfo('removePreferenceValue, key:$key.');
 
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove(key);

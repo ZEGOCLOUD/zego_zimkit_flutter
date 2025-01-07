@@ -10,6 +10,7 @@ import 'package:async/async.dart';
 import 'package:logging/logging.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+import 'package:zego_zimkit/src/callkit/cache.dart';
 
 import 'package:zego_zimkit/src/callkit/defines.dart';
 import 'package:zego_zimkit/src/callkit/notification_manager.dart';
@@ -146,6 +147,14 @@ class ZIMKitCore
     _queryUserCache.clear();
     db.clear();
     currentUser = null;
+  }
+
+  Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineConversationInfo({
+    bool selfDestructing = true,
+  }) async {
+    return await getOfflineMessageConversationInfo(
+      selfDestructing: selfDestructing,
+    );
   }
 
   Stream<ZegoSignalingPluginErrorEvent> getErrorEventStream() {

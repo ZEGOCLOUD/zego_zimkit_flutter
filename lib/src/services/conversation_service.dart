@@ -47,4 +47,12 @@ mixin ZIMKitConversationService {
   Future<int> loadMoreConversation() async {
     return ZIMKitCore.instance.loadMoreConversation();
   }
+
+  Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineConversationInfo({
+    bool selfDestructing = true,
+  }) async {
+    return ZIMKitCore.instance.getOfflineConversationInfo(
+      selfDestructing: selfDestructing,
+    );
+  }
 }

@@ -4,11 +4,14 @@ import 'dart:isolate';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_zpns/zego_zpns.dart';
 
 import 'package:zego_zimkit/src/callkit/notification_manager.dart';
 import 'package:zego_zimkit/src/callkit/variables.dart';
+import 'package:zego_zimkit/src/callkit/cache.dart';
+import 'package:zego_zimkit/src/callkit/defines.dart';
 import 'package:zego_zimkit/src/channel/defines.dart';
 import 'package:zego_zimkit/src/channel/platform_interface.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
@@ -125,7 +128,7 @@ Future<void> _onBackgroundMessageReceived({
   final conversationTypeIndex = payloadMap['type'] as int? ?? -1;
 
   final senderInfo = payloadMap['sender'] as Map<String, dynamic>? ?? {};
-  // final senderID = senderInfo['id'] as String? ?? '';
+  final senderID = senderInfo['id'] as String? ?? '';
   final senderName = senderInfo['name'] as String? ?? '';
 
   ZIMKitLogger.info(
@@ -157,6 +160,13 @@ Future<void> _onBackgroundMessageReceived({
         handlerInfo?.sound ?? '',
       ),
       clickCallback: () async {
+        await setOfflineMessageConversationInfo(
+          ZegoZIMKitOfflineMessageCacheInfo(
+            conversationID: conversationID,
+            conversationTypeIndex: conversationTypeIndex,
+            senderID: senderID,
+          ),
+        );
         await ZegoZIMKitPluginPlatform.instance.activeAppToForeground();
         await ZegoZIMKitPluginPlatform.instance.requestDismissKeyguard();
       },
