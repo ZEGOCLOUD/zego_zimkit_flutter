@@ -56,7 +56,7 @@ class ZimKitHandlerPrivateInfo {
     try {
       jsonMap = jsonDecode(jsonString);
     } catch (e) {
-      ZIMKitLogger.info('handler info, parsing handler info exception:$e');
+      ZIMKitLogger.logInfo('handler info, parsing handler info exception:$e');
     }
 
     return null == jsonMap ? null : ZimKitHandlerPrivateInfo.fromJson(jsonMap);

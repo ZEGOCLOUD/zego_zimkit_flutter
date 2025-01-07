@@ -64,7 +64,7 @@ class ZIMKitVideoMessage extends StatelessWidget {
       builder: (context) => ZIMKitVideoMessagePlayer(message,
           key: ValueKey(message.info.messageID)),
     ).closed.then((value) {
-      ZIMKitLogger.fine('ZIMKitVideoMessage: playVideo end');
+      ZIMKitLogger.logInfo('ZIMKitVideoMessage: playVideo end');
     });
   }
 }

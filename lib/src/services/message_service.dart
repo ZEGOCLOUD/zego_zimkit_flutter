@@ -63,7 +63,7 @@ mixin ZIMKitMessageService {
     FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending,
     Function(ZIMKitMessage)? onMessageSent,
   }) async {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         'sendMediaMessage: ${DateTime.now().millisecondsSinceEpoch}');
     for (final file in files) {
       await ZIMKitCore.instance.sendMediaMessage(

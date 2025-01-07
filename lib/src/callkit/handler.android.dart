@@ -27,7 +27,13 @@ const backgroundMessageIsolatePortName = 'zimkit_bg_msg_isolate_port';
 /// Note: @pragma('vm:entry-point') must be placed on a function to indicate that it can be parsed, allocated, or called directly from native or VM code in AOT mode.
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
-  ZIMKitLogger.info(
+  debugPrint('onBackgroundMessageReceived wait init log...');
+
+  await ZIMKitLogger().initLog();
+
+  debugPrint('onBackgroundMessageReceived init log done...');
+
+  ZIMKitLogger.logInfo(
     'background message, '
     'received: '
     'title:${message.title}, '
@@ -36,7 +42,7 @@ Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
   );
 
   if (!message.extras.containsKey('zego')) {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         '[onBackgroundMessageReceived] is not zego protocol, droped');
     return;
   }
@@ -44,7 +50,7 @@ Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
   final registeredIsolatePort =
       IsolateNameServer.lookupPortByName(backgroundMessageIsolatePortName);
   final isAppRunning = null != registeredIsolatePort;
-  ZIMKitLogger.info(
+  ZIMKitLogger.logInfo(
       'isolate:${registeredIsolatePort?.hashCode}, isAppRunning:$isAppRunning');
   if (isAppRunning) {
     /// after app being screen-locked for more than 10 minutes, the app was not
@@ -55,7 +61,7 @@ Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
     /// it will cause the problem of double opening of the app.
     ///
     /// So, send this offline call to [ZegoUIKitPrebuiltCallInvitationService] to handle.
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
       'background message, '
       'isolate:app has another isolate(${registeredIsolatePort.hashCode}), '
       'send command to deal with this background message',
@@ -73,7 +79,7 @@ Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
     backgroundMessageIsolatePortName,
   );
   backgroundPort.listen((dynamic message) async {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
       'background message, '
       'isolate: current port(${backgroundPort.hashCode}) receive, '
       'message:$message',
@@ -91,7 +97,7 @@ Future<void> onBackgroundMessageReceived(ZPNsMessage message) async {
       backgroundPort: backgroundPort,
     );
   });
-  ZIMKitLogger.info(
+  ZIMKitLogger.logInfo(
     'background message, '
     'isolate: register and listen port(${backgroundPort.hashCode}), '
     'send command to deal with this background message',
@@ -131,7 +137,7 @@ Future<void> _onBackgroundMessageReceived({
   final senderID = senderInfo['id'] as String? ?? '';
   final senderName = senderInfo['name'] as String? ?? '';
 
-  ZIMKitLogger.info(
+  ZIMKitLogger.logInfo(
     'background message, '
     'im message received, '
     'body:$body, conversationID:$conversationID, '
@@ -140,7 +146,7 @@ Future<void> _onBackgroundMessageReceived({
 
   final handlerInfoJson =
       await getPreferenceString(serializationKeyHandlerPrivateInfo);
-  ZIMKitLogger.info(
+  ZIMKitLogger.logInfo(
     'background message, '
     'parsing handler info:$handlerInfoJson',
   );
@@ -167,13 +173,15 @@ Future<void> _onBackgroundMessageReceived({
             senderID: senderID,
           ),
         );
+
+        debugPrint('[zimkit]111 activeAppToForeground');
         await ZegoZIMKitPluginPlatform.instance.activeAppToForeground();
         await ZegoZIMKitPluginPlatform.instance.requestDismissKeyguard();
       },
     ),
   );
 
-  ZIMKitLogger.info(
+  ZIMKitLogger.logInfo(
     'background message, '
     'isolate: clear IsolateNameServer, port:${backgroundPort.hashCode}',
   );

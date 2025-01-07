@@ -32,7 +32,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onError(ZIMAudioError errorInfo) {
-    ZIMKitLogger.info('ZIMAudio, onError, errorInfo:$errorInfo');
+    ZIMKitLogger.logInfo('ZIMAudio, onError, errorInfo:$errorInfo');
 
     ZIMKitAudioInstance().data.removeTopRecordingFile();
     ZIMKitAudioInstance().data.recordDurationNotifier.value = 0;
@@ -41,7 +41,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onRecorderStarted() {
-    ZIMKitLogger.info('ZIMAudio, onRecorderStarted');
+    ZIMKitLogger.logInfo('ZIMAudio, onRecorderStarted');
 
     ZIMKitAudioInstance().data.recordDurationNotifier.value = 0;
     ZIMKitAudioInstance().data.recordCountDownNotifier.value =
@@ -49,7 +49,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onRecorderCompleted(int totalDuration) {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         'ZIMAudio, onRecorderCompleted, totalDuration:$totalDuration');
 
     final currentRecordData =
@@ -61,7 +61,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onRecorderCancelled() {
-    ZIMKitLogger.info('ZIMAudio, onRecorderCancelled');
+    ZIMKitLogger.logInfo('ZIMAudio, onRecorderCancelled');
 
     ZIMKitAudioInstance().data.removeTopRecordingFile();
 
@@ -77,7 +77,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onRecorderFailed(int errorCode) {
-    ZIMKitLogger.info('ZIMAudio, onRecorderFailed, errorCode:$errorCode');
+    ZIMKitLogger.logInfo('ZIMAudio, onRecorderFailed, errorCode:$errorCode');
 
     ZIMKitAudioInstance().data.removeTopRecordingFile();
     ZIMKitAudioInstance().data.recordDurationNotifier.value = 0;
@@ -86,13 +86,13 @@ mixin ZIMKitAudioEventService {
   }
 
   void onPlayerStarted(int totalDuration) {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         'ZIMAudio, onPlayerStarted, totalDuration:$totalDuration');
     ZIMKitAudioInstance().data.playProcessNotifier.value = 0;
   }
 
   void onPlayerEnded() {
-    ZIMKitLogger.info('ZIMAudio, onPlayerEnded');
+    ZIMKitLogger.logInfo('ZIMAudio, onPlayerEnded');
     ZIMKitAudioInstance().data.playProcessNotifier.value = 0;
 
     ZIMKitAudioInstance().data.playStatusNotifier.value = ZIMKitAudioPlayStatus(
@@ -102,7 +102,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onPlayerStopped() {
-    ZIMKitLogger.info('ZIMAudio, onPlayerStopped');
+    ZIMKitLogger.logInfo('ZIMAudio, onPlayerStopped');
     ZIMKitAudioInstance().data.playProcessNotifier.value = 0;
 
     ZIMKitAudioInstance().data.playStatusNotifier.value = ZIMKitAudioPlayStatus(
@@ -124,13 +124,13 @@ mixin ZIMKitAudioEventService {
   }
 
   void onPlayerProgress(int currentDuration) {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         'ZIMAudio, onPlayerProgress, currentDuration:$currentDuration');
     ZIMKitAudioInstance().data.playProcessNotifier.value = currentDuration;
   }
 
   void onPlayerInterrupted() {
-    ZIMKitLogger.info('ZIMAudio, onPlayerInterrupted');
+    ZIMKitLogger.logInfo('ZIMAudio, onPlayerInterrupted');
     ZIMKitAudioInstance().data.playStatusNotifier.value = ZIMKitAudioPlayStatus(
       id: -1,
       isPlaying: false,
@@ -138,7 +138,7 @@ mixin ZIMKitAudioEventService {
   }
 
   void onPlayerFailed(int errorCode) {
-    ZIMKitLogger.info('ZIMAudio, onPlayerFailed, errorCode:$errorCode');
+    ZIMKitLogger.logInfo('ZIMAudio, onPlayerFailed, errorCode:$errorCode');
     ZIMKitAudioInstance().data.playProcessNotifier.value = 0;
 
     ZIMKitAudioInstance().data.playStatusNotifier.value = ZIMKitAudioPlayStatus(

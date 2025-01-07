@@ -9,7 +9,7 @@ extension ZIMKitCoreConversation on ZIMKitCore {
 
     final config = ZIMConversationQueryConfig()..count = kDefaultLoadCount;
     return ZIM.getInstance()!.queryConversationList(config).then((zimResult) {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
         'queryHistoryMessage: ${zimResult.conversationList.length}',
       );
 
@@ -25,10 +25,10 @@ extension ZIMKitCoreConversation on ZIMKitCore {
       return checkNeedReloginOrNot(error).then((retryCode) {
         db.conversations.loading = false;
         if (retryCode == 0) {
-          ZIMKitLogger.info('re-login success, retry loadConversationList');
+          ZIMKitLogger.logInfo('re-login success, retry loadConversationList');
           return getConversationListNotifier();
         } else {
-          ZIMKitLogger.severe('loadConversationList failed', error);
+          ZIMKitLogger.logError('loadConversationList failed:$error');
           throw error;
         }
       });
@@ -54,7 +54,7 @@ extension ZIMKitCoreConversation on ZIMKitCore {
       return 0;
     }
 
-    ZIMKitLogger.info('loadMoreConversation start');
+    ZIMKitLogger.logInfo('loadMoreConversation start');
 
     db.conversations.loading = true;
     // start loading
@@ -75,10 +75,10 @@ extension ZIMKitCoreConversation on ZIMKitCore {
       return checkNeedReloginOrNot(error).then((retryCode) {
         db.conversations.loading = false;
         if (retryCode == 0) {
-          ZIMKitLogger.info('re-login success, retry loadConversationList');
+          ZIMKitLogger.logInfo('re-login success, retry loadConversationList');
           return loadMoreConversation();
         } else {
-          ZIMKitLogger.severe('loadConversationList failed', error);
+          ZIMKitLogger.logError('loadConversationList failed, $error');
           throw error;
         }
       });
@@ -174,7 +174,7 @@ extension ZIMKitCoreConversation on ZIMKitCore {
             );
       }
     } catch (e) {
-      ZIMKitLogger.severe('clearUnreadCount: $e');
+      ZIMKitLogger.logError('clearUnreadCount: $e');
     }
   }
 }
@@ -208,7 +208,7 @@ extension ZIMKitCoreConversationEvent on ZIMKitCore {
     int totalUnreadMessageCount,
   ) {
     totalUnreadMessageCountNotifier.value = totalUnreadMessageCount;
-    ZIMKitLogger.info('onConversationTotalUnreadMessageCountUpdated: '
+    ZIMKitLogger.logInfo('onConversationTotalUnreadMessageCountUpdated: '
         '$totalUnreadMessageCount');
   }
 }

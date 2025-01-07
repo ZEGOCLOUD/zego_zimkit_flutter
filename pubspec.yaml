@@ -23,10 +23,10 @@ dependencies:
   cached_network_image: ^3.3.0
   permission_handler: ^11.3.1
   encrypt: ^5.0.3
-  logging: ^1.2.0
+  flutter_logs: ^2.2.1
   async: ^2.0.0
   video_player: ^2.7.2
-  file_picker: ^8.0.6
+  file_picker: ^8.1.7
   chewie: ^1.7.1
   provider: ^6.0.5
   shared_preferences: ^2.2.3

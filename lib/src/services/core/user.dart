@@ -4,25 +4,25 @@ extension ZIMKitCoreUser on ZIMKitCore {
   Future<int> connectUser(
       {required String id, String name = '', String avatarUrl = ''}) async {
     if (!isInited) {
-      ZIMKitLogger.info('is not inited.');
+      ZIMKitLogger.logInfo('is not inited.');
       throw Exception('ZIMKit is not inited.');
     }
     if (currentUser != null) {
-      ZIMKitLogger.info('has login, auto logout');
+      ZIMKitLogger.logInfo('has login, auto logout');
       await disconnectUser();
     }
 
-    ZIMKitLogger.info('login request, user id:$id, user name:$name');
+    ZIMKitLogger.logInfo('login request, user id:$id, user name:$name');
     currentUser = ZIMUserFullInfo()
       ..baseInfo.userID = id
       ..baseInfo.userName = name.isNotEmpty ? name : id;
 
-    ZIMKitLogger.info('ready to login..');
+    ZIMKitLogger.logInfo('ready to login..');
     final connectResult =
         await ZegoUIKitSignalingPlugin().connectUser(id: id, name: name);
 
     if (connectResult.error == null) {
-      ZIMKitLogger.info('login success');
+      ZIMKitLogger.logInfo('login success');
 
       await updateUserInfo(avatarUrl: avatarUrl);
 
@@ -34,24 +34,24 @@ extension ZIMKitCoreUser on ZIMKitCore {
 
       return 0;
     } else {
-      ZIMKitLogger.info('login error, ${connectResult.error}');
+      ZIMKitLogger.logInfo('login error, ${connectResult.error}');
       return int.parse(connectResult.error!.code);
     }
   }
 
   Future<void> disconnectUser() async {
-    ZIMKitLogger.info('logout.');
+    ZIMKitLogger.logInfo('logout.');
     clear();
     ZegoUIKitSignalingPlugin().disconnectUser().then((result) {
       if (result.timeout) {
-        ZIMKitLogger.warning('logout timeout');
+        ZIMKitLogger.logWarn('logout timeout');
       }
     });
   }
 
   Future<void> waitForLoginOrNot() async {
     if (currentUser == null) {
-      ZIMKitLogger.info('wait for login...');
+      ZIMKitLogger.logInfo('wait for login...');
       loginCompleter ??= Completer();
       await loginCompleter!.future;
       loginCompleter = null;
@@ -65,7 +65,7 @@ extension ZIMKitCoreUser on ZIMKitCore {
     if (errorCode != ZIMErrorCode.networkModuleUserIsNotLogged) {
       return -1;
     }
-    ZIMKitLogger.info('try auto relogin.');
+    ZIMKitLogger.logInfo('try auto relogin.');
     return connectUser(
         id: currentUser!.baseInfo.userID, name: currentUser!.baseInfo.userName);
   }
@@ -83,7 +83,7 @@ extension ZIMKitCoreUser on ZIMKitCore {
     }
 
     return _queryUserCache[queryHash]!.fetch(() async {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
           'queryUser, id:$id, isQueryFromServer:$isQueryFromServer');
       final config = ZIMUserInfoQueryConfig()
         ..isQueryFromServer = isQueryFromServer;
@@ -99,10 +99,10 @@ extension ZIMKitCoreUser on ZIMKitCore {
         // qps limit
         if (ZIMErrorCodeExtension.isFreqLimit(errorCode)) {
           if (isQueryFromServer) {
-            ZIMKitLogger.info('queryUser failed, retry queryUser from sdk');
+            ZIMKitLogger.logInfo('queryUser failed, retry queryUser from sdk');
             return queryUser(id, isQueryFromServer: false);
           } else {
-            ZIMKitLogger.info(
+            ZIMKitLogger.logInfo(
                 'queryUser from sdk failed, retry queryUser from server later');
             return Future.delayed(
               Duration(milliseconds: Random().nextInt(5000)),
@@ -113,10 +113,10 @@ extension ZIMKitCoreUser on ZIMKitCore {
 
         return checkNeedReloginOrNot(error).then((retryCode) {
           if (retryCode == 0) {
-            ZIMKitLogger.info('re-login success, retry queryUser');
+            ZIMKitLogger.logInfo('re-login success, retry queryUser');
             return queryUser(id);
           } else {
-            ZIMKitLogger.severe('queryUser failed', error);
+            ZIMKitLogger.logError('queryUser failed:$error');
             throw error;
           }
         });
@@ -127,12 +127,12 @@ extension ZIMKitCoreUser on ZIMKitCore {
   Future<int> updateUserInfo({String name = '', String avatarUrl = ''}) async {
     if (name.isNotEmpty) {
       return ZIM.getInstance()!.updateUserName(name).then((value) {
-        ZIMKitLogger.info('updateUserName success: $name');
+        ZIMKitLogger.logInfo('updateUserName success: $name');
         currentUser?.baseInfo.userName = name;
 
         return 0;
       }).catchError((error) {
-        ZIMKitLogger.info('updateUserName failed', error);
+        ZIMKitLogger.logInfo('updateUserName failed:$error');
         //  throw error;
         return int.tryParse(error.code) ?? -2;
       });
@@ -140,12 +140,12 @@ extension ZIMKitCoreUser on ZIMKitCore {
 
     if (avatarUrl.isNotEmpty) {
       return ZIM.getInstance()!.updateUserAvatarUrl(avatarUrl).then((value) {
-        ZIMKitLogger.info('updateUserAvatarUrl success: $avatarUrl');
+        ZIMKitLogger.logInfo('updateUserAvatarUrl success: $avatarUrl');
         currentUser?.userAvatarUrl = avatarUrl;
 
         return 0;
       }).catchError((error) {
-        ZIMKitLogger.info('updateUserAvatarUrl failed', error);
+        ZIMKitLogger.logInfo('updateUserAvatarUrl failed:$error');
         //  throw error;
         return int.tryParse(error.code) ?? -2;
       });

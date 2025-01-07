@@ -17,10 +17,10 @@ class ZIMKitDB {
   final Map<String, ZIMKitGroupMemberList> _groupMemberList = {};
   final Map<String, ZIMKitGroupInfoData> _groupInfo = {};
 
-  ZIMKitMessageList messages(String id, ZIMConversationType type) {
+  ZIMKitMessageList messages(String fromUserID, ZIMConversationType type) {
     _messageList[type] ??= {};
-    _messageList[type]![id] ??= ZIMKitMessageList();
-    return _messageList[type]![id]!;
+    _messageList[type]![fromUserID] ??= ZIMKitMessageList();
+    return _messageList[type]![fromUserID]!;
   }
 
   ZIMKitGroupMemberList groupMemberList(String id) {
@@ -288,7 +288,7 @@ class ZIMKitMessageList {
     final index = notifier.value
         .indexWhere((e) => (e.value.info.messageID == reaction.messageID));
     if (index == -1) {
-      ZIMKitLogger.warning("[db]onMessageReactionsChanged: can't find message");
+      ZIMKitLogger.logWarn("[db]onMessageReactionsChanged: can't find message");
     } else {
       notifier[index].value.onMessageReactionsChanged(reaction);
     }

@@ -7,7 +7,7 @@ part 'event_domain.dart';
 
 mixin ZIMKitCoreEvent {
   void initEventHandler() {
-    ZIMKitLogger.info('register event handle.');
+    ZIMKitLogger.logInfo('register event handle.');
     final target = ZIMKitCore.instance;
     ZegoUIKitSignalingPlugin().eventCenter.passThroughEvent
       /*Conversation*/
@@ -33,7 +33,7 @@ mixin ZIMKitCoreEvent {
   }
 
   void uninitEventHandler() {
-    ZIMKitLogger.info('unregister event handle.');
+    ZIMKitLogger.logInfo('unregister event handle.');
     ZegoUIKitSignalingPlugin().eventCenter.passThroughEvent
       /*Conversation*/
       ..onConversationChanged = null

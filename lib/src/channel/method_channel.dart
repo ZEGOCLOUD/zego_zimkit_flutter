@@ -21,12 +21,12 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
     ZegoZIMKitPluginLocalNotificationConfig config,
   ) async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('addLocalNotification, not support in iOS');
+      ZIMKitLogger.logInfo('addLocalNotification, not support in iOS');
 
       return;
     }
 
-    ZIMKitLogger.info('addLocalNotification:$config');
+    ZIMKitLogger.logInfo('addLocalNotification:$config');
 
     try {
       await methodChannel.invokeMethod('addLocalNotification', {
@@ -41,7 +41,7 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
 
       /// set buttons callback
       methodChannel.setMethodCallHandler((call) async {
-        ZIMKitLogger.info(
+        ZIMKitLogger.logInfo(
             'MethodCallHandler, method:${call.method}, arguments:${call.arguments}.');
 
         switch (call.method) {
@@ -50,7 +50,7 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
         }
       });
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to add local notification: $e.');
+      ZIMKitLogger.logWarn('Failed to add local notification: $e.');
     }
   }
 
@@ -61,12 +61,12 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
     ZegoZIMKitPluginLocalNotificationChannelConfig config,
   ) async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('createNotificationChannel, not support in iOS');
+      ZIMKitLogger.logInfo('createNotificationChannel, not support in iOS');
 
       return;
     }
 
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
       'createNotificationChannel:$config',
     );
 
@@ -78,7 +78,7 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
         'vibrate': config.vibrate,
       });
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to create notification channel: $e.');
+      ZIMKitLogger.logWarn('Failed to create notification channel: $e.');
     }
   }
 
@@ -87,17 +87,17 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
   @override
   Future<void> dismissAllNotifications() async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('dismissAllNotifications, not support in iOS');
+      ZIMKitLogger.logInfo('dismissAllNotifications, not support in iOS');
 
       return;
     }
 
-    ZIMKitLogger.info('dismissAllNotifications');
+    ZIMKitLogger.logInfo('dismissAllNotifications');
 
     try {
       await methodChannel.invokeMethod('dismissAllNotifications', {});
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to dismiss all notifications: $e.');
+      ZIMKitLogger.logWarn('Failed to dismiss all notifications: $e.');
     }
   }
 
@@ -106,17 +106,17 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
   @override
   Future<void> activeAppToForeground() async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('activeAppToForeground, not support in iOS');
+      ZIMKitLogger.logInfo('activeAppToForeground, not support in iOS');
 
       return;
     }
 
-    ZIMKitLogger.info('activeAppToForeground');
+    ZIMKitLogger.logInfo('activeAppToForeground');
 
     try {
       await methodChannel.invokeMethod('activeAppToForeground', {});
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to active app to foreground: $e.');
+      ZIMKitLogger.logWarn('Failed to active app to foreground: $e.');
     }
   }
 
@@ -125,24 +125,24 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
   @override
   Future<void> requestDismissKeyguard() async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('requestDismissKeyguard, not support in iOS');
+      ZIMKitLogger.logInfo('requestDismissKeyguard, not support in iOS');
 
       return;
     }
 
-    ZIMKitLogger.info('requestDismissKeyguard');
+    ZIMKitLogger.logInfo('requestDismissKeyguard');
 
     try {
       await methodChannel.invokeMethod('requestDismissKeyguard', {});
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to request dismiss keyguard: $e.');
+      ZIMKitLogger.logWarn('Failed to request dismiss keyguard: $e.');
     }
   }
 
   @override
   Future<bool> isLockScreen() async {
     if (Platform.isIOS) {
-      ZIMKitLogger.info('isLockScreen, not support in iOS');
+      ZIMKitLogger.logInfo('isLockScreen, not support in iOS');
       return false;
     }
 
@@ -150,7 +150,7 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
     try {
       isLock = await methodChannel.invokeMethod<bool?>('isLockScreen') ?? false;
     } on PlatformException catch (e) {
-      ZIMKitLogger.warning('Failed to check isLock: $e.');
+      ZIMKitLogger.logWarn('Failed to check isLock: $e.');
     }
 
     return isLock;

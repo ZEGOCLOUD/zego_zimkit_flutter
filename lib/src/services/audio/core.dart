@@ -20,7 +20,7 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
     String license = '',
     String absFileRoot = '',
   }) async {
-    ZIMKitLogger.info('ZIMAudio init');
+    ZIMKitLogger.logInfo('ZIMAudio init');
 
     data.init();
 
@@ -29,7 +29,7 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
   }
 
   Future<void> uninit() async {
-    ZIMKitLogger.info('ZIMAudio uninit');
+    ZIMKitLogger.logInfo('ZIMAudio uninit');
 
     data.uninit();
 
@@ -47,7 +47,7 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
   }) async {
     filePath ??= data.generateRecordFilePath();
 
-    ZIMKitLogger.info('ZIMAudio startRecord,'
+    ZIMKitLogger.logInfo('ZIMAudio startRecord,'
         'conversationID:$conversationID, '
         'conversationType:$conversationType, '
         'filePath:$filePath, '
@@ -67,12 +67,12 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
   }
 
   Future<void> completeRecord() async {
-    ZIMKitLogger.info('ZIMAudio completeRecord');
+    ZIMKitLogger.logInfo('ZIMAudio completeRecord');
     return ZIMAudio.getInstance().completeRecord();
   }
 
   Future<void> cancelRecord() async {
-    ZIMKitLogger.info('ZIMAudio cancelRecord');
+    ZIMKitLogger.logInfo('ZIMAudio cancelRecord');
     return ZIMAudio.getInstance().cancelRecord();
   }
 
@@ -86,13 +86,13 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
     ZIMAudioRouteType? routeType,
   }) async {
     if (data.playStatusNotifier.value.id == id) {
-      ZIMKitLogger.info('ZIMAudio startPlay, target id($id) is playing');
+      ZIMKitLogger.logInfo('ZIMAudio startPlay, target id($id) is playing');
       return;
     }
 
     if (data.playStatusNotifier.value.isPlaying) {
       /// playing another audio
-      ZIMKitLogger.info('ZIMAudio startPlay, '
+      ZIMKitLogger.logInfo('ZIMAudio startPlay, '
           'current is playing:${data.playStatusNotifier.value.id}, '
           'cache target:$id, waiting stop');
 
@@ -114,7 +114,7 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
       return;
     }
 
-    ZIMKitLogger.info('ZIMAudio startPlay, '
+    ZIMKitLogger.logInfo('ZIMAudio startPlay, '
         'current playing:${data.playStatusNotifier.value.id}, '
         'target, id:$id, filePath:$filePath, routeType:$routeType');
 
@@ -130,7 +130,7 @@ class ZIMKitAudioInstance with ZIMKitAudioEventService {
   }
 
   Future<void> stopPlay() async {
-    ZIMKitLogger.info(
+    ZIMKitLogger.logInfo(
         'ZIMAudio stopPlay, current playing:${data.playStatusNotifier.value.id}');
 
     /// update data

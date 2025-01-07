@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:async/async.dart';
-import 'package:logging/logging.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'package:zego_zimkit/src/callkit/cache.dart';
@@ -89,18 +88,16 @@ class ZIMKitCore
     required int appID,
     String appSign = '',
     String appSecret = '',
-    Level logLevel = Level.ALL,
-    bool enablePrint = true,
     ZegoZIMKitNotificationConfig? notificationConfig,
   }) async {
     if (isInited) {
-      ZIMKitLogger.info('has inited.');
+      ZIMKitLogger.logInfo('has inited.');
       return;
     }
 
     isInited = true;
 
-    ZIMKitLogger.init(logLevel: logLevel, enablePrint: enablePrint);
+    await ZIMKitLogger().initLog();
 
     await initOfflineMessage(
       notificationConfig: notificationConfig,
@@ -112,29 +109,29 @@ class ZIMKitCore
     this.appSign = appSign;
     this.appSecret = appSecret;
 
-    ZIMKitLogger.info('init, appID:$appID');
+    ZIMKitLogger.logInfo('init, appID:$appID');
 
     await ZegoUIKitSignalingPlugin().init(appID: appID, appSign: appSign);
 
     await getVersion().then((value) {
-      ZIMKitLogger.info('version: $value');
+      ZIMKitLogger.logInfo('version: $value');
     });
 
     await ZIMKitAudioInstance().init();
     await ZIMKitAudioInstance().getVersion().then((value) {
-      ZIMKitLogger.info('audio version: $value');
+      ZIMKitLogger.logInfo('audio version: $value');
     });
   }
 
   Future<void> uninit() async {
     if (!isInited) {
-      ZIMKitLogger.info('is not inited.');
+      ZIMKitLogger.logInfo('is not inited.');
       return;
     }
 
     uninitEventHandler();
 
-    ZIMKitLogger.info('destroy.');
+    ZIMKitLogger.logInfo('destroy.');
     await disconnectUser();
     await ZegoUIKitSignalingPlugin().uninit();
     await ZIMKitAudioInstance().uninit();

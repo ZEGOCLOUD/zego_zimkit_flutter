@@ -60,6 +60,8 @@ extension ZegoZIMKitOfflineMessageCacheInfoExtesion
 Future<void> setOfflineMessageConversationInfo(
   ZegoZIMKitOfflineMessageCacheInfo cacheInfo,
 ) async {
+  ZIMKitLogger.logInfo('set offline message:$cacheInfo');
+
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(messageConversationCacheKey, cacheInfo.toJson());
 }
@@ -68,6 +70,11 @@ Future<void> setOfflineMessageConversationInfo(
 Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineMessageConversationInfo({
   bool selfDestructing = true,
 }) async {
+  ZIMKitLogger.logInfo(
+    'get offline message id, '
+    'selfDestructing:$selfDestructing, ',
+  );
+
   final prefs = await SharedPreferences.getInstance();
   final data = prefs.getString(messageConversationCacheKey) ?? '';
 
@@ -80,6 +87,8 @@ Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineMessageConversationInfo({
 
 /// cached ID of the current message
 Future<void> clearOfflineMessageConversationInfo() async {
+  ZIMKitLogger.logInfo('clear offline message id');
+
   final prefs = await SharedPreferences.getInstance();
   prefs.remove(messageConversationCacheKey);
 }

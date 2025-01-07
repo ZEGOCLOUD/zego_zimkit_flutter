@@ -37,7 +37,7 @@ class ZegoZIMKitNotificationManager {
     ZegoZIMKitNotificationConfig? notificationConfig,
   }) async {
     if (_isInit) {
-      ZIMKitLogger.info('notification manager, init already');
+      ZIMKitLogger.logInfo('notification manager, init already');
 
       return;
     }
@@ -45,16 +45,16 @@ class ZegoZIMKitNotificationManager {
     _isInit = true;
     _notificationConfig = notificationConfig;
 
-    ZIMKitLogger.info('notification manager, init');
+    ZIMKitLogger.logInfo('notification manager, init');
 
     await requestPermission(Permission.notification).then((value) {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
           'notification manager, request notification permission result:$value');
     });
 
     /// for bring app to foreground from background in Android 10
     await requestPermission(Permission.systemAlertWindow).then((value) {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
           'notification manager, request system alert window permission result:$value');
     });
 
@@ -72,14 +72,14 @@ class ZegoZIMKitNotificationManager {
   }
 
   Future<void> cancelAll() async {
-    ZIMKitLogger.info('notification manager, cancelAll');
+    ZIMKitLogger.logInfo('notification manager, cancelAll');
 
     /// clear notifications
     await ZegoZIMKitPluginPlatform.instance.dismissAllNotifications();
   }
 
   void uninit() {
-    ZIMKitLogger.info('notification manager, uninit');
+    ZIMKitLogger.logInfo('notification manager, uninit');
 
     _isInit = false;
     _notificationConfig = null;
@@ -89,7 +89,7 @@ class ZegoZIMKitNotificationManager {
 
   void showInvitationNotification(ZIMKitReceivedMessages? messages) {
     if (!_isInit) {
-      ZIMKitLogger.warning('notification manager, not init');
+      ZIMKitLogger.logWarn('notification manager, not init');
     }
 
     ZegoZIMKitPluginPlatform.instance.dismissAllNotifications();
@@ -142,7 +142,7 @@ class ZegoZIMKitNotificationManager {
 
       iconSource = 'resource://drawable/$targetIconFileName';
 
-      ZIMKitLogger.info("icon file, config name:${iconFileName ?? ""}, "
+      ZIMKitLogger.logInfo("icon file, config name:${iconFileName ?? ""}, "
           'file name:$targetIconFileName, source:$iconSource');
     }
 
@@ -161,7 +161,7 @@ class ZegoZIMKitNotificationManager {
 
       soundSource = 'resource://raw/$targetSoundFileName';
 
-      ZIMKitLogger.info("sound file, config name:${soundFileName ?? ""}, "
+      ZIMKitLogger.logInfo("sound file, config name:${soundFileName ?? ""}, "
           'file name:$targetSoundFileName, source:$soundSource');
     }
 
@@ -174,12 +174,12 @@ class ZegoZIMKitNotificationManager {
     try {
       status = await permission.request();
     } catch (e) {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
           'notification manager, Exception: $permission permission not granted, $e');
     }
 
     if (status != PermissionStatus.granted) {
-      ZIMKitLogger.info(
+      ZIMKitLogger.logInfo(
           'notification manager, Error: $permission permission not granted, $status');
       return false;
     }

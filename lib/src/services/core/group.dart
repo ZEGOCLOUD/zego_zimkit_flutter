@@ -11,12 +11,12 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .createGroup(groupInfo, inviteUserIDs)
         .then((ZIMGroupCreatedResult zimResult) {
-      ZIMKitLogger.info('createGroup: success, groupID: $id');
+      ZIMKitLogger.logInfo('createGroup: success, groupID: $id');
       db.groupInfo(id).update(zimResult.groupInfo);
       db.conversations.insertOrUpdate(zimResult.groupInfo.toConversation());
       return Future<String?>.value(zimResult.groupInfo.baseInfo.groupID);
     }).catchError((error) {
-      ZIMKitLogger.severe('createGroup: failed, name: $name, error: $error');
+      ZIMKitLogger.logError('createGroup: failed, name: $name, error: $error');
       return Future<String?>.error(error);
     });
   }
@@ -28,7 +28,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .joinGroup(id)
         .then((ZIMGroupJoinedResult zimResult) {
-      ZIMKitLogger.info('joinGroup: success, groupID: $id');
+      ZIMKitLogger.logInfo('joinGroup: success, groupID: $id');
       db.groupInfo(id).update(zimResult.groupInfo);
       db.conversations.insertOrUpdate(zimResult.groupInfo.toConversation());
       return 0;
@@ -52,7 +52,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
             }
           }
           if (!gotIt) {
-            ZIMKitLogger.info(
+            ZIMKitLogger.logInfo(
                 'joinGroup: warning, already in, but query failed: $id, '
                 'insert a dummy conversation');
             db.conversations.insertOrUpdate(
@@ -63,11 +63,11 @@ extension ZIMKitCoreGroup on ZIMKitCore {
             );
           }
         }).catchError((error) {
-          ZIMKitLogger.severe('joinGroup: failed, already in, but query '
+          ZIMKitLogger.logError('joinGroup: failed, already in, but query '
               'failed: $id, error: $error');
         });
       } else {
-        ZIMKitLogger.severe('joinGroup: failed, groupID: $id, error: $error');
+        ZIMKitLogger.logError('joinGroup: failed, groupID: $id, error: $error');
       }
       return errorCode;
     });
@@ -80,10 +80,10 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .inviteUsersIntoGroup(userIDs, id)
         .then((ZIMGroupUsersInvitedResult zimResult) {
-      ZIMKitLogger.info('addUsersToGroup: success, groupID: $id');
+      ZIMKitLogger.logInfo('addUsersToGroup: success, groupID: $id');
       return 0;
     }).catchError((error) {
-      ZIMKitLogger.severe(
+      ZIMKitLogger.logError(
           'addUsersToGroup: failed, groupID: $id, error: $error');
       return int.tryParse(error.code) ?? -2;
     });
@@ -96,7 +96,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .leaveGroup(groupID)
         .then((ZIMGroupLeftResult zimResult) {
-      ZIMKitLogger.info('leaveGroup: success, groupID: $groupID');
+      ZIMKitLogger.logInfo('leaveGroup: success, groupID: $groupID');
       db.conversations.remove(groupID, ZIMConversationType.group);
       return 0;
     }).catchError((error) {
@@ -105,7 +105,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         db.conversations.remove(groupID, ZIMConversationType.group);
         return 0;
       }
-      ZIMKitLogger.severe(
+      ZIMKitLogger.logError(
           'leaveGroup: failed, groupID: $groupID, error: $error');
       return int.tryParse(error.code) ?? -2;
     });
@@ -117,10 +117,10 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .kickGroupMembers(userIDs, groupID)
         .then((ZIMGroupMemberKickedResult zimResult) {
-      ZIMKitLogger.info('removeUsersFromGroup: success');
+      ZIMKitLogger.logInfo('removeUsersFromGroup: success');
       return 0;
     }).catchError((error) {
-      ZIMKitLogger.severe('removeUsersFromGroup: failed, error: $error');
+      ZIMKitLogger.logError('removeUsersFromGroup: failed, error: $error');
       return int.tryParse(error.code) ?? -2;
     });
   }
@@ -132,10 +132,10 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .dismissGroup(groupID)
         .then((ZIMGroupDismissedResult zimResult) {
-      ZIMKitLogger.info('disbandGroup: success');
+      ZIMKitLogger.logInfo('disbandGroup: success');
       return 0;
     }).catchError((error) {
-      ZIMKitLogger.severe('disbandGroup: failed, error: $error');
+      ZIMKitLogger.logError('disbandGroup: failed, error: $error');
       return int.tryParse(error.code) ?? -2;
     });
   }
@@ -146,15 +146,15 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .transferGroupOwner(toUserID, groupID)
         .then((ZIMGroupOwnerTransferredResult zimResult) {
-      ZIMKitLogger.info('transferGroupOwner: success');
+      ZIMKitLogger.logInfo('transferGroupOwner: success');
       return 0;
     }).catchError((error) {
       return ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {
-          ZIMKitLogger.info('re-login success, retry transferGroupOwner');
+          ZIMKitLogger.logInfo('re-login success, retry transferGroupOwner');
           return transferGroupOwner(groupID, toUserID);
         } else {
-          ZIMKitLogger.severe('transferGroupOwner failed', error);
+          ZIMKitLogger.logError('transferGroupOwner failed:$error');
           return Future.value(int.tryParse(error.code) ?? -2);
         }
       });
@@ -176,12 +176,12 @@ extension ZIMKitCoreGroup on ZIMKitCore {
           .getInstance()!
           .queryGroupMemberInfo(userID, groupID)
           .then((ZIMGroupMemberInfoQueriedResult zimResult) {
-        ZIMKitLogger.info('queryGroupMemberInfo: success');
+        ZIMKitLogger.logInfo('queryGroupMemberInfo: success');
         return Future<ZIMGroupMemberInfo?>.value(zimResult.userInfo);
       }).catchError((error) async {
         final errorCode = int.tryParse(error.code) ?? -2;
         if (ZIMErrorCodeExtension.isFreqLimit(errorCode)) {
-          ZIMKitLogger.info('queryGroupMemberInfo failed, retry later');
+          ZIMKitLogger.logInfo('queryGroupMemberInfo failed, retry later');
 
           return Future.delayed(
             Duration(milliseconds: Random().nextInt(5000)),
@@ -193,10 +193,10 @@ extension ZIMKitCoreGroup on ZIMKitCore {
             .checkNeedReloginOrNot(error)
             .then((retryCode) async {
           if (retryCode == 0) {
-            ZIMKitLogger.info('re-login success, retry queryUser');
+            ZIMKitLogger.logInfo('re-login success, retry queryUser');
             return queryGroupMemberInfo(groupID, userID);
           } else {
-            ZIMKitLogger.severe('queryGroupMemberInfo failed', error);
+            ZIMKitLogger.logError('queryGroupMemberInfo failed:$error');
             return Future<ZIMGroupMemberInfo?>.value(null);
           }
         });
@@ -225,17 +225,17 @@ extension ZIMKitCoreGroup on ZIMKitCore {
           )
           .then((ZIMGroupMemberListQueriedResult zimResult) {
         final list = db.groupMemberList(groupID)..addAll(zimResult.userList);
-        ZIMKitLogger.info(
+        ZIMKitLogger.logInfo(
             'queryGroupMemberList succeess, member count:${list.notifier.length},nextFlag:$nextFlag, newNextFlag:${zimResult.nextFlag}');
         if ((zimResult.nextFlag != 0) && (zimResult.nextFlag != nextFlag)) {
-          ZIMKitLogger.info(
+          ZIMKitLogger.logInfo(
               'queryGroupMemberList next, nextFlag:$nextFlag, newNextFlag:${zimResult.nextFlag}');
           queryGroupMemberList(groupID, nextFlag: zimResult.nextFlag);
         }
       }).catchError((error) {
         final errorCode = int.tryParse(error.code) ?? -2;
         if (ZIMErrorCodeExtension.isFreqLimit(errorCode)) {
-          ZIMKitLogger.info('queryGroupInfo failed, retry later');
+          ZIMKitLogger.logInfo('queryGroupInfo failed, retry later');
 
           Future.delayed(
             Duration(milliseconds: Random().nextInt(5000)),
@@ -245,11 +245,12 @@ extension ZIMKitCoreGroup on ZIMKitCore {
 
         ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
           if (retryCode == 0) {
-            ZIMKitLogger.info('re-login success, retry queryUser');
+            ZIMKitLogger.logInfo('re-login success, retry queryUser');
             queryGroupMemberList(groupID, nextFlag: nextFlag);
           } else {
             db.groupMemberList(groupID).fetched = false;
-            ZIMKitLogger.severe('queryGroupMemberList: failed, error: $error');
+            ZIMKitLogger.logError(
+                'queryGroupMemberList: failed, error: $error');
             throw error;
           }
         });
@@ -263,7 +264,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
       return ValueNotifier<ZIMKitGroupInfo>(ZIMKitGroupInfo());
     }
 
-    ZIMKitLogger.info('queryGroupInfo groupID:$groupID');
+    ZIMKitLogger.logInfo('queryGroupInfo groupID:$groupID');
     ZIM
         .getInstance()!
         .queryGroupInfo(groupID)
@@ -272,7 +273,7 @@ extension ZIMKitCoreGroup on ZIMKitCore {
     }).catchError((error) {
       final errorCode = int.tryParse(error.code) ?? -2;
       if (ZIMErrorCodeExtension.isFreqLimit(errorCode)) {
-        ZIMKitLogger.info('queryGroupInfo failed, retry later');
+        ZIMKitLogger.logInfo('queryGroupInfo failed, retry later');
 
         Future.delayed(
           Duration(milliseconds: Random().nextInt(5000)),
@@ -285,10 +286,10 @@ extension ZIMKitCoreGroup on ZIMKitCore {
 
       ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {
-          ZIMKitLogger.info('re-login success, retry queryUser');
+          ZIMKitLogger.logInfo('re-login success, retry queryUser');
           queryGroupInfo(groupID);
         } else {
-          ZIMKitLogger.severe('queryGroupInfo failed', error);
+          ZIMKitLogger.logError('queryGroupInfo failed:$error');
         }
       });
     });
@@ -305,15 +306,16 @@ extension ZIMKitCoreGroup on ZIMKitCore {
           .getInstance()!
           .queryGroupMemberCount(groupID)
           .then((ZIMGroupMemberCountQueriedResult zimResult) {
-        ZIMKitLogger.info('queryGroupMemberCount: success');
+        ZIMKitLogger.logInfo('queryGroupMemberCount: success');
         db.groupMemberList(groupID).count.value = zimResult.count;
       }).catchError((error) {
         ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
           if (retryCode == 0) {
-            ZIMKitLogger.info('re-login success, retry queryGroupMemberCount');
+            ZIMKitLogger.logInfo(
+                're-login success, retry queryGroupMemberCount');
             queryGroupMemberCount(groupID);
           } else {
-            ZIMKitLogger.severe('queryGroupMemberCount failed', error);
+            ZIMKitLogger.logError('queryGroupMemberCount failed:$error');
             Future<int?>.value(0);
           }
         });
@@ -329,15 +331,15 @@ extension ZIMKitCoreGroup on ZIMKitCore {
         .getInstance()!
         .setGroupMemberRole(role, userID, conversationID)
         .then((_) {
-      ZIMKitLogger.info('setGroupMemberRole: success');
+      ZIMKitLogger.logInfo('setGroupMemberRole: success');
       return 0;
     }).catchError((error) {
       return ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {
-          ZIMKitLogger.info('re-login success, retry setGroupMemberRole');
+          ZIMKitLogger.logInfo('re-login success, retry setGroupMemberRole');
           return setGroupMemberRole(conversationID, userID, role);
         } else {
-          ZIMKitLogger.severe('setGroupMemberRole failed', error);
+          ZIMKitLogger.logError('setGroupMemberRole failed:$error');
           return Future.value(int.tryParse(error.code) ?? -2);
         }
       });
@@ -354,7 +356,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
       db.conversations.insertOrUpdate(groupInfo.toConversation());
     }
 
-    ZIMKitLogger.info('onGroupStateChanged, state: $state, event: $event');
+    ZIMKitLogger.logInfo('onGroupStateChanged, state: $state, event: $event');
     onGroupStateChangedEventController.add(ZIMKitEventGroupStateChanged(
       groupInfo: groupInfo,
       state: state,
@@ -365,7 +367,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
 
   void onGroupNameUpdated(ZIM zim, String groupName,
       ZIMGroupOperatedInfo operatedInfo, String groupID) {
-    ZIMKitLogger.info('onGroupNameUpdated, groupName: $groupName');
+    ZIMKitLogger.logInfo('onGroupNameUpdated, groupName: $groupName');
     final notifier =
         ZIMKitCore().db.conversations.get(groupID, ZIMConversationType.group);
     notifier.value = notifier.value.clone()..name = groupName;
@@ -379,7 +381,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
 
   void onGroupAvatarUrlUpdated(ZIM zim, String groupAvatarUrl,
       ZIMGroupOperatedInfo operatedInfo, String groupID) {
-    ZIMKitLogger.info('onGroupAvatarUrlUpdated');
+    ZIMKitLogger.logInfo('onGroupAvatarUrlUpdated');
     final notifier =
         ZIMKitCore().db.conversations.get(groupID, ZIMConversationType.group);
     notifier.value = notifier.value.clone()..avatarUrl = groupAvatarUrl;
@@ -393,7 +395,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
 
   void onGroupNoticeUpdated(ZIM zim, String groupNotice,
       ZIMGroupOperatedInfo operatedInfo, String groupID) {
-    ZIMKitLogger.info('onGroupNoticeUpdated');
+    ZIMKitLogger.logInfo('onGroupNoticeUpdated');
     db.groupInfo(groupID).onGroupNoticeUpdated(groupNotice);
     onGroupNoticeUpdatedEventController.add(ZIMKitEventGroupNoticeUpdated(
       groupNotice: groupNotice,
@@ -423,7 +425,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
       List<ZIMGroupMemberInfo> userList,
       ZIMGroupOperatedInfo operatedInfo,
       String groupID) {
-    ZIMKitLogger.info('onGroupMemberStateChanged');
+    ZIMKitLogger.logInfo('onGroupMemberStateChanged');
     if (state == ZIMGroupMemberState.enter) {
       db.groupMemberList(groupID).addAll(userList);
     } else {
@@ -443,7 +445,7 @@ extension ZIMKitCoreGroupEvent on ZIMKitCore {
       ZIMGroupOperatedInfo operatedInfo, String groupID) {
     queryGroupMemberList(groupID);
     db.groupMemberList(groupID).addAll(userInfo);
-    ZIMKitLogger.info('onGroupMemberInfoUpdated');
+    ZIMKitLogger.logInfo('onGroupMemberInfoUpdated');
     onGroupMemberInfoUpdatedEventController
         .add(ZIMKitEventGroupMemberInfoUpdated(
       userInfo: userInfo,

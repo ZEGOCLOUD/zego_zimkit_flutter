@@ -41,7 +41,7 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
         (widget.message.videoContent!.fileLocalPath.endsWith('mp4') ||
             widget.message.videoContent!.fileLocalPath.endsWith('mov')) &&
         File(widget.message.videoContent!.fileLocalPath).existsSync()) {
-      ZIMKitLogger.fine('ZIMKitVideoMessagePlayer: initPlayer from local '
+      ZIMKitLogger.logInfo('ZIMKitVideoMessagePlayer: initPlayer from local '
           'file: ${widget.message.videoContent!.fileLocalPath}');
       videoPlayerController = VideoPlayerController.file(
         File(
@@ -50,7 +50,7 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
         ),
       );
     } else {
-      ZIMKitLogger.fine(
+      ZIMKitLogger.logInfo(
         'ZIMKitVideoMessagePlayer: initPlayer from network: '
         '${widget.message.videoContent!.fileDownloadUrl}',
       );
@@ -79,9 +79,9 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
         if (!chewieController.videoPlayerController.value.isInitialized) {
-          ZIMKitLogger.severe(
+          ZIMKitLogger.logError(
               'videoPlayerController is not initialized, ${widget.message.videoContent!.fileLocalPath}');
-          ZIMKitLogger.shout(context,
+          ZIMKitLogger.logWarn(
               "Seems Can't play this video, ${widget.message.videoContent!.fileLocalPath}");
         }
       },
@@ -100,14 +100,14 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
             future: initing,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                ZIMKitLogger.fine(
+                ZIMKitLogger.logInfo(
                     'ZIMKitVideoMessagePlayer: videoPlayerController initialize done');
                 return Chewie(
                   key: ValueKey(widget.message.info.messageID),
                   controller: chewieController,
                 );
               } else {
-                ZIMKitLogger.fine(
+                ZIMKitLogger.logInfo(
                     'ZIMKitVideoMessagePlayer: videoPlayerController initializing...');
                 return Chewie(
                   key: ValueKey(snapshot.hashCode),

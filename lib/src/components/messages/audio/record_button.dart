@@ -293,7 +293,7 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
   }
 
   void onRecordCompleted(ZIMKitAudioRecordData recordData) {
-    ZIMKitLogger.info('audio button, onRecordCompleted, $recordData');
+    ZIMKitLogger.logInfo('audio button, onRecordCompleted, $recordData');
 
     widget.status.stateNotifier.value = ZIMKitRecordState.complete;
     widget.status.stateNotifier.value = ZIMKitRecordState.idle;
@@ -311,9 +311,9 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
       preMessageSending: widget.preMessageSending,
     )
         .then((_) {
-      ZIMKitLogger.info('audio button, send audio done');
+      ZIMKitLogger.logInfo('audio button, send audio done');
     }).catchError((e) {
-      ZIMKitLogger.info('audio button, send audio error, $e');
+      ZIMKitLogger.logInfo('audio button, send audio error, $e');
     });
   }
 
