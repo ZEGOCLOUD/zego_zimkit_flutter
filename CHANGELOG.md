@@ -1,3 +1,9 @@
+## 1.19.0-beta.3
+
+- Features
+  - Support sending webp image format
+
+
 ## 1.19.0-beta.2
 
 - Bugs
