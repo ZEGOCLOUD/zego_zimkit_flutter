@@ -36,7 +36,8 @@ mixin ZIMKitInputService {
       'png',
       'bmp',
       'gif',
-      'tiff'
+      'tiff',
+      'webp',
     ]; // <10M
     const supportVideoList = <String>['mp4', 'mov']; // <100M
     const supportAudioList = <String>['mp3', 'm4a']; // <300s, <6M

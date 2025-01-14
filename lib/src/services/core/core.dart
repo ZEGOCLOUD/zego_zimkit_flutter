@@ -78,10 +78,11 @@ class ZIMKitCore
   final onGroupMemberInfoUpdatedEventController =
       StreamController<ZIMKitEventGroupMemberInfoUpdated>.broadcast();
 
+  String get version => '1.19.0-beta.2';
   // API
   Future<String> getVersion() async {
     final signalingVersion = await ZegoUIKitSignalingPlugin().getVersion();
-    return 'zego_zimkit:1.19.0-beta.2;plugin:$signalingVersion';
+    return 'zego_zimkit:$version;plugin:$signalingVersion';
   }
 
   Future<void> init({

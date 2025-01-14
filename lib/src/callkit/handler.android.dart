@@ -173,8 +173,10 @@ Future<void> _onBackgroundMessageReceived({
             senderID: senderID,
           ),
         );
+        ZIMKitLogger.logInfo(
+          'background message, click offline message',
+        );
 
-        debugPrint('[zimkit]111 activeAppToForeground');
         await ZegoZIMKitPluginPlatform.instance.activeAppToForeground();
         await ZegoZIMKitPluginPlatform.instance.requestDismissKeyguard();
       },

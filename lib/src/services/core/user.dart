@@ -1,18 +1,27 @@
 part of 'core.dart';
 
 extension ZIMKitCoreUser on ZIMKitCore {
-  Future<int> connectUser(
-      {required String id, String name = '', String avatarUrl = ''}) async {
+  Future<int> connectUser({
+    required String id,
+    String name = '',
+    String avatarUrl = '',
+  }) async {
     if (!isInited) {
       ZIMKitLogger.logInfo('is not inited.');
       throw Exception('ZIMKit is not inited.');
     }
+
+    ZIMKitLogger.logInfo(
+      'login request, '
+      'target user(id:$id, name:$name), '
+      'currentUser user(id:${currentUser?.baseInfo.userID}, name:${currentUser?.baseInfo.userName}), ',
+    );
+
     if (currentUser != null) {
       ZIMKitLogger.logInfo('has login, auto logout');
       await disconnectUser();
     }
 
-    ZIMKitLogger.logInfo('login request, user id:$id, user name:$name');
     currentUser = ZIMUserFullInfo()
       ..baseInfo.userID = id
       ..baseInfo.userName = name.isNotEmpty ? name : id;

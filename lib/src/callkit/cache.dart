@@ -70,13 +70,14 @@ Future<void> setOfflineMessageConversationInfo(
 Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineMessageConversationInfo({
   bool selfDestructing = true,
 }) async {
-  ZIMKitLogger.logInfo(
-    'get offline message id, '
-    'selfDestructing:$selfDestructing, ',
-  );
-
   final prefs = await SharedPreferences.getInstance();
   final data = prefs.getString(messageConversationCacheKey) ?? '';
+
+  ZIMKitLogger.logInfo(
+    'get offline message conversation info, '
+    'data:$data, '
+    'selfDestructing:$selfDestructing, ',
+  );
 
   if (selfDestructing) {
     await clearOfflineMessageConversationInfo();

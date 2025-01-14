@@ -66,4 +66,8 @@ class ZIMKit
   Future<void> uninit() async {
     return ZIMKitCore.instance.uninit();
   }
+
+  String getVersion()  {
+    return ZIMKitCore.instance.version;
+  }
 }

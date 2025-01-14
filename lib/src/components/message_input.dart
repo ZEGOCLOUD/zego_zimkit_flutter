@@ -490,7 +490,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
   void jumpListToBottom() {
     if (widget.listScrollController?.hasClients ?? false) {
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         widget.listScrollController?.jumpTo(
           (widget.listScrollController?.position.maxScrollExtent ?? 0),
         );
