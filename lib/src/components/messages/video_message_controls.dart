@@ -134,7 +134,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
   }) {
     final options = <OptionItem>[
       OptionItem(
-        onTap: () async {
+        onTap: (context) async {
           Navigator.pop(context);
           _onSpeedButtonTap();
         },
