@@ -53,9 +53,10 @@ mixin ZIMKitOfflineMessage {
         'offline message, register background message handler',
       );
 
-      await ZegoPluginAdapter()
-          .signalingPlugin
-          ?.setBackgroundMessageHandler(onBackgroundMessageReceived);
+      await ZegoPluginAdapter().signalingPlugin?.setBackgroundMessageHandler(
+            onBackgroundMessageReceived,
+            key: 'zego_zimkit',
+          );
     } else if (Platform.isIOS) {
       ///
     }

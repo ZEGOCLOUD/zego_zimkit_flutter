@@ -52,11 +52,11 @@ class ZegoZIMKitNotificationManager {
           'notification manager, request notification permission result:$value');
     });
 
-    /// for bring app to foreground from background in Android 10
-    await requestPermission(Permission.systemAlertWindow).then((value) {
-      ZIMKitLogger.logInfo(
-          'notification manager, request system alert window permission result:$value');
-    });
+    // /// for bring app to foreground from background in Android 10
+    // await requestPermission(Permission.systemAlertWindow).then((value) {
+    //   ZIMKitLogger.logInfo(
+    //       'notification manager, request system alert window permission result:$value');
+    // });
 
     await ZegoZIMKitPluginPlatform.instance.createNotificationChannel(
       ZegoZIMKitPluginLocalNotificationChannelConfig(
