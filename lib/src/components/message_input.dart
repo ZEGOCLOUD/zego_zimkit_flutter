@@ -182,16 +182,23 @@ class ZIMKitMessageInput extends StatefulWidget {
 class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
   // TODO RestorableTextEditingController
   final TextEditingController _defaultEditingController =
-  TextEditingController();
+      TextEditingController();
 
   TextEditingController get _editingController =>
       widget.editingController ?? _defaultEditingController;
+
+  bool hasFocus = false;
 
   @override
   void initState() {
     super.initState();
 
-    widget.inputFocusNode?.addListener(onInputFocusChanged);
+    widget.inputFocusNode?.addListener(() {
+      onInputFocusChanged();
+      setState(() {
+        hasFocus = widget.inputFocusNode?.hasFocus == true;
+      });
+    });
   }
 
   @override
@@ -214,17 +221,12 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
             ),
         decoration: widget.containerDecoration ??
             BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .scaffoldBackgroundColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
                 BoxShadow(
                   offset: const Offset(0, 4),
                   blurRadius: 32,
-                  color: Theme
-                      .of(context)
-                      .primaryColor
-                      .withOpacity(0.15),
+                  color: Theme.of(context).primaryColor.withOpacity(0.15),
                 ),
               ],
             ),
@@ -237,11 +239,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                   return recordState == ZIMKitRecordState.idle
                       ? messageWidgets()
                       : ZIMKitRecordCancelSlider(
-                    status: widget.recordStatus,
-                    sendButtonWidget: widget.sendButtonWidget,
-                    onMessageSent: onMessageSent,
-                    preMessageSending: onMessagePreSend,
-                  );
+                          status: widget.recordStatus,
+                          sendButtonWidget: widget.sendButtonWidget,
+                          onMessageSent: onMessageSent,
+                          preMessageSending: onMessagePreSend,
+                        );
                 },
               ),
               const SizedBox(width: 5),
@@ -257,11 +259,31 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     return Expanded(
       child: Row(
         children: [
-          ...buildActions(ZIMKitMessageInputActionLocation.left),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.ease,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: hasFocus ? 0 : null,
+              child: Row(
+                children: buildActions(ZIMKitMessageInputActionLocation.left),
+              ),
+            ),
+          ),
           moreButton(),
           const SizedBox(width: 5),
           contentWidgets(),
-          ...buildActions(ZIMKitMessageInputActionLocation.right)
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.ease,
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: hasFocus ? null : 0,
+              child: Row(
+                children: buildActions(ZIMKitMessageInputActionLocation.right),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -273,10 +295,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         decoration: widget.inputBackgroundDecoration ??
             BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .primaryColor
-                  .withOpacity(0.05),
+              color: Theme.of(context).primaryColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(40),
             ),
         child: Row(
@@ -291,9 +310,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                 maxLines: widget.maxLines ?? 3,
                 minLines: widget.minLines ?? 1,
                 textInputAction:
-                widget.textInputAction ?? TextInputAction.newline,
+                    widget.textInputAction ?? TextInputAction.newline,
                 textCapitalization:
-                widget.textCapitalization ?? TextCapitalization.sentences,
+                    widget.textCapitalization ?? TextCapitalization.sentences,
                 focusNode: widget.inputFocusNode,
                 onTap: () {
                   // jumpListToBottom();
@@ -349,7 +368,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitPickFileButton(
         icon: widget.pickFileButtonWidget,
-        onFilePicked: (List<ZIMKitPlatformFile> files,) {
+        onFilePicked: (
+          List<ZIMKitPlatformFile> files,
+        ) {
           void defaultAction() {
             ZIMKit().sendFileMessage(
               widget.conversationID,
@@ -380,7 +401,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitPickMediaButton(
         icon: widget.pickMediaButtonWidget,
-        onFilePicked: (List<ZIMKitPlatformFile> files,) {
+        onFilePicked: (
+          List<ZIMKitPlatformFile> files,
+        ) {
           void defaultAction() {
             ZIMKit().sendMediaMessage(
               widget.conversationID,
@@ -415,10 +438,10 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitMoreButton(
         buttons: widget.actions
-            ?.where((element) =>
-        element.location == ZIMKitMessageInputActionLocation.more)
-            .map((e) => e.child)
-            .toList() ??
+                ?.where((element) =>
+                    element.location == ZIMKitMessageInputActionLocation.more)
+                .map((e) => e.child)
+                .toList() ??
             [],
       ),
     );
@@ -450,16 +473,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       decoration: widget.sendButtonWidget == null
           ? BoxDecoration(
-        color: text.isNotEmpty
-            ? Theme
-            .of(context)
-            .primaryColor
-            : Theme
-            .of(context)
-            .primaryColor
-            .withOpacity(0.6),
-        shape: BoxShape.circle,
-      )
+              color: text.isNotEmpty
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).primaryColor.withOpacity(0.6),
+              shape: BoxShape.circle,
+            )
           : null,
       child: IconButton(
         padding: EdgeInsets.zero,
@@ -485,16 +503,15 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
   List<Widget> buildActions(ZIMKitMessageInputActionLocation location) {
     return widget.actions
-        ?.where((element) => element.location == location)
-        .map(
-          (e) =>
-          SizedBox(
-            height: ZIMKitMessageStyle.iconSize,
-            width: ZIMKitMessageStyle.iconSize,
-            child: e.child,
-          ),
-    )
-        .toList() ??
+            ?.where((element) => element.location == location)
+            .map(
+              (e) => SizedBox(
+                height: ZIMKitMessageStyle.iconSize,
+                width: ZIMKitMessageStyle.iconSize,
+                child: e.child,
+              ),
+            )
+            .toList() ??
         [];
   }
 
@@ -530,13 +547,13 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
   bool get rightInsideActionsIsEmpty =>
       (widget.actions
-          ?.where((element) =>
-      element.location ==
-          ZIMKitMessageInputActionLocation.rightInside)
-          .isEmpty ??
+              ?.where((element) =>
+                  element.location ==
+                  ZIMKitMessageInputActionLocation.rightInside)
+              .isEmpty ??
           true) &&
-          !widget.showPickFileButton &&
-          !widget.showPickMediaButton;
+      !widget.showPickFileButton &&
+      !widget.showPickMediaButton;
 }
 
 enum ZIMKitMessageInputActionLocation {
@@ -548,39 +565,40 @@ enum ZIMKitMessageInputActionLocation {
 }
 
 class ZIMKitMessageInputAction {
-  const ZIMKitMessageInputAction(this.child, [
+  const ZIMKitMessageInputAction(
+    this.child, [
     this.location = ZIMKitMessageInputActionLocation.rightInside,
   ]);
 
   const ZIMKitMessageInputAction.left(Widget child)
       : this(
-    child,
-    ZIMKitMessageInputActionLocation.left,
-  );
+          child,
+          ZIMKitMessageInputActionLocation.left,
+        );
 
   const ZIMKitMessageInputAction.right(Widget child)
       : this(
-    child,
-    ZIMKitMessageInputActionLocation.right,
-  );
+          child,
+          ZIMKitMessageInputActionLocation.right,
+        );
 
   const ZIMKitMessageInputAction.leftInside(Widget child)
       : this(
-    child,
-    ZIMKitMessageInputActionLocation.leftInside,
-  );
+          child,
+          ZIMKitMessageInputActionLocation.leftInside,
+        );
 
   const ZIMKitMessageInputAction.rightInside(Widget child)
       : this(
-    child,
-    ZIMKitMessageInputActionLocation.rightInside,
-  );
+          child,
+          ZIMKitMessageInputActionLocation.rightInside,
+        );
 
   const ZIMKitMessageInputAction.more(Widget child)
       : this(
-    child,
-    ZIMKitMessageInputActionLocation.more,
-  );
+          child,
+          ZIMKitMessageInputActionLocation.more,
+        );
 
   final Widget child;
   final ZIMKitMessageInputActionLocation location;
