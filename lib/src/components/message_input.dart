@@ -306,7 +306,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                     const InputDecoration(hintText: 'type message...'),
               ),
             ),
-            messageButtons(),
+            // send button will be custom and visible based on focus
+            // messageButtons(),
           ],
         ),
       ),
