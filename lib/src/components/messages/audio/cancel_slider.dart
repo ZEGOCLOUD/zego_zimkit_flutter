@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -128,9 +129,9 @@ class _ZIMKitRecordCancelSliderState extends State<ZIMKitRecordCancelSlider> {
           builder: (context, duration, _) {
             return Text(
               formatAudioRecordDuration(duration),
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.grey,
-                fontSize: 17,
+                fontSize: Platform.isIOS ? 17 : 12,
               ),
             );
           },
