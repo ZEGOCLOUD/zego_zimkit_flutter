@@ -22,7 +22,13 @@ extension ZIMKitCoreUser on ZIMKitCore {
       await disconnectUser();
     }
 
-    currentUser = ZIMUserFullInfo()
+    currentUser = ZIMUserFullInfo(
+        baseInfo: ZIMUserInfo()
+          ..userID = id
+          ..userName = name
+          ..userAvatarUrl = avatarUrl,
+        userAvatarUrl: '',
+        extendedData: '')
       ..baseInfo.userID = id
       ..baseInfo.userName = name.isNotEmpty ? name : id;
 

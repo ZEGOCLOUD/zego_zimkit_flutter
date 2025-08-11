@@ -208,7 +208,7 @@ extension ZIMKitCoreMessage on ZIMKitCore {
 
     // 1. create message
     var kitMessage =
-        (ZIMCustomMessage(subType: customType, message: customMessage)
+        (ZIMCustomMessage(subType: customType, message: customMessage, searchedContent: '')
               ..searchedContent = searchedContent ?? '')
             .toKIT();
     final sendConfig = ZIMMessageSendConfig()..hasReceipt = true;

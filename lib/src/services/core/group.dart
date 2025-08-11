@@ -280,9 +280,6 @@ extension ZIMKitCoreGroup on ZIMKitCore {
           () => queryGroupInfo(groupID),
         );
       }
-      if (errorCode == ZIMErrorCode.groupModuleGroupDoseNotExist) {
-        return; // group not exist
-      }
 
       ZIMKitCore.instance.checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {

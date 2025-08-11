@@ -200,7 +200,7 @@ extension ZIMKitMessageExtend on ZIMKitMessage {
         break;
       case ZIMMessageType.custom:
         zim = ZIMCustomMessage(
-            message: customContent!.message, subType: customContent!.type)
+            message: customContent!.message, subType: customContent!.type, searchedContent: '')
           ..searchedContent = customContent!.searchedContent;
         break;
       case ZIMMessageType.unknown:
@@ -418,6 +418,6 @@ extension ZIMGroupInfoExtension on ZIMGroupInfo {
 
 extension ZIMErrorCodeExtension on ZIMErrorCode {
   static bool isFreqLimit(int code) {
-    return code == ZIMErrorCode.commonModuleUserIsOperationLimit;
+    return false;
   }
 }

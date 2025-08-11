@@ -298,7 +298,6 @@ class ZIMKitMessageList {
 
 class ZIMKitReactions {
   String reaction = '';
-  List<ZIMReactionUserInfo> userList = [];
   int totalCount = 0;
   String reactionType = '';
   bool isSelfIncluded = false;
