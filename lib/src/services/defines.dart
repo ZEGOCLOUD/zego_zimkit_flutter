@@ -17,7 +17,9 @@ typedef ZIMKitMessageType = ZIMMessageType;
 typedef ZIMKitGroupMemberInfo = ZIMGroupMemberInfo;
 typedef ZIMKitUserFullInfo = ZIMUserFullInfo;
 
+/// Conversation information class for ZIMKit
 class ZIMKitConversation {
+  /// Type of the conversation (peer or group)
   ZIMKitConversationType type = ZIMKitConversationType.peer;
 
   // conversation
@@ -32,14 +34,24 @@ class ZIMKitConversation {
   ZIMKitMessage? lastMessage;
 }
 
+/// Group information class for ZIMKit
 class ZIMKitGroupInfo {
+  /// Group notice text
   String notice = "";
+  
+  /// Group attributes map
   Map<String, String> attributes = {};
+  
+  /// Current group state
   ZIMGroupState state = ZIMGroupState.enter;
+  
+  /// Current group event
   ZIMGroupEvent event = ZIMGroupEvent.created;
 }
 
+/// Message class for ZIMKit
 class ZIMKitMessage {
+  /// Type of the message
   ZIMKitMessageType type = ZIMKitMessageType.unknown;
 
   ZIMKitMessageBaseInfo info = ZIMKitMessageBaseInfo();

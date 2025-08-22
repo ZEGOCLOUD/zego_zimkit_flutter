@@ -7,13 +7,30 @@ const String defaultZIMKitMessageChannelName = 'Message';
 
 const String serializationKeyHandlerPrivateInfo = 'zim_message_handler';
 
+/// Private information class for ZIMKit message handler
 class ZimKitHandlerPrivateInfo {
+  /// Notification channel ID
   String channelID;
+  
+  /// Notification channel name
   String channelName;
+  
+  /// Sound file name for notifications
   String sound;
+  
+  /// Icon file name for notifications
   String icon;
+  
+  /// Whether to enable vibration for notifications
   bool isVibrate;
 
+  /// Creates a handler private info instance
+  /// 
+  /// [channelID] Notification channel ID
+  /// [channelName] Notification channel name
+  /// [sound] Sound file name, defaults to empty string
+  /// [icon] Icon file name, defaults to empty string
+  /// [isVibrate] Whether to enable vibration, defaults to false
   ZimKitHandlerPrivateInfo({
     required this.channelID,
     required this.channelName,

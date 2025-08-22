@@ -148,7 +148,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
     );
   }
 
-  Widget buildNickName(context) {
+  Widget buildNickName(BuildContext context) {
     if (message.isMine ||
         message.info.conversationType != ZIMConversationType.group) {
       return const SizedBox.shrink();

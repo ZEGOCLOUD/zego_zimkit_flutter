@@ -2,11 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// Custom painter for drawing animated sound wave effects
 class SoundWavePainter extends CustomPainter {
+  /// Current progress of the sound wave animation (0.0 to 1.0)
   final double progress;
+  
+  /// Color of the sound wave
   final Color color;
+  
+  /// Whether the animation is currently running
   final bool isAnimating;
 
+  /// Creates a sound wave painter instance
+  /// 
+  /// [progress] Current progress of the sound wave animation (0.0 to 1.0)
+  /// [color] Color of the sound wave
+  /// [isAnimating] Whether the animation is currently running
   SoundWavePainter({
     required this.progress,
     required this.color,

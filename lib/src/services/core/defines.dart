@@ -445,11 +445,22 @@ class ZIMKitGroupMemberList {
   void triggerNotify() => notifier.triggerNotify();
 }
 
+/// Class for storing received messages information
 class ZIMKitReceivedMessages {
+  /// Conversation ID
   String id;
+  
+  /// Conversation type
   ZIMKitConversationType type;
+  
+  /// List of received messages
   List<ZIMKitMessage> receiveMessages;
 
+  /// Creates a received messages instance
+  /// 
+  /// [id] Conversation ID
+  /// [type] Conversation type
+  /// [receiveMessages] List of received messages
   ZIMKitReceivedMessages({
     required this.id,
     required this.type,

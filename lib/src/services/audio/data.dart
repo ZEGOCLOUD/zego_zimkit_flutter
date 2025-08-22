@@ -9,7 +9,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zego_zim/zego_zim.dart';
 import 'package:zego_zim_audio/zego_zim_audio.dart';
 
+/// Audio recording data class for storing audio recording related information
 class ZIMKitAudioRecordData {
+  /// Creates an audio recording data instance
+  ///
+  /// [absFilePath] Absolute path of the audio file
+  /// [conversationID] Conversation ID
+  /// [conversationType] Conversation type
+  /// [duration] Recording duration in milliseconds, defaults to 0
+  /// [maxDuration] Maximum recording duration in milliseconds, defaults to 60 seconds
   ZIMKitAudioRecordData({
     required this.absFilePath,
     required this.conversationID,
@@ -45,7 +53,13 @@ class ZIMKitAudioRecordData {
   }
 }
 
+/// Audio playback data class for storing audio playback related information
 class ZIMKitAudioPlayData {
+  /// Creates an audio playback data instance
+  ///
+  /// [id] Unique identifier for audio playback
+  /// [filePath] Audio file path
+  /// [routeType] Audio route type, optional parameter
   ZIMKitAudioPlayData({
     required this.id,
     required this.filePath,
@@ -63,7 +77,12 @@ class ZIMKitAudioPlayData {
   }
 }
 
+/// Audio playback status class for storing audio playback status information
 class ZIMKitAudioPlayStatus {
+  /// Creates an audio playback status instance
+  ///
+  /// [id] Unique identifier for audio playback
+  /// [isPlaying] Whether the audio is currently playing
   ZIMKitAudioPlayStatus({
     required this.id,
     required this.isPlaying,

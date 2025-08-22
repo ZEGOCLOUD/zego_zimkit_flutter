@@ -76,7 +76,7 @@ class _ZIMKitRecordCancelSliderState extends State<ZIMKitRecordCancelSlider> {
     );
   }
 
-  Widget slider(constraints) {
+  Widget slider(BoxConstraints constraints) {
     return Positioned(
       child: Dismissible(
         key: UniqueKey(),

@@ -30,7 +30,16 @@ class HexUtils {
   }
 }
 
+/// Token information class for ZIM authentication
 class ZIMKitTokenInfo04 {
+  /// Creates a token info instance
+  /// 
+  /// [appID] Application ID
+  /// [userID] User ID
+  /// [ctime] Creation time
+  /// [expire] Expiration time
+  /// [nonce] Random number for security
+  /// [payload] Additional payload data
   ZIMKitTokenInfo04({
     required this.appID,
     required this.userID,

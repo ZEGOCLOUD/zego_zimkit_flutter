@@ -1,6 +1,13 @@
 import 'package:flutter/foundation.dart';
 
+/// A ValueNotifier wrapper for List that provides convenient list operations
+/// 
+/// This class extends ValueNotifier<List<T>> and adds common list manipulation
+/// methods with optional notification control.
 class ListNotifier<T> extends ValueNotifier<List<T>> {
+  /// Creates a ListNotifier instance
+  /// 
+  /// [value] The initial list value
   ListNotifier(List<T> value) : super(value);
 
   int get length => value.length;
@@ -95,7 +102,14 @@ class ListNotifier<T> extends ValueNotifier<List<T>> {
   void triggerNotify() => notifyListeners();
 }
 
+/// A ValueNotifier wrapper for Map that provides convenient map operations
+/// 
+/// This class extends ValueNotifier<Map<K, V>> and adds common map manipulation
+/// methods with optional notification control.
 class MapNotifier<K, V> extends ValueNotifier<Map<K, V>> {
+  /// Creates a MapNotifier instance
+  /// 
+  /// [value] The initial map value
   MapNotifier(Map<K, V> value) : super(value);
 
   int get length => value.length;

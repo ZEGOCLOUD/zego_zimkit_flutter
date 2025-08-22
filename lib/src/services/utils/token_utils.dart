@@ -62,7 +62,16 @@ class ZIMKitTokenUtils {
   }
 }
 
+/// Token information class for token generation
 class TokenInfo04 {
+  /// Creates a token info instance
+  /// 
+  /// [appID] Application ID
+  /// [userID] User ID
+  /// [ctime] Creation time in seconds since epoch
+  /// [expire] Expiration time in seconds since epoch
+  /// [nonce] Random number for security
+  /// [payload] Additional payload data
   TokenInfo04({
     required this.appID,
     required this.userID,

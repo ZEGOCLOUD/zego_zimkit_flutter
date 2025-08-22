@@ -11,7 +11,9 @@ enum ZIMKitRecordLockerState {
   locked,
 }
 
+/// Style configuration class for audio recording components
 class ZIMKitRecordStyle {
+  /// Size of the locker icon in pixels
   static double lockerIconSize = 50;
 }
 

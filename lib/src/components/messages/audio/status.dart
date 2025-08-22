@@ -3,9 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_zimkit/src/services/audio/core.dart';
 import 'defines.dart';
 
+/// Status management class for audio recording
 class ZIMKitRecordStatus {
+  /// Notifier for recording state changes
   final stateNotifier =
       ValueNotifier<ZIMKitRecordState>(ZIMKitRecordState.idle);
+
+  /// Notifier for locker state changes
   final lockerStateNotifier =
       ValueNotifier<ZIMKitRecordLockerState>(ZIMKitRecordLockerState.idle);
 

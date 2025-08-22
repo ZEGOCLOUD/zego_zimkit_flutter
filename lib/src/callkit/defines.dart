@@ -15,6 +15,12 @@ class ZegoZIMKitNotificationConfig {
   ///
   ZegoZIMKitIOSNotificationConfig? iosNotificationConfig;
 
+  /// Creates a notification configuration instance
+  ///
+  /// [resourceID] Resource ID for notifications
+  /// [supportOfflineMessage] Whether to support offline messages, defaults to true
+  /// [androidNotificationConfig] Android-specific notification configuration
+  /// [iosNotificationConfig] iOS-specific notification configuration
   ZegoZIMKitNotificationConfig({
     this.resourceID,
     this.supportOfflineMessage = true,
@@ -58,6 +64,14 @@ class ZegoZIMKitAndroidNotificationConfig {
   /// and in this case, it should be set to false
   bool enable;
 
+  /// Creates an Android notification configuration instance
+  ///
+  /// [channelID] Notification channel ID, defaults to 'ZIM Message'
+  /// [channelName] Notification channel name, defaults to 'Message'
+  /// [icon] Icon file name, defaults to empty string
+  /// [sound] Sound file name, defaults to empty string
+  /// [vibrate] Whether to enable vibration, defaults to false
+  /// [enable] Whether to enable notifications, defaults to true
   ZegoZIMKitAndroidNotificationConfig({
     this.channelID = 'ZIM Message',
     this.channelName = 'Message',
@@ -75,6 +89,10 @@ class ZegoZIMKitIOSNotificationConfig {
 
   ZegoSignalingPluginMultiCertificate certificateIndex;
 
+  /// Creates an iOS notification configuration instance
+  ///
+  /// [isSandboxEnvironment] Whether running in iOS sandbox environment
+  /// [certificateIndex] Certificate index for push notifications, defaults to first certificate
   ZegoZIMKitIOSNotificationConfig({
     this.isSandboxEnvironment,
     this.certificateIndex =

@@ -6,6 +6,7 @@ import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/pages/pages.dart';
 import 'package:zego_zimkit/src/services/services.dart';
+import 'package:zego_zimkit/src/services/logger_service.dart';
 
 extension ZIMKitDefaultDialogService on ZIMKit {
   void showDefaultNewPeerChatDialog(BuildContext context) {
@@ -46,11 +47,19 @@ extension ZIMKitDefaultDialogService on ZIMKit {
       ).then((ok) {
         if (ok != true) return;
         if (userIDController.text.isNotEmpty) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return ZIMKitMessageListPage(
-              conversationID: userIDController.text,
+          if (context.mounted) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ZIMKitMessageListPage(
+                conversationID: userIDController.text,
+              );
+            }));
+          } else {
+            ZIMKitLogger.logInfo(
+              'showDefaultNewChatDialog, context is not mounted',
+              tag: 'zimkit',
+              subTag: 'dialogs_utils',
             );
-          }));
+          }
         }
       });
     });
@@ -137,12 +146,20 @@ extension ZIMKitDefaultDialogService on ZIMKit {
           )
               .then((String? conversationID) {
             if (conversationID != null) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ZIMKitMessageListPage(
-                  conversationID: conversationID,
-                  conversationType: ZIMConversationType.group,
+              if (context.mounted) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ZIMKitMessageListPage(
+                    conversationID: conversationID,
+                    conversationType: ZIMConversationType.group,
+                  );
+                }));
+              } else {
+                ZIMKitLogger.logInfo(
+                  'showDefaultNewGroupChatDialog, context is not mounted',
+                  tag: 'zimkit',
+                  subTag: 'dialogs_utils',
                 );
-              }));
+              }
             }
           });
         }
@@ -190,12 +207,20 @@ extension ZIMKitDefaultDialogService on ZIMKit {
         if (groupIDController.text.isNotEmpty) {
           ZIMKit().joinGroup(groupIDController.text).then((int errorCode) {
             if (errorCode == 0) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ZIMKitMessageListPage(
-                  conversationID: groupIDController.text,
-                  conversationType: ZIMConversationType.group,
+              if (context.mounted) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ZIMKitMessageListPage(
+                    conversationID: groupIDController.text,
+                    conversationType: ZIMConversationType.group,
+                  );
+                }));
+              } else {
+                ZIMKitLogger.logInfo(
+                  'showDefaultJoinGroupDialog, context is not mounted',
+                  tag: 'zimkit',
+                  subTag: 'dialogs_utils',
                 );
-              }));
+              }
             }
           });
         }

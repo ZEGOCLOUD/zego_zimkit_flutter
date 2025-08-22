@@ -1,8 +1,12 @@
 import 'dart:core';
 import 'dart:math' as math;
 
+/// Utility class for string operations in ZIMKit
 class ZIMKitStringUtils {
+  /// Random number generator instance
   static final _random = math.Random();
+  
+  /// Default character pool for random string generation
   static const _defaultPool =
       'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
 
