@@ -29,7 +29,12 @@ mixin ZIMKitCoreEvent {
       ..onGroupNoticeUpdated = target.onGroupNoticeUpdated
       ..onGroupAttributesUpdated = target.onGroupAttributesUpdated
       ..onGroupMemberStateChanged = target.onGroupMemberStateChanged
-      ..onGroupMemberInfoUpdated = target.onGroupMemberInfoUpdated;
+      ..onGroupMemberInfoUpdated = target.onGroupMemberInfoUpdated
+
+      // zpns notification
+      ..onZPNsRegistered = target.onZPNsRegistered
+      ..onZPNsNotificationArrived = target.onZPNsNotificationArrived
+      ..onZPNsNotificationClicked = target.onZPNsNotificationClicked;
   }
 
   void uninitEventHandler() {

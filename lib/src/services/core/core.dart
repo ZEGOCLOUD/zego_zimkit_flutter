@@ -15,14 +15,18 @@ import 'package:zego_zimkit/src/callkit/defines.dart';
 import 'package:zego_zimkit/src/callkit/notification_manager.dart';
 import 'package:zego_zimkit/src/services/audio/core.dart';
 import 'package:zego_zimkit/src/services/core/offline_message.dart';
+import 'package:zego_zimkit/src/services/internal/notification/ios_im_message.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'package:zego_zimkit/src/services/services.dart';
+import 'package:zego_zpns/zego_zpns.dart';
 
 export 'defines.dart';
 
 part 'conversation.dart';
 
 part 'group.dart';
+
+part 'notification.dart';
 
 part 'message.dart';
 
@@ -78,7 +82,7 @@ class ZIMKitCore
   final onGroupMemberInfoUpdatedEventController =
       StreamController<ZIMKitEventGroupMemberInfoUpdated>.broadcast();
 
-  String get version => '1.19.4';
+  String get version => '1.19.5';
   // API
   Future<String> getVersion() async {
     final signalingVersion = await ZegoUIKitSignalingPlugin().getVersion();
@@ -100,11 +104,13 @@ class ZIMKitCore
 
     await ZIMKitLogger().initLog();
 
+    /// must init zpns event before registerPush,
+    /// otherwise maybe can not receive notificationClick event
+    initEventHandler();
+
     await initOfflineMessage(
       notificationConfig: notificationConfig,
     );
-
-    initEventHandler();
 
     this.appID = appID;
     this.appSign = appSign;

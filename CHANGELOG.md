@@ -1,3 +1,8 @@
+## 1.19.5
+
+- Bugs
+  - Fixed the issue where getOfflineConversationInfo returns empty data after clicking the offline message pop-up box on iOS
+
 ## 1.19.4
 
 - Features

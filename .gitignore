@@ -75,3 +75,8 @@
 **/client.txt
 **/*.sh
 **/Podfile
+
+.gradle/
+local.properties
+example/ios/
+example/macos/
