@@ -1,3 +1,7 @@
+## 1.19.6
+
+- Update dependency
+
 ## 1.19.5
 
 - Bugs
