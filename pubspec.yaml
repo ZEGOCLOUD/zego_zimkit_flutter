@@ -14,8 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  zego_plugin_adapter: ^2.13.12
-  zego_uikit_signaling_plugin: ^2.8.18
+  zego_plugin_adapter: ^2.14.0
+  zego_uikit_signaling_plugin: ^2.8.19
   zego_zim: ^2.21.1+1
   zego_zim_audio: ^1.0.0+1
   zego_zpns: ^2.8.0
