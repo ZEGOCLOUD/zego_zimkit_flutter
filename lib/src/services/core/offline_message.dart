@@ -53,10 +53,11 @@ mixin ZIMKitOfflineMessage {
         'offline message, register background message handler',
       );
 
-      await ZegoPluginAdapter().signalingPlugin?.setBackgroundMessageHandler(
-            onBackgroundMessageReceived,
-            key: 'zego_zimkit',
-          );
+      // ** iorUp do not use call kit so it is safe to comment out **
+      // await ZegoPluginAdapter().signalingPlugin?.setBackgroundMessageHandler(
+      //       onBackgroundMessageReceived,
+      //       key: 'zego_zimkit',
+      //     );
     } else if (Platform.isIOS) {
       ///
     }

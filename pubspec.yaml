@@ -11,12 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  zego_plugin_adapter: ^2.13.9
-  zego_uikit_signaling_plugin: ^2.8.13
-  zego_zim: ^2.20.0+1
-  zego_zim_audio: ^1.0.0+1
-  zego_zpns: ^2.8.0
-  zego_callkit: ^1.0.0+4
+  zego_plugin_adapter:
+  zego_uikit_signaling_plugin:
+  zego_zim:
+  zego_zim_audio:
+  zego_zpns:
+  zego_callkit:
 
   cupertino_icons: ^1.0.6
   equatable: ^2.0.5
