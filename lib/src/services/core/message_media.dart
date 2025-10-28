@@ -55,6 +55,7 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
               'name': ZIMKit().currentUser()?.baseInfo.userName ?? '',
             },
             'type': conversationType.index,
+            'image_attachment' : ZIMKit().currentUser()?.baseInfo.userAvatarUrl ?? '',
           },
         );
       sendConfig.pushConfig = pushConfig;

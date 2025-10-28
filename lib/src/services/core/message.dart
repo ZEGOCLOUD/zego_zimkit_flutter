@@ -138,7 +138,7 @@ extension ZIMKitCoreMessage on ZIMKitCore {
               'name': ZIMKit().currentUser()?.baseInfo.userName ?? '',
             },
             'type': conversationType.index,
-            'image_attachment' : 'https://dummyimage.com/600x400/000/fff',
+            'image_attachment' : ZIMKit().currentUser()?.baseInfo.userAvatarUrl ?? '',
           },
         );
       sendConfig.pushConfig = pushConfig;
