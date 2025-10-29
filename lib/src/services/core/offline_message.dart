@@ -7,7 +7,7 @@ import 'package:zego_zimkit/src/callkit/handler.android.dart';
 import 'package:zego_zimkit/src/callkit/notification_manager.dart';
 import 'package:zego_zimkit/src/callkit/variables.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
-import 'package:zego_zimkit/src/utils/share_pref.dart';
+import 'package:zego_zimkit/src/utils/utils.dart';
 import 'package:zego_zimkit/zego_zimkit.dart';
 
 mixin ZIMKitOfflineMessage {

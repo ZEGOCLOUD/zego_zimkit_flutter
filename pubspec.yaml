@@ -16,8 +16,8 @@ dependencies:
 
   zego_plugin_adapter: ^2.14.0
   zego_uikit_signaling_plugin: ^2.8.19
-  zego_zim: ^2.21.1+1
-  zego_zim_audio: ^1.0.0+1
+  zego_zim: ^2.23.0
+  zego_zim_audio: ^1.0.0+7
   zego_zpns: ^2.8.0
 
   cupertino_icons: ^1.0.6
@@ -28,13 +28,16 @@ dependencies:
   flutter_logs_yoer: ^2.2.1
   async: ^2.0.0
   video_player: ^2.7.2
-  file_picker: ^10.1.2
+  file_picker: ^10.3.3
   chewie: ^1.10.0
   provider: ^6.0.5
   shared_preferences: ^2.2.3
   path_provider: ^2.1.3
   plugin_platform_interface: ^2.1.8
   intl: ^0.20.2
+  wechat_assets_picker: ^9.8.0
+  wechat_camera_picker: ^4.4.0
+  emoji_picker_flutter: ^4.3.0
 
 dev_dependencies:
   flutter_test:

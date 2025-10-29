@@ -1,4 +1,4 @@
-part of 'zimkit_services.dart';
+part of '../zimkit.dart';
 
 mixin ZIMKitInputService {
   Future<List<ZIMKitPlatformFile>> pickFiles(

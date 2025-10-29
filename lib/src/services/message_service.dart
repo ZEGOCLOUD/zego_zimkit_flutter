@@ -1,9 +1,11 @@
-part of 'zimkit_services.dart';
+part of '../zimkit.dart';
 
 mixin ZIMKitMessageService {
   // Event
   Future<ZIMKitMessageListNotifier> getMessageListNotifier(
-      String conversationID, ZIMConversationType type) {
+    String conversationID,
+    ZIMConversationType type,
+  ) {
     return ZIMKitCore.instance.getMessageListNotifier(conversationID, type);
   }
 
@@ -13,14 +15,37 @@ mixin ZIMKitMessageService {
 
   // API
   Future<int> loadMoreMessage(
-      String conversationID, ZIMConversationType conversationType) async {
-    return ZIMKitCore.instance
-        .loadMoreMessage(conversationID, conversationType);
+    String conversationID,
+    ZIMConversationType conversationType,
+  ) async {
+    return ZIMKitCore.instance.loadMoreMessage(
+      conversationID,
+      conversationType,
+    );
   }
 
   Future<void> sendTextMessage(
     String conversationID,
     ZIMConversationType type,
+    String text, {
+    ZIMKitMessage? repliedMessage,
+    FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending,
+    Function(ZIMKitMessage)? onMessageSent,
+  }) async {
+    return ZIMKitCore.instance.sendTextMessage(
+      conversationID,
+      type,
+      text,
+      repliedMessage: repliedMessage,
+      preMessageSending: preMessageSending,
+      onMessageSent: onMessageSent,
+    );
+  }
+
+  Future<void> replyMessage(
+    String conversationID,
+    ZIMConversationType type,
+    ZIMKitMessage repliedMessage,
     String text, {
     FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending,
     Function(ZIMKitMessage)? onMessageSent,
@@ -29,6 +54,7 @@ mixin ZIMKitMessageService {
       conversationID,
       type,
       text,
+      repliedMessage: repliedMessage,
       preMessageSending: preMessageSending,
       onMessageSent: onMessageSent,
     );
@@ -64,7 +90,8 @@ mixin ZIMKitMessageService {
     Function(ZIMKitMessage)? onMessageSent,
   }) async {
     ZIMKitLogger.logInfo(
-        'sendMediaMessage: ${DateTime.now().millisecondsSinceEpoch}');
+      'sendMediaMessage: ${DateTime.now().millisecondsSinceEpoch}',
+    );
     for (final file in files) {
       await ZIMKitCore.instance.sendMediaMessage(
         conversationID,
@@ -98,6 +125,32 @@ mixin ZIMKitMessageService {
     );
   }
 
+  Future<void> sendCombineMessage(
+    String conversationID,
+    ZIMConversationType type, {
+    required String title,
+    required String summary,
+    required List<ZIMKitMessage> messageList,
+    FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending,
+    Function(ZIMKitMessage)? onMessageSent,
+  }) async {
+    return ZIMKitCore.instance.sendCombineMessage(
+      conversationID,
+      type,
+      title: title,
+      summary: summary,
+      messageList: messageList,
+      preMessageSending: preMessageSending,
+      onMessageSent: onMessageSent,
+    );
+  }
+
+  Future<List<ZIMKitMessage>> queryCombineMessageDetail(
+    ZIMKitMessage message,
+  ) async {
+    return ZIMKitCore.instance.queryCombineMessageDetail(message);
+  }
+
   Future<void> deleteMessage(List<ZIMKitMessage> messages) async {
     return ZIMKitCore.instance.deleteMessage(messages);
   }
@@ -119,18 +172,26 @@ mixin ZIMKitMessageService {
   }
 
   Future<void> updateLocalExtendedData(
-      ZIMKitMessage message, String localExtendedData) {
-    return ZIMKitCore.instance
-        .updateLocalExtendedData(message, localExtendedData);
+    ZIMKitMessage message,
+    String localExtendedData,
+  ) {
+    return ZIMKitCore.instance.updateLocalExtendedData(
+      message,
+      localExtendedData,
+    );
   }
 
   Future<void> addMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     return ZIMKitCore.instance.addMessageReaction(message, reactionType);
   }
 
   Future<void> deleteMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     return ZIMKitCore.instance.deleteMessageReaction(message, reactionType);
   }
 

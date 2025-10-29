@@ -1,4 +1,4 @@
-part of 'zimkit_services.dart';
+part of '../zimkit.dart';
 
 mixin ZIMKitConversationService {
   Future<ZIMKitConversationListNotifier> getConversationListNotifier() {
@@ -54,5 +54,33 @@ mixin ZIMKitConversationService {
     return ZIMKitCore.instance.getOfflineConversationInfo(
       selfDestructing: selfDestructing,
     );
+  }
+
+  Future<void> updateConversationPinnedState(
+    String conversationID,
+    ZIMConversationType conversationType,
+    bool isPinned,
+  ) async {
+    await ZIM.getInstance()!.updateConversationPinnedState(
+          isPinned,
+          conversationID,
+          conversationType,
+        );
+  }
+
+  Future<void> setConversationNotificationStatus(
+    String conversationID,
+    ZIMConversationType conversationType,
+    ZIMConversationNotificationStatus status,
+  ) async {
+    await ZIM.getInstance()!.setConversationNotificationStatus(
+          status,
+          conversationID,
+          conversationType,
+        );
+  }
+
+  Future<ZIMUserFullInfo> queryUser(String userID) async {
+    return ZIMKitCore.instance.queryUser(userID);
   }
 }

@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:zego_zim_audio/zego_zim_audio.dart';
 
-import 'package:zego_zimkit/src/components/messages/audio/defines.dart';
-import 'package:zego_zimkit/src/components/messages/defines.dart';
-import 'package:zego_zimkit/src/services/audio/core.dart';
-import 'package:zego_zimkit/src/services/audio/data.dart';
-import 'package:zego_zimkit/src/services/services.dart';
+import 'package:zego_zimkit/src/audio/core.dart';
+import 'package:zego_zimkit/src/audio/data.dart';
+import 'package:zego_zimkit/src/components/audio/defines.dart';
+import 'package:zego_zimkit/src/components/style.dart';
+import 'package:zego_zimkit/src/components/messages/style.dart';
+import 'package:zego_zimkit/src/components/messages/widgets/reactions.dart';
+import 'package:zego_zimkit/src/defines.dart';
+import 'package:zego_zimkit/src/extensions/extensions.dart';
+import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
+import 'package:zego_zimkit/src/zimkit.dart';
 
 class ZIMKitAudioMessage extends StatefulWidget {
   const ZIMKitAudioMessage({
-    Key? key,
+    super.key,
     required this.message,
     this.onPressed,
     this.onLongPress,
-  }) : super(key: key);
+    this.onReplyMessageTap,
+  });
 
   final ZIMKitMessage message;
 
@@ -23,8 +29,13 @@ class ZIMKitAudioMessage extends StatefulWidget {
     ZIMKitMessage message,
     Function defaultAction,
   )? onPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onLongPress;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )? onLongPress;
+  final void Function(String repliedMessageID)? onReplyMessageTap;
 
   @override
   State<ZIMKitAudioMessage> createState() => _ZIMKitAudioMessageState();
@@ -44,10 +55,10 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
           widget.message.info.messageID;
 
   SliderThemeData get sliderThemeData => SliderThemeData(
-        trackHeight: 2.0,
+        trackHeight: 2.0.zH,
         thumbColor: Colors.white,
-        thumbShape: const RoundSliderThumbShape(
-          enabledThumbRadius: 3.0,
+        thumbShape: RoundSliderThumbShape(
+          enabledThumbRadius: 3.0.zR,
         ),
         overlayShape: SliderComponentShape.noOverlay,
         activeTrackColor: Colors.white,
@@ -96,30 +107,78 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
             : defaultLongPress,
         child: LayoutBuilder(builder: (context, constraints) {
           const minDisplayWidth = 100;
-          var durationWidth = widget.message.audioContent!.audioDuration * 5;
+          final audioDuration = widget.message.audioContent?.audioDuration ?? 0;
+          var durationWidth = audioDuration * 5;
           if (durationWidth > constraints.maxWidth - minDisplayWidth) {
             durationWidth = constraints.maxWidth.toInt() - minDisplayWidth - 1;
           }
           return Container(
             width: (minDisplayWidth + durationWidth).toDouble(),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12.zW, vertical: 8.zH),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Theme.of(context)
-                  .primaryColor
-                  .withValues(alpha: widget.message.isMine ? 1 : 0.1),
+              borderRadius: BorderRadius.circular(30.zR),
+              color: widget.message.isMine
+                  ? ZIMKitMessageStyle.sentMessageBubbleColor(context)
+                  : ZIMKitMessageStyle.receivedMessageBubbleColor,
+              boxShadow: widget.message.isMine
+                  ? null
+                  : ZIMKitMessageStyle.getReceivedMessageBubbleShadow(),
             ),
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...state(),
-                process(),
-                duration(),
+                // Audio controls
+                Row(
+                  children: [
+                    ...state(),
+                    process(),
+                    duration(),
+                  ],
+                ),
+                // Reactions inside bubble (like Android)
+                ZIMKitMessageReactionsWidget(
+                  message: widget.message,
+                  isMine: widget.message.isMine,
+                  onReactionTap: (reactionType) async {
+                    await _handleReactionTap(reactionType);
+                  },
+                ),
               ],
             ),
           );
         }),
       ),
     );
+  }
+
+  Future<void> _handleReactionTap(String reactionType) async {
+    final currentUserID = ZIMKit().currentUser()?.baseInfo.userID;
+    if (currentUserID == null) return;
+
+    final reactions = widget.message.reactions.value;
+
+    // Check if current user already reacted with this type
+    final existingReaction = reactions.firstWhere(
+      (r) => r.reactionType == reactionType,
+      orElse: () => throw StateError('Reaction not found'),
+    );
+
+    try {
+      final hasReacted = existingReaction.userList.any(
+        (user) => user.userID == currentUserID,
+      );
+
+      if (hasReacted) {
+        // Remove reaction
+        await ZIMKit().deleteMessageReaction(widget.message, reactionType);
+      } else {
+        // Add reaction
+        await ZIMKit().addMessageReaction(widget.message, reactionType);
+      }
+    } catch (e) {
+      // Reaction not found, do nothing
+    }
   }
 
   List<Widget> state() {
@@ -130,8 +189,8 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
           return Icon(
             Icons.play_arrow,
             color: widget.message.isMine
-                ? Colors.white
-                : Theme.of(context).primaryColor,
+                ? ZIMKitMessageStyle.sentMessageTextColor
+                : ZIMKitMessageStyle.sentMessageBubbleColor(context),
           );
         }
 
@@ -147,12 +206,12 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
     if (widget.message.audioContent!.fileLocalPath.isEmpty) {
       return [
         SizedBox(
-          width: ZIMKitMessageStyle.iconSize / 2,
-          height: ZIMKitMessageStyle.iconSize / 2,
+          width: (ZIMKitComponentStyle.iconSize / 2).zW,
+          height: (ZIMKitComponentStyle.iconSize / 2).zH,
           child: const CircularProgressIndicator(),
         ),
-        const SizedBox(
-          width: 5,
+        SizedBox(
+          width: 5.zW,
         ),
       ];
     }

@@ -9,18 +9,24 @@ import 'package:flutter/services.dart';
 import 'package:async/async.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-import 'package:zego_zimkit/src/callkit/cache.dart';
-
-import 'package:zego_zimkit/src/callkit/defines.dart';
-import 'package:zego_zimkit/src/callkit/notification_manager.dart';
-import 'package:zego_zimkit/src/services/audio/core.dart';
-import 'package:zego_zimkit/src/services/core/offline_message.dart';
-import 'package:zego_zimkit/src/services/internal/notification/ios_im_message.dart';
-import 'package:zego_zimkit/src/services/logger_service.dart';
-import 'package:zego_zimkit/src/services/services.dart';
 import 'package:zego_zpns/zego_zpns.dart';
 
-export 'defines.dart';
+import 'package:zego_zimkit/src/audio/core.dart';
+import 'package:zego_zimkit/src/callkit/cache.dart';
+import 'package:zego_zimkit/src/callkit/defines.dart';
+import 'package:zego_zimkit/src/callkit/notification_manager.dart';
+import 'package:zego_zimkit/src/config.dart';
+import 'package:zego_zimkit/src/config.defines.dart';
+import 'package:zego_zimkit/src/defines.dart';
+import 'package:zego_zimkit/src/events.dart';
+import 'package:zego_zimkit/src/extensions/extensions.dart';
+import 'package:zego_zimkit/src/inner_text.dart';
+import 'package:zego_zimkit/src/utils/notification/ios_im_message.dart';
+import 'package:zego_zimkit/src/services/core/offline_message.dart';
+import 'package:zego_zimkit/src/services/logger_service.dart';
+import 'package:zego_zimkit/src/services/services.dart';
+import 'package:zego_zimkit/src/utils/utils.dart';
+import 'package:zego_zimkit/src/zimkit.dart';
 
 part 'conversation.dart';
 
@@ -56,10 +62,24 @@ class ZIMKitCore
   ZIMUserFullInfo? currentUser;
   ZIMKitDB db = ZIMKitDB();
 
+  // Configuration and Events
+  ZIMKitConfig? config;
+  ZIMKitEvents? events;
+
+  // Forward messages state
+  List<ZIMKitMessage> forwardMessages = [];
+  ZIMKitForwardType? forwardType;
+
+  // Inner text configuration
+  ZIMKitInnerText innerText = ZIMKitInnerText();
+
   final Map<String, AsyncCache<ZIMGroupFullInfo?>> _queryGroupCache = {};
   final Map<String, AsyncCache<ZIMGroupMemberInfo?>>
       _queryGroupMemberInfoCache = {};
   final Map<int, AsyncCache<ZIMUserFullInfo>> _queryUserCache = {};
+
+  // User info memory cache (like Android's GroupUserInfoNameMap/AvatarMap)
+  final Map<String, ZIMUserFullInfo> _userInfoMemoryCache = {};
 
   Completer? loginCompleter;
 
@@ -93,7 +113,8 @@ class ZIMKitCore
     required int appID,
     String appSign = '',
     String appSecret = '',
-    ZegoZIMKitNotificationConfig? notificationConfig,
+    ZIMKitConfig? config,
+    ZIMKitEvents? events,
   }) async {
     if (isInited) {
       ZIMKitLogger.logInfo('has inited.');
@@ -104,17 +125,20 @@ class ZIMKitCore
 
     await ZIMKitLogger().initLog();
 
+    this.appID = appID;
+    this.appSign = appSign;
+    this.appSecret = appSecret;
+    this.config = config ?? ZIMKitConfig.defaultConfig();
+    this.innerText = this.config!.innerText;
+    this.events = events;
+
     /// must init zpns event before registerPush,
     /// otherwise maybe can not receive notificationClick event
     initEventHandler();
 
     await initOfflineMessage(
-      notificationConfig: notificationConfig,
+      notificationConfig: this.config?.notificationConfig,
     );
-
-    this.appID = appID;
-    this.appSign = appSign;
-    this.appSecret = appSecret;
 
     ZIMKitLogger.logInfo('init, appID:$appID');
 
@@ -149,8 +173,24 @@ class ZIMKitCore
   void clear() {
     _queryGroupCache.clear();
     _queryUserCache.clear();
+    _userInfoMemoryCache.clear();
     db.clear();
     currentUser = null;
+  }
+
+  /// Get user info from memory cache (like Android's getMemoryUserInfo)
+  ZIMUserFullInfo? getMemoryUserInfo(String userID) {
+    return _userInfoMemoryCache[userID];
+  }
+
+  /// Update user info memory cache
+  void updateUserInfoCache(String userID, ZIMUserFullInfo userInfo) {
+    _userInfoMemoryCache[userID] = userInfo;
+  }
+
+  /// Batch update user info cache
+  void batchUpdateUserInfoCache(Map<String, ZIMUserFullInfo> userInfoMap) {
+    _userInfoMemoryCache.addAll(userInfoMap);
   }
 
   Future<ZegoZIMKitOfflineMessageCacheInfo> getOfflineConversationInfo({

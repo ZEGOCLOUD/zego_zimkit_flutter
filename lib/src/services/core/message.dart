@@ -22,10 +22,15 @@ extension ZIMKitCoreMessage on ZIMKitCore {
         .queryHistoryMessage(conversationID, conversationType, config)
         .then((ZIMMessageQueriedResult zimResult) {
       ZIMKitLogger.logInfo(
-          'queryHistoryMessage: ${zimResult.messageList.length}');
+        'queryHistoryMessage: ${zimResult.messageList.length}',
+      );
 
       dbMessages.init(zimResult.messageList);
       autoDownloadMessage(dbMessages.notifier.value);
+
+      // Cache user info from messages (like Android)
+      _cacheUserInfoFromMessages(zimResult.messageList);
+
       if (zimResult.messageList.isEmpty ||
           zimResult.messageList.length < config.count) {
         dbMessages.noMore = true;
@@ -73,13 +78,18 @@ extension ZIMKitCoreMessage on ZIMKitCore {
         .queryHistoryMessage(conversationID, conversationType, config)
         .then((ZIMMessageQueriedResult zimResult) {
       ZIMKitLogger.logInfo(
-          'queryHistoryMessage: ${zimResult.messageList.length}');
+        'queryHistoryMessage: ${zimResult.messageList.length}',
+      );
 
       dbMessages.insertAll(zimResult.messageList);
       autoDownloadMessage(dbMessages.notifier.value);
 
+      // Cache user info from messages (like Android)
+      _cacheUserInfoFromMessages(zimResult.messageList);
+
       ZIMKitLogger.logInfo(
-          'loadMoreMessage success, length ${zimResult.messageList.length}');
+        'loadMoreMessage success, length ${zimResult.messageList.length}',
+      );
 
       if (zimResult.messageList.isEmpty ||
           zimResult.messageList.length < config.count) {
@@ -106,6 +116,7 @@ extension ZIMKitCoreMessage on ZIMKitCore {
     String conversationID,
     ZIMKitConversationType conversationType,
     String text, {
+    ZIMKitMessage? repliedMessage,
     FutureOr<ZIMKitMessage> Function(ZIMKitMessage message)? preMessageSending,
     Function(ZIMKitMessage message)? onMessageSent,
   }) async {
@@ -119,7 +130,21 @@ extension ZIMKitCoreMessage on ZIMKitCore {
     }
 
     // 1. create message
-    var kitMessage = ZIMTextMessage(message: text).toKIT();
+    var zimTextMessage = ZIMTextMessage(message: text);
+    var kitMessage = zimTextMessage.toKIT();
+
+    // 1.1 set reply info if needed (for ZIMKit internal use)
+    if (repliedMessage != null) {
+      kitMessage.replyInfo = ZIMKitReplyMessageInfo(
+        messageID: repliedMessage.info.messageID,
+        senderUserID: repliedMessage.info.senderUserID,
+        senderUserName: repliedMessage.info.senderUserName,
+        messageType: repliedMessage.type,
+        contentSummary: _getMessageContent(repliedMessage),
+        originalMessage: repliedMessage,
+      );
+    }
+
     final sendConfig = ZIMMessageSendConfig();
 
     if (ZegoZIMKitNotificationManager.instance.resourceID?.isNotEmpty ??
@@ -128,67 +153,138 @@ extension ZIMKitCoreMessage on ZIMKitCore {
         ..resourcesID = ZegoZIMKitNotificationManager.instance.resourceID!
         ..title = ZIMKit().currentUser()?.baseInfo.userName ?? ''
         ..content = text
-        ..payload = const JsonEncoder().convert(
-          {
-            ZIMKitInvitationProtocolKey.operationType:
-                BackgroundMessageType.textMessage.text,
-            'id': conversationID,
-            'sender': {
-              'id': ZIMKit().currentUser()?.baseInfo.userID ?? '',
-              'name': ZIMKit().currentUser()?.baseInfo.userName ?? '',
-            },
-            'type': conversationType.index,
+        ..payload = const JsonEncoder().convert({
+          ZIMKitInvitationProtocolKey.operationType:
+              BackgroundMessageType.textMessage.text,
+          'id': conversationID,
+          'sender': {
+            'id': ZIMKit().currentUser()?.baseInfo.userID ?? '',
+            'name': ZIMKit().currentUser()?.baseInfo.userName ?? '',
           },
-        );
+          'type': conversationType.index,
+        });
       sendConfig.pushConfig = pushConfig;
     }
 
     // 2. preMessageSending
     kitMessage = (await preMessageSending?.call(kitMessage)) ?? kitMessage;
-    ZIMKitLogger.logInfo('sendTextMessage: $text');
-
-    // 3. re-generate zim
-    kitMessage.reGenerateZIMMessage();
+    ZIMKitLogger.logInfo(
+        'sendTextMessage: $text, repliedMessage: ${repliedMessage != null}');
 
     // 3. call service
     late ZIMKitMessageNotifier kitMessageNotifier;
-    await ZIM.getInstance()!.sendMessage(
-      kitMessage.zim,
-      conversationID,
-      conversationType,
-      sendConfig,
-      ZIMMessageSendNotification(
-        onMessageAttached: (zimMessage) {
-          kitMessageNotifier = db
-              .messages(conversationID, conversationType)
-              .onAttach(zimMessage);
-        },
-      ),
-    ).then((result) {
-      ZIMKitLogger.logInfo('sendTextMessage: success, $text');
-      kitMessageNotifier.value = result.message.toKIT();
-      onMessageSent?.call(kitMessageNotifier.value);
-    }).catchError((error) {
-      kitMessageNotifier.value =
-          (kitMessageNotifier.value.clone()..sendFailed(error));
 
-      return checkNeedReloginOrNot(error).then((retryCode) {
-        if (retryCode == 0) {
-          ZIMKitLogger.logInfo('relogin success, retry sendTextMessage');
-          sendTextMessage(
-            conversationID,
-            conversationType,
-            text,
-            preMessageSending: preMessageSending,
-            onMessageSent: onMessageSent,
-          );
-        } else {
-          ZIMKitLogger.logError('sendTextMessage: failed, $text,error:$error');
-          onMessageSent?.call(kitMessageNotifier.value);
-          throw error;
-        }
+    // Use replyMessage API if replying to a message
+    if (repliedMessage != null) {
+      ZIMKitLogger.logInfo('sendTextMessage: $text, call replyMessage');
+      // For reply messages, use the replyMessage API
+      await ZIM.getInstance()!.replyMessage(
+        zimTextMessage,
+        repliedMessage.zim,
+        sendConfig,
+        ZIMMessageSendNotification(
+          onMessageAttached: (zimMessage) {
+            kitMessageNotifier = db
+                .messages(conversationID, conversationType)
+                .onAttach(zimMessage);
+          },
+        ),
+      ).then((result) {
+        ZIMKitLogger.logInfo('replyMessage: success, $text');
+        kitMessageNotifier.value = result.message.toKIT();
+        onMessageSent?.call(kitMessageNotifier.value);
+      }).catchError((error) {
+        kitMessageNotifier.value =
+            (kitMessageNotifier.value.clone()..sendFailed(error));
+
+        return checkNeedReloginOrNot(error).then((retryCode) {
+          if (retryCode == 0) {
+            ZIMKitLogger.logInfo('relogin success, retry replyMessage');
+            sendTextMessage(
+              conversationID,
+              conversationType,
+              text,
+              repliedMessage: repliedMessage,
+              preMessageSending: preMessageSending,
+              onMessageSent: onMessageSent,
+            );
+          } else {
+            ZIMKitLogger.logError(
+              'replyMessage: failed, $text,error:$error',
+            );
+            onMessageSent?.call(kitMessageNotifier.value);
+            throw error;
+          }
+        });
       });
-    });
+    } else {
+      // For normal messages, use sendMessage API
+      // Re-generate zim message from kitMessage
+      kitMessage.reGenerateZIMMessage();
+
+      await ZIM.getInstance()!.sendMessage(
+        kitMessage.zim,
+        conversationID,
+        conversationType,
+        sendConfig,
+        ZIMMessageSendNotification(
+          onMessageAttached: (zimMessage) {
+            kitMessageNotifier = db
+                .messages(conversationID, conversationType)
+                .onAttach(zimMessage);
+          },
+        ),
+      ).then((result) {
+        ZIMKitLogger.logInfo('sendTextMessage: success, $text');
+        kitMessageNotifier.value = result.message.toKIT();
+        onMessageSent?.call(kitMessageNotifier.value);
+      }).catchError((error) {
+        kitMessageNotifier.value =
+            (kitMessageNotifier.value.clone()..sendFailed(error));
+
+        return checkNeedReloginOrNot(error).then((retryCode) {
+          if (retryCode == 0) {
+            ZIMKitLogger.logInfo('relogin success, retry sendTextMessage');
+            sendTextMessage(
+              conversationID,
+              conversationType,
+              text,
+              repliedMessage: repliedMessage,
+              preMessageSending: preMessageSending,
+              onMessageSent: onMessageSent,
+            );
+          } else {
+            ZIMKitLogger.logError(
+              'sendTextMessage: failed, $text,error:$error',
+            );
+            onMessageSent?.call(kitMessageNotifier.value);
+            throw error;
+          }
+        });
+      });
+    }
+  }
+
+  // Helper method to get message content for reply
+  String _getMessageContent(ZIMKitMessage message) {
+    switch (message.type) {
+      case ZIMMessageType.text:
+        return message.textContent?.text ?? '';
+      case ZIMMessageType.image:
+        return '[Image]';
+      case ZIMMessageType.video:
+        return '[Video]';
+      case ZIMMessageType.audio:
+        return '[Audio]';
+      case ZIMMessageType.file:
+        return '[File]';
+      case ZIMMessageType.combine:
+        return '[Chat History]';
+      case ZIMMessageType.custom:
+        return '[Custom Message]';
+      default:
+        return '';
+    }
   }
 
   Future<void> sendCustomMessage(
@@ -216,7 +312,8 @@ extension ZIMKitCoreMessage on ZIMKitCore {
     // 2. preMessageSending
     kitMessage = (await preMessageSending?.call(kitMessage)) ?? kitMessage;
     ZIMKitLogger.logInfo(
-        'sendCustomMessage: customType: $customType, message: $customMessage');
+      'sendCustomMessage: customType: $customType, message: $customMessage',
+    );
 
     // 3. re-generate zim
     kitMessage.reGenerateZIMMessage();
@@ -237,7 +334,8 @@ extension ZIMKitCoreMessage on ZIMKitCore {
       ),
     ).then((result) {
       ZIMKitLogger.logInfo(
-          'sendCustomMessage: success, customType: $customType, message: $customMessage');
+        'sendCustomMessage: success, customType: $customType, message: $customMessage',
+      );
       kitMessageNotifier.value = result.message.toKIT();
       onMessageSent?.call(kitMessageNotifier.value);
     }).catchError((error) {
@@ -258,11 +356,122 @@ extension ZIMKitCoreMessage on ZIMKitCore {
           );
         } else {
           ZIMKitLogger.logError(
-              'sendCustomMessage: failed, error:$error, customType: $customType, message: $customMessage');
+            'sendCustomMessage: failed, error:$error, customType: $customType, message: $customMessage',
+          );
           onMessageSent?.call(kitMessageNotifier.value);
           throw error;
         }
       });
+    });
+  }
+
+  Future<void> sendCombineMessage(
+    String conversationID,
+    ZIMKitConversationType conversationType, {
+    required String title,
+    required String summary,
+    required List<ZIMKitMessage> messageList,
+    FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending,
+    Function(ZIMKitMessage)? onMessageSent,
+  }) async {
+    if (conversationID.isEmpty) {
+      ZIMKitLogger.logWarn('sendCombineMessage: conversationID is empty');
+      return;
+    }
+    if (messageList.isEmpty) {
+      ZIMKitLogger.logWarn('sendCombineMessage: messageList is empty');
+      return;
+    }
+
+    // 1. create message
+    final zimMessageList = messageList.map((m) => m.zim).toList();
+    var zimCombineMessage = ZIMCombineMessage(
+      title: title,
+      summary: summary,
+      messageList: zimMessageList,
+    );
+    var kitMessage = zimCombineMessage.toKIT();
+    final sendConfig = ZIMMessageSendConfig();
+
+    // 2. preMessageSending
+    kitMessage = (await preMessageSending?.call(kitMessage)) ?? kitMessage;
+    ZIMKitLogger.logInfo(
+      'sendCombineMessage: title: $title, messageCount: ${messageList.length}',
+    );
+
+    // 3. re-generate zim
+    kitMessage.reGenerateZIMMessage();
+
+    // 4. call service
+    late ZIMKitMessageNotifier kitMessageNotifier;
+    await ZIM.getInstance()!.sendMessage(
+      kitMessage.zim,
+      conversationID,
+      conversationType,
+      sendConfig,
+      ZIMMessageSendNotification(
+        onMessageAttached: (zimMessage) {
+          kitMessageNotifier = db
+              .messages(conversationID, conversationType)
+              .onAttach(zimMessage);
+        },
+      ),
+    ).then((result) {
+      ZIMKitLogger.logInfo('sendCombineMessage: success, title: $title');
+      kitMessageNotifier.value = result.message.toKIT();
+      onMessageSent?.call(kitMessageNotifier.value);
+    }).catchError((error) {
+      kitMessageNotifier.value =
+          (kitMessageNotifier.value.clone()..sendFailed(error));
+
+      return checkNeedReloginOrNot(error).then((retryCode) {
+        if (retryCode == 0) {
+          ZIMKitLogger.logInfo('relogin success, retry sendCombineMessage');
+          sendCombineMessage(
+            conversationID,
+            conversationType,
+            title: title,
+            summary: summary,
+            messageList: messageList,
+            preMessageSending: preMessageSending,
+            onMessageSent: onMessageSent,
+          );
+        } else {
+          ZIMKitLogger.logError(
+            'sendCombineMessage: failed, error:$error, title: $title',
+          );
+          onMessageSent?.call(kitMessageNotifier.value);
+          throw error;
+        }
+      });
+    });
+  }
+
+  Future<List<ZIMKitMessage>> queryCombineMessageDetail(
+    ZIMKitMessage message,
+  ) async {
+    if (message.type != ZIMMessageType.combine) {
+      ZIMKitLogger.logWarn(
+        'queryCombineMessageDetail: message is not combine type',
+      );
+      return [];
+    }
+
+    final zimCombineMessage = message.zim as ZIMCombineMessage;
+
+    return ZIM
+        .getInstance()!
+        .queryCombineMessageDetail(zimCombineMessage)
+        .then((result) {
+      ZIMKitLogger.logInfo(
+        'queryCombineMessageDetail: success, messageCount: ${result.message.messageList.length}',
+      );
+      return result.message.messageList.map((m) => m.toKIT()).toList();
+    }).catchError((error) {
+      ZIMKitLogger.logError(
+        'queryCombineMessageDetail: failed, error:$error',
+      );
+      throw error;
     });
   }
 
@@ -276,17 +485,20 @@ extension ZIMKitCoreMessage on ZIMKitCore {
     await ZIM
         .getInstance()!
         .deleteAllMessage(
-            conversationID,
-            conversationType,
-            ZIMMessageDeleteConfig()
-              ..isAlsoDeleteServerMessage = isAlsoDeleteServerMessage)
+          conversationID,
+          conversationType,
+          ZIMMessageDeleteConfig()
+            ..isAlsoDeleteServerMessage = isAlsoDeleteServerMessage,
+        )
         .then((result) {
       ZIMKitLogger.logInfo(
-          'deleteAllMessage: success, conversationID:$conversationID, conversationType: ${conversationType.name}');
+        'deleteAllMessage: success, conversationID:$conversationID, conversationType: ${conversationType.name}',
+      );
       db.messages(conversationID, conversationType).deleteAll();
     }).catchError((error) {
       ZIMKitLogger.logError(
-          'deleteAllMessage: failed, error:$error, conversationID:$conversationID, conversationType: ${conversationType.name}');
+        'deleteAllMessage: failed, error:$error, conversationID:$conversationID, conversationType: ${conversationType.name}',
+      );
       throw error;
     });
   }
@@ -315,7 +527,9 @@ extension ZIMKitCoreMessage on ZIMKitCore {
   }
 
   Future<void> updateLocalExtendedData(
-      ZIMKitMessage message, String localExtendedData) async {
+    ZIMKitMessage message,
+    String localExtendedData,
+  ) async {
     ZIM
         .getInstance()!
         .updateMessageLocalExtendedData(localExtendedData, message.zim)
@@ -340,9 +554,11 @@ extension ZIMKitCoreMessage on ZIMKitCore {
           .messages(conversationID, conversationType)
           .notifier
           .value
-          .indexWhere((e) =>
-              (e.value.info.messageID == message.info.messageID) ||
-              (e.value.info.localMessageID == message.info.localMessageID));
+          .indexWhere(
+            (e) =>
+                (e.value.info.messageID == message.info.messageID) ||
+                (e.value.info.localMessageID == message.info.localMessageID),
+          );
       if (index == -1) {
         ZIMKitLogger.logWarn("recallMessage: can't find message");
       } else {
@@ -395,7 +611,8 @@ extension ZIMKitCoreMessageEvent on ZIMKitCore {
     List<ZIMMessage> receiveMessages,
   ) async {
     ZIMKitLogger.logInfo(
-        'onReceiveMessage: $fromUserID, $type, ${receiveMessages.length}');
+      'onReceiveMessage: $fromUserID, $type, ${receiveMessages.length}',
+    );
 
     if (db.conversations.notInited) {
       await getConversationListNotifier();
@@ -403,7 +620,8 @@ extension ZIMKitCoreMessageEvent on ZIMKitCore {
 
     if (db.messages(fromUserID, type).notInited) {
       ZIMKitLogger.logInfo(
-          'onReceiveMessage: notInited, loadMessageList first');
+        'onReceiveMessage: notInited, loadMessageList first',
+      );
       await getMessageListNotifier(fromUserID, type);
     } else {
       db.messages(fromUserID, type).receive(receiveMessages);
@@ -431,7 +649,8 @@ extension ZIMKitCoreMessageEvent on ZIMKitCore {
 
       if (db.messages(conversationID, conversationType).notInited) {
         ZIMKitLogger.logInfo(
-            'onMessageRecalled: notInited, loadMessageList first');
+          'onMessageRecalled: notInited, loadMessageList first',
+        );
         await getMessageListNotifier(conversationID, conversationType);
       }
 
@@ -439,9 +658,11 @@ extension ZIMKitCoreMessageEvent on ZIMKitCore {
           .messages(conversationID, conversationType)
           .notifier
           .value
-          .indexWhere((e) =>
-              (e.value.info.messageID == recalledMessage.messageID) ||
-              (e.value.info.localMessageID == recalledMessage.localMessageID));
+          .indexWhere(
+            (e) =>
+                (e.value.info.messageID == recalledMessage.messageID) ||
+                (e.value.info.localMessageID == recalledMessage.localMessageID),
+          );
       if (index == -1) {
         ZIMKitLogger.logWarn("onMessageRecalled: can't find message");
       } else {
@@ -452,6 +673,45 @@ extension ZIMKitCoreMessageEvent on ZIMKitCore {
             .value = recalledMessage.toKIT();
         ZIMKitLogger.logInfo('recallMessage: success');
       }
+    }
+  }
+
+  /// Cache user info from messages (like Android's setGroupMemberInfo)
+  void _cacheUserInfoFromMessages(List<ZIMMessage> messages) {
+    // Collect all unique user IDs from messages and reactions
+    final Set<String> userIDs = {};
+
+    for (final message in messages) {
+      // Add sender
+      if (message.senderUserID.isNotEmpty) {
+        userIDs.add(message.senderUserID);
+      }
+
+      // Add reaction users
+      for (final reaction in message.reactions) {
+        for (final userInfo in reaction.userList) {
+          if (userInfo.userID.isNotEmpty) {
+            userIDs.add(userInfo.userID);
+          }
+        }
+      }
+    }
+
+    // Query user info for each unique user ID (async, but don't wait)
+    for (final userID in userIDs) {
+      // Skip if already cached
+      if (getMemoryUserInfo(userID) != null) {
+        continue;
+      }
+
+      // Query from server (async, cache when ready)
+      queryUser(userID, isQueryFromServer: false).then((userInfo) {
+        updateUserInfoCache(userID, userInfo);
+        ZIMKitLogger.logInfo(
+            'Cached user info: $userID => ${userInfo.baseInfo.userName}');
+      }).catchError((error) {
+        ZIMKitLogger.logWarn('Failed to cache user info for $userID: $error');
+      });
     }
   }
 }

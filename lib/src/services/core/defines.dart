@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:zego_zim/zego_zim.dart';
 
+import 'package:zego_zimkit/src/defines.dart';
+import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'package:zego_zimkit/src/services/services.dart';
+import 'package:zego_zimkit/src/zimkit.dart';
 
 export 'event.dart';
 
@@ -449,15 +452,15 @@ class ZIMKitGroupMemberList {
 class ZIMKitReceivedMessages {
   /// Conversation ID
   String id;
-  
+
   /// Conversation type
   ZIMKitConversationType type;
-  
+
   /// List of received messages
   List<ZIMKitMessage> receiveMessages;
 
   /// Creates a received messages instance
-  /// 
+  ///
   /// [id] Conversation ID
   /// [type] Conversation type
   /// [receiveMessages] List of received messages

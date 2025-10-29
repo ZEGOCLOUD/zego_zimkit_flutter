@@ -164,7 +164,7 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
     final downloadTypes = <ZIMMediaFileType>[];
 
     switch (kitMessageNotifier.value.zim.runtimeType) {
-      case ZIMVideoMessage:
+      case ZIMVideoMessage _:
         if ((kitMessageNotifier.value.zim as ZIMVideoMessage)
             .videoFirstFrameLocalPath
             .isEmpty) {
@@ -176,17 +176,17 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
           downloadTypes.add(ZIMMediaFileType.originalFile);
         }
         break;
-      case ZIMImageMessage:
+      case ZIMImageMessage _:
         // just use flutter cache manager
         break;
-      case ZIMAudioMessage:
+      case ZIMAudioMessage _:
         if ((kitMessageNotifier.value.zim as ZIMMediaMessage)
             .fileLocalPath
             .isEmpty) {
           downloadTypes.add(ZIMMediaFileType.originalFile);
         }
         break;
-      case ZIMFileMessage:
+      case ZIMFileMessage _:
         if ((kitMessageNotifier.value.zim as ZIMMediaMessage)
             .fileLocalPath
             .isEmpty) {

@@ -1,6 +1,6 @@
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
-import 'package:zego_zimkit/src/services/defines.dart';
+import 'package:zego_zimkit/src/defines.dart';
 
 class ZegoZIMKitNotificationConfig {
   /// The [resource id] for notification which same as [Zego Console](https://console.zegocloud.com/)

@@ -1,3 +1,45 @@
+## 2.0.0
+
+- Functional Features
+  - **Internationalization Support**: A complete internationalization system with built-in support for Chinese and English
+    - Added the `ZIMKitInnerText` class for customizing all UI text
+    - Added `ZIMKitInnerTextZhCN` to provide Simplified Chinese translation
+    - Configure the language via `ZIMKitConfig.innerText`
+  - **Message Emoji Reaction (Reaction)**: Fully implement the message Reaction feature
+    - Long press a message to quickly add/remove emoji reactions
+    - Supports selection of over 100 emoji expressions
+    - Display the list of reacted emojis and users
+    - Smooth click animations and visual feedback
+  - **Chat Settings Page**: New `ZIMKitSingleChatDetailPage` added
+    - Pin/Unpin Conversation
+    - Message Do Not Disturb Switch
+  - **Message Forwarding**: New `ZIMKitForwardSelectPage` added
+    - Supports single message forwarding
+    - Supports forwarding item by item
+    - Supports combined forwarding
+    - Forward Confirmation Dialog Box
+  - **Message Multi-Select**: Complete multi-select mode
+    - Long press a message to enter multi-select mode
+    - Bottom toolbar (merge forwarding, individual forwarding, delete)
+    - Message Selection Visual Feedback
+  - **UI/UX Optimization**
+    - Redesign the bottom input toolbar (two-line layout)
+    - Added more operation panels (Camera, Album, File, Call)
+    - Optimize the style of the long-press message menu
+    - New Emoji Picker dialog box (categorized display)
+    - Add animation effects (scaling, fade in/out, ripple) to all interactions
+
+- Interface Improvement
+  - The bottom toolbar uses a two-row layout: the text box occupies one row, and the function buttons occupy another row
+  - Function button order: +, emoji, photo album, microphone
+
+- Technical Improvement
+  - Optimized code structure to improve maintainability
+
+- Breaking Changes
+  - This is a major version update, with some APIs and UI adjustments
+  - It is recommended to view the sample code to understand the new usage method
+
 ## 1.19.7
 
 - Update environment

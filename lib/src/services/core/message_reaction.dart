@@ -17,6 +17,9 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
         .then((result) {
       ZIMKitLogger.logInfo(
           'addMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
+
+      // Update local message reactions immediately (like Android/iOS)
+      message.onMessageReactionsChanged(result.reaction);
     }).catchError((error) {
       return checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {
@@ -46,6 +49,9 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
         .then((result) {
       ZIMKitLogger.logInfo(
           'deleteMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
+
+      // Update local message reactions immediately (like Android/iOS)
+      message.onMessageReactionsChanged(result.reaction);
     }).catchError((error) {
       return checkNeedReloginOrNot(error).then((retryCode) {
         if (retryCode == 0) {

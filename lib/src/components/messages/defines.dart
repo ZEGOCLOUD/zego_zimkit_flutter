@@ -1,8 +1,12 @@
-/// Style configuration class for message components
-class ZIMKitMessageStyle {
-  /// Default height of message items in pixels
-  static double height = 70;
+import 'package:zego_zimkit/src/defines.dart';
+import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 
-  /// Default size of message icons in pixels
-  static double iconSize = 32;
+class ZIMKitMessageListMultiModeData {
+  bool isMultiMode;
+  ZIMKitMessage? initialMessage;
+
+  ZIMKitMessageListMultiModeData({
+    required this.isMultiMode,
+    this.initialMessage,
+  });
 }
