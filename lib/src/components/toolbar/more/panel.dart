@@ -7,6 +7,8 @@ import 'package:zego_zim/zego_zim.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 
+import 'defines.dart';
+
 /// More actions panel providing additional message input options
 /// Includes take photo, pick images, pick files, and call functions
 class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
@@ -15,14 +17,15 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
     required this.conversationID,
     required this.conversationType,
     required this.onActionSelected,
-    this.onCallTap,
     this.extraActions = const [],
   });
 
   final String conversationID;
   final ZIMConversationType conversationType;
-  final Function(String action, dynamic data)? onActionSelected;
-  final VoidCallback? onCallTap;
+  final Function(ZIMKitMoreActionsPanelAction action, dynamic data)?
+      onActionSelected;
+
+  /// please use [buildZIMKitInputMoreActionItem] to build a same style widget
   final List<Widget> extraActions;
 
   @override
@@ -42,92 +45,33 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
         crossAxisSpacing: 20.zW,
         childAspectRatio: 0.75, // Adjust aspect ratio to fit icon + label
         children: [
-          _buildActionItem(
+          buildZIMKitInputMoreActionItem(
             context,
             icon: Icons.camera_alt,
             label: ZIMKitCore.instance.innerText.takePhotoText,
             onTap: () => _handleTakePhoto(context),
           ),
-          _buildActionItem(
+          buildZIMKitInputMoreActionItem(
             context,
             icon: Icons.image,
             label: ZIMKitCore.instance.innerText.photoText,
             onTap: () => _handlePickImages(context),
           ),
-          _buildActionItem(
+          buildZIMKitInputMoreActionItem(
             context,
             icon: Icons.folder,
             label: ZIMKitCore.instance.innerText.fileText,
             onTap: () => _handlePickFiles(context),
           ),
-          _buildActionItem(
-            context,
-            icon: Icons.call,
-            label: ZIMKitCore.instance.innerText.callText,
-            onTap: () {
-              if (onCallTap != null) {
-                onCallTap!();
-              } else {
-                onActionSelected?.call('call', null);
-              }
-            },
-          ),
-          // Wrap extra actions with size constraints to match internal buttons
-          ...extraActions.map((widget) => _wrapExtraAction(widget)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    Color? iconColor,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 55.zW,
-            height: 55.zH,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.zR),
-              border: Border.all(color: Colors.grey[300]!, width: 1.zW),
+          ...extraActions.map(
+            (widget) => SizedBox(
+              width: 55.zW,
+              height: 55.zH,
+              child: widget,
             ),
-            child: Icon(
-              icon,
-              size: 28.zW,
-              color: iconColor ?? Colors.grey[700],
-            ),
-          ),
-          SizedBox(height: 6.zH),
-          Text(
-            label,
-            style: TextStyle(fontSize: 11.zSP, color: Colors.grey[700]),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
-    );
-  }
-
-  /// Wraps extra action widgets with size constraints to match internal buttons
-  /// This ensures consistent button sizes regardless of the external widget size
-  Widget _wrapExtraAction(Widget widget) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(width: 55.zW, height: 55.zH, child: widget),
-        SizedBox(height: 6.zH),
-        // Empty space for label alignment consistency
-        SizedBox(height: 11.zSP * 1.2),
-      ],
     );
   }
 
@@ -139,7 +83,7 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
       );
 
       if (entity != null) {
-        onActionSelected?.call('takePhoto', entity);
+        onActionSelected?.call(ZIMKitMoreActionsPanelAction.takePhoto, entity);
       }
     } catch (e) {
       debugPrint('Take photo error: $e');
@@ -157,7 +101,7 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
       );
 
       if (result != null && result.isNotEmpty) {
-        onActionSelected?.call('pickImages', result);
+        onActionSelected?.call(ZIMKitMoreActionsPanelAction.pickImages, result);
       }
     } catch (e) {
       debugPrint('Pick images error: $e');
@@ -175,7 +119,7 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
       );
 
       if (result != null && result.isNotEmpty) {
-        onActionSelected?.call('pickFiles', result);
+        onActionSelected?.call(ZIMKitMoreActionsPanelAction.pickFiles, result);
       }
     } catch (e) {
       debugPrint('Pick files error: $e');

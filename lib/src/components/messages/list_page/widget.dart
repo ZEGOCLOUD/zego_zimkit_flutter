@@ -41,10 +41,10 @@ class ZIMKitMessageListPage extends StatefulWidget {
   final ZIMKitMessageListPageConfigs? config;
 
   /// Style for message list page
-  final ZIMKitMessageListPageStyle? style;
+  final ZIMKitMessageListPageStyles? style;
 
   /// events.
-  final ZIMKitMessageListPageEvent? events;
+  final ZIMKitMessageListPageEvents? events;
 
   @override
   State<ZIMKitMessageListPage> createState() => _ZIMKitMessageListPageState();
@@ -213,7 +213,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
 
   Widget messageRecordLocker() {
     return Positioned(
-      bottom: widget.config?.messageInputHeight ??
+      bottom: widget.config?.messageInput?.height ??
           ZIMKitMessageStyle.inputHeight - 5,
       right: 5,
       child: SizedBox(
@@ -231,7 +231,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
       right: 0,
       bottom: multiModeData.isMultiMode
           ? 0
-          : (widget.config?.messageInputHeight ??
+          : (widget.config?.messageInput?.height ??
               ZIMKitMessageStyle.inputHeight),
       child: GestureDetector(
         onTap: () {
@@ -250,14 +250,13 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
             scrollController: listScrollController,
             inputFocusNode: inputFocusNode,
           ),
-          events:
-              (widget.events?.messageListEvents ?? ZIMKitMessageListEvents())
-                  .copyWith(
+          events: (widget.events?.messageList ?? ZIMKitMessageListEvents())
+              .copyWith(
             onReplyMessageTap: scrollToMessage,
             onReplyMessage: setReplyMessage,
           ),
-          style: (widget.style?.messageListStyles ?? ZIMKitMessageListStyles())
-              .copyWith(
+          style:
+              (widget.style?.messageList ?? ZIMKitMessageListStyles()).copyWith(
             theme: widget.style?.theme,
           ),
         ),
@@ -277,7 +276,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
             recordStatus: recordStatus,
             conversationID: widget.conversationID,
             conversationType: widget.conversationType,
-            config: (widget.config?.messageInputConfigs ??
+            config: (widget.config?.messageInput ??
                     const ZIMKitMessageInputConfigs())
                 .copyWith(
               inputFocusNode: inputFocusNode,
@@ -285,16 +284,16 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
               closePanelNotifier: _closePanelNotifier,
               repliedMessage: repliedMessage,
             ),
-            events: (widget.events?.messageInputEvents ??
+            events: (widget.events?.messageInput ??
                     const ZIMKitMessageInputEvents())
                 .copyWith(
               onReplyCancelled: () {
                 _repliedMessageNotifier.value = null;
               },
             ),
-            style: (widget.style?.messageInputStyles ??
-                    const ZIMKitMessageInputStyles())
-                .copyWith(
+            style:
+                (widget.style?.messageInput ?? const ZIMKitMessageInputStyles())
+                    .copyWith(
               theme: widget.style?.theme,
             ),
           );

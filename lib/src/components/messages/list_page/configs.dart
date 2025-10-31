@@ -7,16 +7,13 @@ import 'package:zego_zimkit/src/components/messages/input/configs.dart';
 /// Configuration class for ZIMKitMessageListPage
 class ZIMKitMessageListPageConfigs {
   const ZIMKitMessageListPageConfigs({
-    this.messageInputConfigs,
-    this.messageInputHeight,
+    this.messageInput,
     this.messageListScrollController,
     this.inputFocusNode,
   });
 
-  final ZIMKitMessageInputConfigs? messageInputConfigs;
-
-  /// Message input height
-  final double? messageInputHeight;
+  /// message input configs
+  final ZIMKitMessageInputConfigs? messageInput;
 
   /// Message list scroll controller
   final ScrollController? messageListScrollController;

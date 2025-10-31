@@ -14,8 +14,9 @@ class ZIMKitMessageInputConfigs {
     this.showRecordButton = true,
     this.showEmojiButton = true,
     this.actions = const [],
-    this.editingController,
+    this.height,
     this.inputFocusNode,
+    this.editingController,
     this.listScrollController,
     this.closePanelNotifier,
     this.keyboardType,
@@ -25,6 +26,9 @@ class ZIMKitMessageInputConfigs {
     this.textCapitalization,
     this.repliedMessage,
   });
+
+  /// Message input height
+  final double? height;
 
   /// Show pick file button
   final bool showPickFileButton;

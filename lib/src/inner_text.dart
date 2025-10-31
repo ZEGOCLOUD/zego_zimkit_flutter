@@ -154,7 +154,6 @@ class ZIMKitInnerText {
     String? takePhotoText,
     String? photoText,
     String? fileText,
-    String? callText,
 
     /// Badge Related
     String? maxBadgeCountText,
@@ -302,7 +301,6 @@ class ZIMKitInnerText {
         takePhotoText = takePhotoText ?? 'Take Photo',
         photoText = photoText ?? 'Photo',
         fileText = fileText ?? 'File',
-        callText = callText ?? 'Call',
 
         /// Badge Related
         maxBadgeCountText = maxBadgeCountText ?? '9999+';
@@ -615,9 +613,6 @@ class ZIMKitInnerText {
 
   /// File text
   final String fileText;
-
-  /// Call text
-  final String callText;
 
   /// ========== Badge Related ==========
 

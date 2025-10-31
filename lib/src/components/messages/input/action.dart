@@ -35,6 +35,7 @@ class ZIMKitMessageInputAction {
           ZIMKitMessageInputActionLocation.rightInside,
         );
 
+  /// please use [buildZIMKitInputMoreActionItem] to build a same style widget
   const ZIMKitMessageInputAction.more(Widget child)
       : this(
           child,

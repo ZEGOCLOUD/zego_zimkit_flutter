@@ -24,7 +24,6 @@ class ZIMKitMessageInputEvents {
     this.preMessageSending,
     this.onMediaFilesPicked,
     this.onReplyCancelled,
-    this.onCallTap,
     this.onTextFieldTap,
   });
 
@@ -39,9 +38,6 @@ class ZIMKitMessageInputEvents {
 
   /// Called when reply is cancelled
   final VoidCallback? onReplyCancelled;
-
-  /// Called when call button is tapped
-  final VoidCallback? onCallTap;
 
   /// [onTextFieldTap] Callback when text field is tapped
   final VoidCallback? onTextFieldTap;
@@ -60,7 +56,6 @@ class ZIMKitMessageInputEvents {
       preMessageSending: preMessageSending ?? this.preMessageSending,
       onMediaFilesPicked: onMediaFilesPicked ?? this.onMediaFilesPicked,
       onReplyCancelled: onReplyCancelled ?? this.onReplyCancelled,
-      onCallTap: onCallTap ?? this.onCallTap,
       onTextFieldTap: onTextFieldTap ?? this.onTextFieldTap,
     );
   }

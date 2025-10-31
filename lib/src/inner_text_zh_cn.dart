@@ -141,7 +141,6 @@ class ZIMKitInnerTextZhCN extends ZIMKitInnerText {
           takePhotoText: '拍摄',
           photoText: '相册',
           fileText: '文件',
-          callText: '通话',
 
           /// Badge相关
           maxBadgeCountText: '9999+',

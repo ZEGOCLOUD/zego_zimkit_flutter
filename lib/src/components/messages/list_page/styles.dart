@@ -7,13 +7,13 @@ import 'package:zego_zimkit/src/components/messages/input/styles.dart';
 import 'package:zego_zimkit/src/components/messages/list/styles.dart';
 
 /// Style/UI builders class for ZIMKitMessageListPage
-class ZIMKitMessageListPageStyle {
-  const ZIMKitMessageListPageStyle({
+class ZIMKitMessageListPageStyles {
+  const ZIMKitMessageListPageStyles({
     this.theme,
     this.appBarBuilder,
     this.appBarActions,
-    this.messageInputStyles,
-    this.messageListStyles,
+    this.messageInput,
+    this.messageList,
   });
 
   /// Theme data
@@ -26,7 +26,7 @@ class ZIMKitMessageListPageStyle {
   /// AppBar actions
   final List<Widget>? appBarActions;
 
-  final ZIMKitMessageInputStyles? messageInputStyles;
+  final ZIMKitMessageInputStyles? messageInput;
 
-  final ZIMKitMessageListStyles? messageListStyles;
+  final ZIMKitMessageListStyles? messageList;
 }

@@ -9,6 +9,7 @@ export 'messages/input/widget.dart';
 export 'messages/input/configs.dart';
 export 'messages/input/styles.dart';
 export 'messages/input/events.dart';
+export 'messages/input/action.dart';
 
 export 'messages/list/widget.dart';
 export 'messages/list/configs.dart';
@@ -30,11 +31,11 @@ export 'messages/widgets/long_press_menu.dart';
 
 export 'audio/record.dart';
 export 'audio/record_button.dart';
+export 'audio/events.dart';
 
-export 'toolbar/pick_file_button.dart';
-export 'toolbar/pick_media_button.dart';
-export 'toolbar/more_button.dart';
-export 'toolbar/more_actions_panel_widget.dart';
+export 'toolbar/more/defines.dart';
 
 export 'select/multi_select_toolbar_widget.dart';
 export 'select/message_list_multi_select_processor.dart';
+
+export 'settings/widget.dart';

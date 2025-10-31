@@ -171,7 +171,7 @@ class _ZIMKitConversationListViewState
                                               conversationType:
                                                   conversation.type,
                                               style: widget.styles != null
-                                                  ? ZIMKitMessageListPageStyle(
+                                                  ? ZIMKitMessageListPageStyles(
                                                       theme:
                                                           widget.styles!.theme,
                                                     )

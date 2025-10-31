@@ -8,11 +8,13 @@ import 'package:zego_zim/zego_zim.dart';
 import 'package:zego_zimkit/src/components/audio/events.dart';
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/components/emoji/picker_widget.dart';
+import 'package:zego_zimkit/src/components/toolbar/more/panel.dart';
 import 'package:zego_zimkit/src/components/reply/input_reply_widget.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
+
 import 'defines.dart';
 
 /// Message input component with two-row layout
@@ -307,7 +309,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         );
       case ZIMKitInputPanelType.more:
         // Extract widgets from actions with location 'more'
-        final moreActions = widget.config?.actions
+        final extraActions = widget.config?.actions
                 .where(
                   (action) =>
                       action.location == ZIMKitMessageInputActionLocation.more,
@@ -320,8 +322,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           conversationID: widget.conversationID,
           conversationType: widget.conversationType,
           onActionSelected: _handleMoreAction,
-          onCallTap: widget.events?.onCallTap,
-          extraActions: moreActions,
+          extraActions: extraActions,
         );
       default:
         return const SizedBox.shrink(key: ValueKey('none'));
@@ -393,10 +394,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     }
   }
 
-  Future<void> _handleMoreAction(String action, dynamic data) async {
+  Future<void> _handleMoreAction(
+      ZIMKitMoreActionsPanelAction action, dynamic data) async {
     try {
       switch (action) {
-        case 'takePhoto':
+        case ZIMKitMoreActionsPanelAction.takePhoto:
           if (data is AssetEntity) {
             final file = await data.file;
             if (file != null) {
@@ -415,7 +417,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
             }
           }
           break;
-        case 'pickImages':
+        case ZIMKitMoreActionsPanelAction.pickImages:
           if (data is List<AssetEntity>) {
             for (final asset in data) {
               final file = await asset.file;
@@ -436,7 +438,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
             }
           }
           break;
-        case 'pickFiles':
+        case ZIMKitMoreActionsPanelAction.pickFiles:
           if (data is List<AssetEntity>) {
             for (final asset in data) {
               final file = await asset.file;
@@ -457,10 +459,6 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
               }
             }
           }
-          break;
-        case 'call':
-          // Call action should be handled by the application
-          // Because it requires call plugin integration
           break;
       }
 

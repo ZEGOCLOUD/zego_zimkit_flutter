@@ -8,14 +8,14 @@ import 'package:zego_zimkit/src/components/messages/list/events.dart';
 import 'package:zego_zimkit/src/components/audio/events.dart';
 
 /// Events class for ZIMKitMessageListPage (extends the existing one)
-class ZIMKitMessageListPageEvent {
-  const ZIMKitMessageListPageEvent({
-    this.audioRecordEvents,
-    this.messageInputEvents,
-    this.messageListEvents,
+class ZIMKitMessageListPageEvents {
+  const ZIMKitMessageListPageEvents({
+    this.audioRecord,
+    this.messageInput,
+    this.messageList,
   });
 
-  final ZIMKitMessageInputEvents? messageInputEvents;
-  final ZIMKitAudioRecordEvents? audioRecordEvents;
-  final ZIMKitMessageListEvents? messageListEvents;
+  final ZIMKitAudioRecordEvents? audioRecord;
+  final ZIMKitMessageInputEvents? messageInput;
+  final ZIMKitMessageListEvents? messageList;
 }
