@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:zego_zim/zego_zim.dart';
-
 import 'package:zego_zimkit/src/defines.dart';
 
 /// Style/UI builders class for ZIMKitConversationListView

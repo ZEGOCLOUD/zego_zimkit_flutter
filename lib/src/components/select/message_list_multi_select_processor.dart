@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -50,7 +48,7 @@ class ZIMKitMessageListMultiSelectProcessor {
   }
 
   void _onMultiSelectModeChanged() {
-    if (modeNotifier.value.isMultiMode ?? false) {
+    if (modeNotifier.value.isMultiMode) {
       clearSelectedMessage();
 
       if (modeNotifier.value.initialMessage != null) {

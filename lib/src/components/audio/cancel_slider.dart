@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:zego_zimkit/src/audio/core.dart';
-import 'package:zego_zimkit/src/components/messages/defines.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';

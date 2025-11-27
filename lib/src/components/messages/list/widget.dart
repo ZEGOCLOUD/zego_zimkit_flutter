@@ -8,16 +8,12 @@ import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/components/messages/style.dart';
-import 'package:zego_zimkit/src/components/messages/widget.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/widgets/checkbox.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
-import 'configs.dart';
-import 'events.dart';
 import 'long_press_event.dart';
-import 'styles.dart';
 
 class ZIMKitMessageListView extends StatefulWidget {
   const ZIMKitMessageListView({

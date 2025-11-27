@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:zego_zimkit/src/components/messages/defines.dart';
-import 'package:zego_zimkit/src/defines.dart';
-
 /// Configuration class for ZIMKitMessageListView
 class ZIMKitMessageListConfigs {
   const ZIMKitMessageListConfigs({

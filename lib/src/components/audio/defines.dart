@@ -1,5 +1,3 @@
-import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
-
 enum ZIMKitRecordState {
   idle,
   recording,

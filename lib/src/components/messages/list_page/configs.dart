@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'package:zego_zimkit/src/components/messages/input/configs.dart';

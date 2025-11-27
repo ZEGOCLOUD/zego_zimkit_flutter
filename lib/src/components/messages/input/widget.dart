@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:zego_zim/zego_zim.dart';
 
-import 'package:zego_zimkit/src/components/audio/events.dart';
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/components/emoji/picker_widget.dart';
 import 'package:zego_zimkit/src/components/toolbar/more/panel.dart';
