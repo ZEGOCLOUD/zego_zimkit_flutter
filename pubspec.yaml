@@ -28,7 +28,7 @@ dependencies:
   flutter_logs_yoer: ^2.2.1
   async: ^2.0.0
   video_player: ^2.7.2
-  file_picker: ^10.3.9
+  file_picker: 10.3.8
   chewie: ^1.10.0
   provider: ^6.0.5
   shared_preferences: ^2.2.3
