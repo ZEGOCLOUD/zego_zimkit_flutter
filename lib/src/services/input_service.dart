@@ -9,7 +9,7 @@ mixin ZIMKitInputService {
       ZIMKitLogger.logInfo(
           'pickFiles: start, ${DateTime.now().millisecondsSinceEpoch}');
       // see https://github.com/miguelpruivo/flutter_file_picker/wiki/API#-filepickerpickfiles
-      final ret = (await FilePicker.platform.pickFiles(
+      final ret = (await FilePicker.pickFiles(
             type: FileType.values[type.index],
             allowMultiple: allowMultiple,
             onFileLoading: (p0) {
