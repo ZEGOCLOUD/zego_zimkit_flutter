@@ -74,7 +74,8 @@ class ZIMKitCore
   final onGroupMemberInfoUpdatedEventController =
       StreamController<ZIMKitEventGroupMemberInfoUpdated>.broadcast();
 
-  String get version => '1.19.8';
+  String get version => '1.19.9';
+
   // API
   Future<String> getVersion() async {
     final signalingVersion = await ZegoUIKitSignalingPlugin().getVersion();
