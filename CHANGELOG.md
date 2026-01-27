@@ -1,3 +1,7 @@
+## 1.19.8
+
+- Update dependency
+
 ## 1.19.7
 
 - Update environment
@@ -9,51 +13,52 @@
 ## 1.19.5
 
 - Bugs
-  - Fixed the issue where getOfflineConversationInfo returns empty data after clicking the offline message pop-up box on iOS
+    - Fixed the issue where getOfflineConversationInfo returns empty data after clicking the offline message pop-up box on iOS
 
 ## 1.19.4
 
 - Features
-  - Remove zpns dependency 
-  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits 
+    - Remove zpns dependency
+    - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits
 - Update dependency
-  
+
 ## 1.19.3
 
 - Bugs
-  - Fixed the issue of the offline notification popping up twice when used with zego_uikit_prebuilt_call, For mixed usage scenarios.
-    Please set the `enable` of `androidNotificationConfig` to false 
-    like follows:
-    ``` dart
-    await ZIMKit().init(
-        ...
-        notificationConfig: ZegoZIMKitNotificationConfig(
+    - Fixed the issue of the offline notification popping up twice when used with zego_uikit_prebuilt_call, For mixed usage scenarios.
+      Please set the `enable` of `androidNotificationConfig` to false
+      like follows:
+      ``` dart
+      await ZIMKit().init(
           ...
-          androidNotificationConfig: ZegoZIMKitAndroidNotificationConfig(
+          notificationConfig: ZegoZIMKitNotificationConfig(
             ...
-            enable: false,
+            androidNotificationConfig: ZegoZIMKitAndroidNotificationConfig(
+              ...
+              enable: false,
+            ),
           ),
-        ),
-      )
-    ```
+        )
+      ```
+
 ## 1.19.2
 
 - Bugs
-  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices 
+    - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
 
 ## 1.19.1
 
 - update zego_zim
-  
+
 ## 1.19.0
 
 - Features
-  - Support sending webp image format
-  - Support to get the offline message content which active app through the **getOfflineConversationInfo** API
+    - Support sending webp image format
+    - Support to get the offline message content which active app through the **getOfflineConversationInfo** API
 
 
 - Bugs
-  - Fix the issue that android compile error about namespace not specified
+    - Fix the issue that android compile error about namespace not specified
 
 ## 1.18.17
 
@@ -94,7 +99,7 @@
 ## 1.18.8
 
 - Features
-  - time display added to message list
+    - time display added to message list
 
 ## 1.18.3-1.18.7
 
@@ -103,56 +108,57 @@
 ## 1.18.2
 
 - Features
-  - Add `messageInputHeight` in `ZIMKitMessageListPage` to control height of input container.
-  
+    - Add `messageInputHeight` in `ZIMKitMessageListPage` to control height of input container.
+
 ## 1.18.1
 
 - Features
-  - Add `showRecordButton` and `showMoreButton` in `ZIMKitMessageListPage` to control visibility of record button or more button.
+    - Add `showRecordButton` and `showMoreButton` in `ZIMKitMessageListPage` to control visibility of record button or more button.
 
 ## 1.18.0
 
 - Features
-  - Add `ZIMKitAudioRecordEvents`, support listening to voice recording related callbacks, such as `onFailed`, `onCountdownTick`.
-  - Add `ZIMKitMessageListPageEvents` to support `audioRecord(ZIMKitAudioRecordEvents)` event listen.
-  - Add `events(ZIMKitMessageListPageEvents)` property in `ZIMKitMessageListPage`
-  - Add **more** in `ZIMKitMessageInputAction`, which will display in more pop-ups
-  - Optimized bottom input-board style
-  - 
+    - Add `ZIMKitAudioRecordEvents`, support listening to voice recording related callbacks, such as `onFailed`, `onCountdownTick`.
+    - Add `ZIMKitMessageListPageEvents` to support `audioRecord(ZIMKitAudioRecordEvents)` event listen.
+    - Add `events(ZIMKitMessageListPageEvents)` property in `ZIMKitMessageListPage`
+    - Add **more** in `ZIMKitMessageInputAction`, which will display in more pop-ups
+    - Optimized bottom input-board style
+    -
+
 ## 1.17.2
 
- - fix compile issue.
+- fix compile issue.
 
 ## 1.17.1
 
- - ignore non-zego fcm message.
+- ignore non-zego fcm message.
 
 ## 1.17.0
 
- - support group manager.
+- support group manager.
 
 ## 1.16.1
 
- - support ZIMKit().deleteAllConversastions().
+- support ZIMKit().deleteAllConversastions().
 
 ## 1.16.0
 
-  1. Add the "ZIMKit().deleteAllMessage()" API to delete the conversation message history.
+1. Add the "ZIMKit().deleteAllMessage()" API to delete the conversation message history.
 
-  2. Add the "ZIMKit().sendCustomMessage()" API to send custom message types, such as red envelope messages or exit group messages.
+2. Add the "ZIMKit().sendCustomMessage()" API to send custom message types, such as red envelope messages or exit group messages.
 
-  3. Add the "messageContentBuilder" custom View callback. After receiving a CustomMessage, you can use the messageContentBuilder to customize the message body, or use the messageItemBuilder to completely redraw the item (message body + avatar + username).
+3. Add the "messageContentBuilder" custom View callback. After receiving a CustomMessage, you can use the messageContentBuilder to customize the message body, or use the messageItemBuilder to
+   completely redraw the item (message body + avatar + username).
 
-  4. Add "ZIMKit().updateLocalExtendedData()" to update the localExtendedData of the message.
-
+4. Add "ZIMKit().updateLocalExtendedData()" to update the localExtendedData of the message.
 
 ## 1.15.0
 
- - Support Group Management.
+- Support Group Management.
 
 ## 1.14.0
 
- - Add commonly used TextFiled parameters to ZIMKitMessageInput and ZIMKitMessageListPage.
+- Add commonly used TextFiled parameters to ZIMKitMessageInput and ZIMKitMessageListPage.
 
 ## 1.13.4
 

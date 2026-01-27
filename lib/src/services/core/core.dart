@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:async/async.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'package:zego_zimkit/src/callkit/cache.dart';
-
 import 'package:zego_zimkit/src/callkit/defines.dart';
 import 'package:zego_zimkit/src/callkit/notification_manager.dart';
 import 'package:zego_zimkit/src/services/audio/core.dart';
@@ -23,17 +21,11 @@ import 'package:zego_zpns/zego_zpns.dart';
 export 'defines.dart';
 
 part 'conversation.dart';
-
 part 'group.dart';
-
-part 'notification.dart';
-
 part 'message.dart';
-
 part 'message_media.dart';
-
 part 'message_reaction.dart';
-
+part 'notification.dart';
 part 'user.dart';
 
 const int kDefaultLoadCount = 30; // default is 30
@@ -82,7 +74,7 @@ class ZIMKitCore
   final onGroupMemberInfoUpdatedEventController =
       StreamController<ZIMKitEventGroupMemberInfoUpdated>.broadcast();
 
-  String get version => '1.19.7';
+  String get version => '1.19.8';
   // API
   Future<String> getVersion() async {
     final signalingVersion = await ZegoUIKitSignalingPlugin().getVersion();
