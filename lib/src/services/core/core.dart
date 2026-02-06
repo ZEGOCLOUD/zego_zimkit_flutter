@@ -10,6 +10,7 @@ import 'package:async/async.dart';
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'package:zego_zpns/zego_zpns.dart';
+import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/audio/core.dart';
 import 'package:zego_zimkit/src/callkit/cache.dart';

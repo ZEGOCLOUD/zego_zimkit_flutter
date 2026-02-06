@@ -2,6 +2,7 @@ import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'package:zego_zimkit/zego_zimkit.dart';
+import 'package:zego_zim/zego_zim.dart';
 
 part 'event_domain.dart';
 
