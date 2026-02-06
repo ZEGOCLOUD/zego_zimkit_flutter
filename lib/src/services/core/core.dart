@@ -129,7 +129,7 @@ class ZIMKitCore
     this.appSign = appSign;
     this.appSecret = appSecret;
     this.config = config ?? ZIMKitConfig.defaultConfig();
-    this.innerText = this.config!.innerText;
+    innerText = this.config!.innerText;
     this.events = events;
 
     /// must init zpns event before registerPush,

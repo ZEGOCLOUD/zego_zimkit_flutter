@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:zego_zimkit/src/defines.dart';
 
 /// Style/UI builders class for ZIMKitMessageListView
@@ -77,14 +76,13 @@ class ZIMKitMessageListStyles {
   }) {
     return ZIMKitMessageListStyles(
       theme: theme ?? this.theme,
-      itemBuilder: itemBuilder ?? this.itemBuilder,
-      messageContentBuilder:
-          messageContentBuilder ?? this.messageContentBuilder,
-      avatarBuilder: avatarBuilder ?? this.avatarBuilder,
-      statusBuilder: statusBuilder ?? this.statusBuilder,
-      backgroundBuilder: backgroundBuilder ?? this.backgroundBuilder,
-      loadingBuilder: loadingBuilder ?? this.loadingBuilder,
-      errorBuilder: errorBuilder ?? this.errorBuilder,
+      itemBuilder: itemBuilder ?? itemBuilder,
+      messageContentBuilder: messageContentBuilder ?? messageContentBuilder,
+      avatarBuilder: avatarBuilder ?? avatarBuilder,
+      statusBuilder: statusBuilder ?? statusBuilder,
+      backgroundBuilder: backgroundBuilder ?? backgroundBuilder,
+      loadingBuilder: loadingBuilder ?? loadingBuilder,
+      errorBuilder: errorBuilder ?? errorBuilder,
     );
   }
 }
