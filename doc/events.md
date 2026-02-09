@@ -1,329 +1,667 @@
 # Events
 
-- [ZIMKitMessageEvent](#zimkitmessageevent)
-- [ZIMKitConversationEvent](#zimkitconversationevent)
-- [ZIMKitUserEvent](#zimkituserevent)
-- [ZIMKitGroupEvent](#zimkitgroupevent)
-- [ZIMKitMessageReactionEvent](#zimkitmessagereactionevent)
-- [ZIMKitMediaTransferProgressEvent](#zimkitmediatransferprogressevent)
-- [ZIMKitConnectionStateEvent](#zimkitconnectionstateevent)
-- [ZIMKitTokenExpiredEvent](#zimkittokenexpiredevent)
-- [ZIMKitErrorEvent](#zimkiterrorevent)
+This document describes the event callback classes in ZIMKit. These classes are used to listen to various events occurring in ZIMKit.
+
+- [ZIMKitEvents](#zimkitevents)
+- [ZIMKitMessageEvents](#zimkitmessageevents)
+- [ZIMKitConversationEvents](#zimkitconversationevents)
+- [ZIMKitUserEvents](#zimkituserevents)
+- [ZIMKitGroupEvents](#zimkitgroupevents)
+- [ZIMKitConnectionEvents](#zimkitconnectionevents)
 
 ---
 
-## ZIMKitMessageEvent
+## ZIMKitEvents
 
-Contains detailed information about message-related events.
+ZIMKit Event Callback Class. Used to listen to various events occurring in ZIMKit.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| message | [ZIMKitMessage](#zimkitmessage) | Message object |
-| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message-related events | [ZIMKitMessageEvents](#zimkitmessageevents) | `ZIMKitMessageEvents()` |
+| **conversation** | Conversation-related events | [ZIMKitConversationEvents](#zimkitconversationevents) | `ZIMKitConversationEvents()` |
+| **user** | User-related events | [ZIMKitUserEvents](#zimkituserevents) | `ZIMKitUserEvents()` |
+| **group** | Group-related events | [ZIMKitGroupEvents](#zimkitgroupevents) | `ZIMKitGroupEvents()` |
+| **connection** | Connection-related events | [ZIMKitConnectionEvents](#zimkitconnectionevents) | `ZIMKitConnectionEvents()` |
+| **onError** | Error event callback | `void Function(ZIMKitErrorEvent event)?` | `null` |
 
-### ZIMKitMessage
-
-Message class for ZIMKit.
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| type | [ZIMKitMessageType](#zimkitmessagetype) | Type of the message |
-| info | [ZIMKitMessageBaseInfo](#zimkitmessagebaseinfo) | Basic message info |
-| textContent | [ZIMKitMessageTextContent](#zimkitmessagetextcontent)? | Text message content |
-| imageContent | [ZIMKitMessageImageContent](#zimkitmessageimagecontent)? | Image message content |
-| audioContent | [ZIMKitMessageAudioContent](#zimkitmessageaudiocontent)? | Audio message content |
-| videoContent | [ZIMKitMessageVideoContent](#zimkitmessagevideocontent)? | Video message content |
-| fileContent | [ZIMKitMessageFileContent](#zimkitmessagefilecontent)? | File message content |
-| systemContent | [ZIMKitMessageSystemContent](#zimkitmessagesystemcontent)? | System message content |
-| customContent | [ZIMKitMessageCustomContent](#zimkitmessagecustomcontent)? | Custom message content |
-| combineContent | [ZIMKitMessageCombineContent](#zimkitmessagecombinecontent)? | Combine message content |
-| revokeContent | [ZIMKitMessageRevokeContent](#zimkitmessagerevokecontent)? | Revoke message content |
-| tipsContent | [ZIMKitMessageTipsContent](#zimkitmessagetipscontent)? | Tips message content |
-| replyInfo | [ZIMKitReplyMessageInfo](#zimkitreplymessageinfo)? | Reply message info |
-| reactions | ListNotifier<ZIMMessageReaction> | List of reactions |
-| localExtendedData | ValueNotifier<String> | Local extended data |
-
-### ZIMKitMessageBaseInfo
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| messageID | int | Message ID |
-| localMessageID | int | Local message ID |
-| senderUserID | String | Sender user ID |
-| senderUserName | String | Sender user name |
-| conversationID | String | Conversation ID |
-| direction | ZIMMessageDirection | Message direction (send/receive) |
-| sentStatus | ZIMMessageSentStatus | Message sent status |
-| conversationType | [ZIMKitConversationType](#zimkitconversationtype) | Conversation type |
-| timestamp | int | Message timestamp |
-| conversationSeq | int | Conversation sequence |
-| orderKey | int | Order key |
-| isUserInserted | bool | Whether inserted by user |
-| receiptStatus | ZIMMessageReceiptStatus | Message receipt status |
-
-### ZIMKitMessageTextContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| text | String | Text content |
-
-### ZIMKitMessageImageContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| fileLocalPath | String | Local file path |
-| fileDownloadUrl | String | Download URL |
-| fileName | String | File name |
-| fileSize | int | File size |
-| thumbnailDownloadUrl | String | Thumbnail download URL |
-| thumbnailLocalPath | String | Thumbnail local path |
-| largeImageDownloadUrl | String | Large image download URL |
-| largeImageLocalPath | String | Large image local path |
-| originalImageWidth | int | Original image width |
-| originalImageHeight | int | Original image height |
-
-### ZIMKitMessageAudioContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| fileLocalPath | String | Local file path |
-| fileDownloadUrl | String | Download URL |
-| fileName | String | File name |
-| fileSize | int | File size |
-| audioDuration | int | Audio duration |
-
-### ZIMKitMessageVideoContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| fileLocalPath | String | Local file path |
-| fileDownloadUrl | String | Download URL |
-| fileName | String | File name |
-| fileSize | int | File size |
-| videoDuration | int | Video duration |
-| videoFirstFrameDownloadUrl | String | First frame download URL |
-| videoFirstFrameLocalPath | String | First frame local path |
-| videoFirstFrameWidth | int | First frame width |
-| videoFirstFrameHeight | int | First frame height |
-
-### ZIMKitMessageFileContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| fileLocalPath | String | Local file path |
-| fileDownloadUrl | String | Download URL |
-| fileName | String | File name |
-| fileSize | int | File size |
-
-### ZIMKitMessageSystemContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| info | String | System info |
-
-### ZIMKitMessageCustomContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| message | String | Custom message content |
-| type | int | Custom message type |
-| searchedContent | String | Content for search |
-
-### ZIMKitMessageCombineContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| title | String | Title |
-| summary | List<String> | Summary list |
-| combineID | String | Combine ID |
-| messageList | List<[ZIMKitMessage](#zimkitmessage)>? | Message list |
-
-### ZIMKitMessageRevokeContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| operatorID | String | Revoker ID |
-| operatorName | String | Revoker name |
-| revokeTimestamp | int | Revoke timestamp |
-| originalType | [ZIMKitMessageType](#zimkitmessagetype) | Original message type |
-| canReEdit | bool | Whether can re-edit |
-
-### ZIMKitMessageTipsContent
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| type | [ZIMKitTipsType](#zimkittipstype) | Tips type |
-| content | String | Tips content |
-| extendedData | Map<String, dynamic>? | Extended data |
-
-### ZIMKitReplyMessageInfo
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| messageID | int | Original message ID |
-| senderUserID | String | Sender user ID |
-| senderUserName | String | Sender user name |
-| messageType | [ZIMKitMessageType](#zimkitmessagetype) | Original message type |
-| contentSummary | String | Content summary |
-| originalMessage | [ZIMKitMessage](#zimkitmessage)? | Original message object |
-
-### ZIMKitEventReason
-
-Event reason enumeration.
-
-| Enum Value | Description |
-| :--- | :--- |
-| normal | Normal operation |
-| userAction | User-initiated action |
-| systemAction | System automatic action |
-| networkError | Network issue |
-| permissionDenied | Permission issue |
-| other | Other reasons |
-
-### ZIMKitMessageType
-
-Enum: text, image, audio, video, file, system, custom, combine, revoke, tips, unknown
-
-### ZIMKitTipsType
-
-Enum: groupNotice, memberJoined, memberLeft, memberKicked, groupInfoChanged, other
+**Example:**
+```dart
+ZIMKitEvents(
+  message: ZIMKitMessageEvents(
+    onMessageReceived: (event) {
+      print('Received message: ${event.message}');
+    },
+    onMessageSent: (event) {
+      print('Sent message: ${event.message}');
+    },
+  ),
+  conversation: ZIMKitConversationEvents(
+    onConversationChanged: (event) {
+      print('Conversation changed: ${event.conversation}');
+    },
+  ),
+)
+```
 
 ---
 
-## ZIMKitConversationEvent
+## ZIMKitMessageEvents
 
-Contains detailed information about conversation-related events.
+Message-related events.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| conversation | [ZIMKitConversation](#zimkitconversation) | Conversation object |
-| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+### onMessageReceived
 
-### ZIMKitConversation
+- **Description**
+  Triggered when a message is received.
 
-Conversation information class for ZIMKit.
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageReceived;
+  ```
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| type | [ZIMKitConversationType](#zimkitconversationtype) | Conversation type (peer/group) |
-| id | String | Conversation ID |
-| name | String | Conversation name |
-| avatarUrl | String | Avatar URL |
-| notificationStatus | ZIMConversationNotificationStatus | Notification status |
-| unreadMessageCount | int | Unread message count |
-| orderKey | int | Order key |
-| disable | bool | Whether disabled |
-| isPinned | bool | Whether pinned |
-| lastMessage | [ZIMKitMessage](#zimkitmessage)? | Last message |
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageReceived: (event) {
+      print('Message received from ${event.message.info.senderUserID}');
+    },
+  )
+  ```
 
-### ZIMKitConversationType
+### onMessageSent
 
-Enum: peer, group, room, unknown
+- **Description**
+  Triggered when a message is sent successfully.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageSent;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageSent: (event) {
+      print('Message sent to ${event.message.info.conversationID}');
+    },
+  )
+  ```
+
+### onMessageSendFailed
+
+- **Description**
+  Triggered when a message fails to send.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageSendFailed;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageSendFailed: (event) {
+      print('Message failed to send');
+    },
+  )
+  ```
+
+### onMessageDeleted
+
+- **Description**
+  Triggered when a message is deleted.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageDeleted;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageDeleted: (event) {
+      print('Message deleted');
+    },
+  )
+  ```
+
+### onMessageRevoked
+
+- **Description**
+  Triggered when a message is revoked.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageRevoked;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageRevoked: (event) {
+      print('Message revoked');
+    },
+  )
+  ```
+
+### onMessageReplied
+
+- **Description**
+  Triggered when a message is replied to.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageReplied;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageReplied: (event) {
+      print('Message replied');
+    },
+  )
+  ```
+
+### onMessageForwarded
+
+- **Description**
+  Triggered when a message is forwarded.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageEvent event)? onMessageForwarded;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageForwarded: (event) {
+      print('Message forwarded');
+    },
+  )
+  ```
+
+### onMessageReactionAdded
+
+- **Description**
+  Triggered when a reaction is added to a message.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageReactionEvent event)? onMessageReactionAdded;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageReactionAdded: (event) {
+      print('${event.user.name} added ${event.reaction}');
+    },
+  )
+  ```
+
+### onMessageReactionDeleted
+
+- **Description**
+  Triggered when a reaction is removed from a message.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMessageReactionEvent event)? onMessageReactionDeleted;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMessageReactionDeleted: (event) {
+      print('${event.user.name} removed ${event.reaction}');
+    },
+  )
+  ```
+
+### onMediaTransferProgress
+
+- **Description**
+  Triggered during media upload/download progress.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitMediaTransferProgressEvent event)? onMediaTransferProgress;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitMessageEvents(
+    onMediaTransferProgress: (event) {
+      print('Progress: ${(event.progress * 100).toStringAsFixed(0)}%');
+    },
+  )
+  ```
 
 ---
 
-## ZIMKitUserEvent
+## ZIMKitConversationEvents
 
-Contains detailed information about user-related events.
+Conversation-related events.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| user | [ZIMKitUser](#zimkituser) | User object |
-| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+### onConversationChanged
 
-### ZIMKitUser
+- **Description**
+  Triggered when conversation information changes.
 
-User Information Class.
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationChanged;
+  ```
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| id | String | User ID |
-| name | String | User name |
-| avatarUrl | String | User avatar URL |
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationChanged: (event) {
+      print('Conversation changed: ${event.conversation.id}');
+    },
+  )
+  ```
+
+### onConversationAdded
+
+- **Description**
+  Triggered when a new conversation is added.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationAdded;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationAdded: (event) {
+      print('New conversation: ${event.conversation.id}');
+    },
+  )
+  ```
+
+### onConversationDeleted
+
+- **Description**
+  Triggered when a conversation is deleted.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationDeleted;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationDeleted: (event) {
+      print('Conversation deleted');
+    },
+  )
+  ```
+
+### onConversationPinned
+
+- **Description**
+  Triggered when a conversation is pinned.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationPinned;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationPinned: (event) {
+      print('Conversation pinned');
+    },
+  )
+  ```
+
+### onConversationUnpinned
+
+- **Description**
+  Triggered when a conversation is unpinned.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationUnpinned;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationUnpinned: (event) {
+      print('Conversation unpinned');
+    },
+  )
+  ```
+
+### onConversationMuted
+
+- **Description**
+  Triggered when a conversation is muted.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationMuted;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationMuted: (event) {
+      print('Conversation muted');
+    },
+  )
+  ```
+
+### onConversationUnmuted
+
+- **Description**
+  Triggered when a conversation is unmuted.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConversationEvent event)? onConversationUnmuted;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onConversationUnmuted: (event) {
+      print('Conversation unmuted');
+    },
+  )
+  ```
+
+### onTotalUnreadCountChanged
+
+- **Description**
+  Triggered when the total unread count changes.
+
+- **Prototype**
+  ```dart
+  final void Function(int totalUnreadCount)? onTotalUnreadCountChanged;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConversationEvents(
+    onTotalUnreadCountChanged: (count) {
+      print('Total unread: $count');
+    },
+  )
+  ```
 
 ---
 
-## ZIMKitGroupEvent
+## ZIMKitUserEvents
 
-Contains detailed information about group-related events.
+User-related events.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| group | [ZIMKitGroupInfo](#zimkitgroupinfo) | Group object |
-| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+### onUserInfoUpdated
 
-### ZIMKitGroupInfo
+- **Description**
+  Triggered when user information is updated.
 
-Group information class for ZIMKit.
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitUserEvent event)? onUserInfoUpdated;
+  ```
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| notice | String | Group notice |
-| attributes | Map<String, String> | Group attributes |
-| state | ZIMGroupState | Group state |
-| event | ZIMGroupEvent | Group event |
+- **Example**
+  ```dart
+  ZIMKitUserEvents(
+    onUserInfoUpdated: (event) {
+      print('User info updated: ${event.user.name}');
+    },
+  )
+  ```
 
----
+### onUserAvatarUpdated
 
-## ZIMKitMessageReactionEvent
+- **Description**
+  Triggered when user avatar is updated.
 
-Contains detailed information about message reaction events.
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitUserEvent event)? onUserAvatarUpdated;
+  ```
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| message | [ZIMKitMessage](#zimkitmessage) | Message object |
-| reaction | String | Reaction emoji |
-| user | [ZIMKitUser](#zimkituser) | User who performed the action |
-| isAdded | bool | Whether it's an addition |
-
----
-
-## ZIMKitMediaTransferProgressEvent
-
-Contains detailed information about upload/download progress of media messages.
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| message | [ZIMKitMessage](#zimkitmessage) | Message object |
-| currentSize | int | Currently transferred size |
-| totalSize | int | Total size |
-| isUploading | bool | Whether it's uploading |
-| progress | double | Progress percentage (0.0 - 1.0) |
+- **Example**
+  ```dart
+  ZIMKitUserEvents(
+    onUserAvatarUpdated: (event) {
+      print('User avatar updated');
+    },
+  )
+  ```
 
 ---
 
-## ZIMKitConnectionStateEvent
+## ZIMKitGroupEvents
 
-Contains detailed information about connection state changes.
+Group-related events.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| state | [ZIMConnectionState](#zimconnectionstate) | Connection state |
-| event | [ZIMConnectionEvent](#zimconnectionevent) | Connection event |
-| extendedData | Map<String, dynamic>? | Extended data |
+### onGroupCreated
 
-### ZIMConnectionState
+- **Description**
+  Triggered when a group is created.
 
-Enum: disconnected, connecting, connected, reconnecting
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event)? onGroupCreated;
+  ```
 
-### ZIMConnectionEvent
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupCreated: (event) {
+      print('Group created');
+    },
+  )
+  ```
 
-Enum: success, activeLogin, kickedOut, tokenExpired, networkInterrupted, networkDisconnected
+### onGroupDismissed
+
+- **Description**
+  Triggered when a group is dismissed.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event)? onGroupDismissed;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupDismissed: (event) {
+      print('Group dismissed');
+    },
+  )
+  ```
+
+### onGroupJoined
+
+- **Description**
+  Triggered when the current user joins a group.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event)? onGroupJoined;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupJoined: (event) {
+      print('Joined group');
+    },
+  )
+  ```
+
+### onGroupLeft
+
+- **Description**
+  Triggered when the current user leaves a group.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event)? onGroupLeft;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupLeft: (event) {
+      print('Left group');
+    },
+  )
+  ```
+
+### onGroupInfoUpdated
+
+- **Description**
+  Triggered when group information is updated.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event)? onGroupInfoUpdated;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupInfoUpdated: (event) {
+      print('Group info updated');
+    },
+  )
+  ```
+
+### onGroupMemberJoined
+
+- **Description**
+  Triggered when a member joins a group.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event, List<ZIMKitUser> members)? onGroupMemberJoined;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupMemberJoined: (event, members) {
+      for (final user in members) {
+        print('${user.name} joined the group');
+      }
+    },
+  )
+  ```
+
+### onGroupMemberLeft
+
+- **Description**
+  Triggered when a member leaves a group.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event, List<ZIMKitUser> members)? onGroupMemberLeft;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupMemberLeft: (event, members) {
+      for (final user in members) {
+        print('${user.name} left the group');
+      }
+    },
+  )
+  ```
+
+### onGroupMemberInfoUpdated
+
+- **Description**
+  Triggered when a group member's information is updated.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitGroupEvent event, ZIMKitUser member)? onGroupMemberInfoUpdated;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitGroupEvents(
+    onGroupMemberInfoUpdated: (event, member) {
+      print('Member info updated: ${member.name}');
+    },
+  )
+  ```
 
 ---
 
-## ZIMKitTokenExpiredEvent
+## ZIMKitConnectionEvents
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| remainSeconds | int | Remaining seconds |
+Connection-related events.
 
----
+### onConnectionStateChanged
 
-## ZIMKitErrorEvent
+- **Description**
+  Triggered when the connection state changes.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| code | int | Error code |
-| message | String | Error message |
-| method | String? | Method that triggered the error |
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitConnectionStateEvent event)? onConnectionStateChanged;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConnectionEvents(
+    onConnectionStateChanged: (event) {
+      print('Connection state: ${event.state}');
+    },
+  )
+  ```
+
+### onTokenWillExpire
+
+- **Description**
+  Triggered when the token will expire (notified 30 seconds in advance).
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMKitTokenExpiredEvent event)? onTokenWillExpire;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConnectionEvents(
+    onTokenWillExpire: (event) {
+      print('Token will expire in ${event.remainSeconds} seconds');
+    },
+  )
+  ```
+
+### onTokenExpired
+
+- **Description**
+  Triggered when the token has expired.
+
+- **Prototype**
+  ```dart
+  final void Function()? onTokenExpired;
+  ```
+
+- **Example**
+  ```dart
+  ZIMKitConnectionEvents(
+    onTokenExpired: () {
+      print('Token expired, please re-login');
+    },
+  )
+  ```
