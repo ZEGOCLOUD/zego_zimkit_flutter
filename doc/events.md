@@ -1,753 +1,329 @@
-# ZIMKit 事件文档
+# Events
 
-本文档介绍 ZIMKit 的所有事件回调。
-
-## 目录
-
-- [ZIMKitEvents](#zimkitevents) - 事件回调类
-- [ZIMKitMessageEvents](#zimkitmessageevents) - 消息事件
-- [ZIMKitConversationEvents](#zimkitconversationevents) - 会话事件
-- [ZIMKitUserEvents](#zimkituserevents) - 用户事件
-- [ZIMKitGroupEvents](#zimkitgroupevents) - 群组事件
-- [ZIMKitCallEvents](#zimkitcallevents) - 通话事件
-- [ZIMKitConnectionEvents](#zimkitconnectionevents) - 连接事件
-- [事件数据类型](#事件数据类型)
+- [ZIMKitMessageEvent](#zimkitmessageevent)
+- [ZIMKitConversationEvent](#zimkitconversationevent)
+- [ZIMKitUserEvent](#zimkituserevent)
+- [ZIMKitGroupEvent](#zimkitgroupevent)
+- [ZIMKitMessageReactionEvent](#zimkitmessagereactionevent)
+- [ZIMKitMediaTransferProgressEvent](#zimkitmediatransferprogressevent)
+- [ZIMKitConnectionStateEvent](#zimkitconnectionstateevent)
+- [ZIMKitTokenExpiredEvent](#zimkittokenexpiredevent)
+- [ZIMKitErrorEvent](#zimkiterrorevent)
 
 ---
 
-## ZIMKitEvents
-
-事件回调容器类，包含所有子事件类别。
-
-### 构造函数
-
-```dart
-ZIMKitEvents({
-  ZIMKitMessageEvents? message,
-  ZIMKitConversationEvents? conversation,
-  ZIMKitUserEvents? user,
-  ZIMKitGroupEvents? group,
-  ZIMKitCallEvents? call,
-  ZIMKitConnectionEvents? connection,
-})
-```
-
-### 属性
-
-| 属性 | 类型 | 描述 |
-|-----|------|------|
-| message | ZIMKitMessageEvents? | 消息相关事件 |
-| conversation | ZIMKitConversationEvents? | 会话相关事件 |
-| user | ZIMKitUserEvents? | 用户相关事件 |
-| group | ZIMKitGroupEvents? | 群组相关事件 |
-| call | ZIMKitCallEvents? | 通话相关事件 |
-| connection | ZIMKitConnectionEvents? | 连接相关事件 |
-
-### 示例
-
-```dart
-final events = ZIMKitEvents(
-  message: ZIMKitMessageEvents(
-    onReceived: (List<ZIMKitMessageEvent> events) {
-      print('收到 ${events.length} 条新消息');
-    },
-    onSent: (ZIMKitMessage message) {
-      print('消息发送成功: ${message.info.message.message}');
-    },
-  ),
-  connection: ZIMKitConnectionEvents(
-    onStateChanged: (ZIMConnectionState state) {
-      print('连接状态变化: $state');
-    },
-  ),
-);
-
-await ZIMKit().init(
-  appID: yourAppID,
-  appSign: yourAppSign,
-  events: events,
-);
-```
-
----
-
-## ZIMKitMessageEvents
-
-消息相关事件。
-
-### 构造函数
-
-```dart
-ZIMKitMessageEvents({
-  void Function(List<ZIMKitMessageEvent> events)? onReceived,
-  void Function(ZIMKitMessage message)? onSent,
-  void Function(String messageID, String error)? onSendFailed,
-  void Function(List<ZIMKitMessageEvent> events)? onRevoked,
-  void Function(List<ZIMKitMessageEvent> events)? onDeleted,
-  void Function(ZIMKitMessage message)? onReactionAdded,
-  void Function(ZIMKitMessage message)? onReactionRemoved,
-  void Function(String messageID, int progress)? onMediaUploadProgress,
-  void Function(String messageID, int progress)? onMediaDownloadProgress,
-})
-```
-
-### 事件回调
-
-#### onReceived
-
-接收到新消息。
-
-```dart
-void Function(List<ZIMKitMessageEvent> events)? onReceived
-```
-
-**参数**：
-- `events`: 消息事件列表
-
-**示例**：
-```dart
-onReceived: (List<ZIMKitMessageEvent> events) {
-  for (var event in events) {
-    print('收到来自 ${event.conversationID} 的消息');
-    print('消息内容: ${event.message.info.message.message}');
-  }
-}
-```
-
-#### onSent
-
-消息发送成功。
-
-```dart
-void Function(ZIMKitMessage message)? onSent
-```
-
-**参数**：
-- `message`: 发送成功的消息
-
-**示例**：
-```dart
-onSent: (ZIMKitMessage message) {
-  print('消息已发送: ${message.info.message.messageID}');
-}
-```
-
-#### onSendFailed
-
-消息发送失败。
-
-```dart
-void Function(String messageID, String error)? onSendFailed
-```
-
-**参数**：
-- `messageID`: 消息 ID
-- `error`: 错误信息
-
-**示例**：
-```dart
-onSendFailed: (String messageID, String error) {
-  print('消息发送失败: $messageID, 错误: $error');
-}
-```
-
-#### onRevoked
-
-消息被撤回。
-
-```dart
-void Function(List<ZIMKitMessageEvent> events)? onRevoked
-```
-
-**参数**：
-- `events`: 被撤回的消息事件列表
-
-**示例**：
-```dart
-onRevoked: (List<ZIMKitMessageEvent> events) {
-  print('${events.length} 条消息被撤回');
-}
-```
-
-#### onDeleted
-
-消息被删除。
-
-```dart
-void Function(List<ZIMKitMessageEvent> events)? onDeleted
-```
-
-**参数**：
-- `events`: 被删除的消息事件列表
-
-**示例**：
-```dart
-onDeleted: (List<ZIMKitMessageEvent> events) {
-  print('${events.length} 条消息被删除');
-}
-```
-
-#### onReactionAdded
-
-消息表情反应被添加。
-
-```dart
-void Function(ZIMKitMessage message)? onReactionAdded
-```
-
-**参数**：
-- `message`: 更新后的消息
-
-**示例**：
-```dart
-onReactionAdded: (ZIMKitMessage message) {
-  print('消息收到新的表情反应');
-}
-```
-
-#### onReactionRemoved
-
-消息表情反应被移除。
-
-```dart
-void Function(ZIMKitMessage message)? onReactionRemoved
-```
-
-**参数**：
-- `message`: 更新后的消息
-
-**示例**：
-```dart
-onReactionRemoved: (ZIMKitMessage message) {
-  print('消息表情反应被移除');
-}
-```
-
-#### onMediaUploadProgress
-
-媒体文件上传进度。
-
-```dart
-void Function(String messageID, int progress)? onMediaUploadProgress
-```
-
-**参数**：
-- `messageID`: 消息 ID
-- `progress`: 上传进度 (0-100)
-
-**示例**：
-```dart
-onMediaUploadProgress: (String messageID, int progress) {
-  print('消息 $messageID 上传进度: $progress%');
-}
-```
-
-#### onMediaDownloadProgress
-
-媒体文件下载进度。
-
-```dart
-void Function(String messageID, int progress)? onMediaDownloadProgress
-```
-
-**参数**：
-- `messageID`: 消息 ID
-- `progress`: 下载进度 (0-100)
-
-**示例**：
-```dart
-onMediaDownloadProgress: (String messageID, int progress) {
-  print('消息 $messageID 下载进度: $progress%');
-}
-```
-
----
-
-## ZIMKitConversationEvents
-
-会话相关事件。
-
-### 构造函数
-
-```dart
-ZIMKitConversationEvents({
-  void Function(List<ZIMKitConversationEvent> events)? onUpdated,
-  void Function(List<ZIMKitConversationEvent> events)? onDeleted,
-  void Function(String conversationID, int count)? onUnreadMessageCountChanged,
-  void Function(int totalCount)? onTotalUnreadMessageCountChanged,
-})
-```
-
-### 事件回调
-
-#### onUpdated
-
-会话列表更新。
-
-```dart
-void Function(List<ZIMKitConversationEvent> events)? onUpdated
-```
-
-**参数**：
-- `events`: 会话事件列表
-
-**示例**：
-```dart
-onUpdated: (List<ZIMKitConversationEvent> events) {
-  print('${events.length} 个会话有更新');
-}
-```
-
-#### onDeleted
-
-会话被删除。
-
-```dart
-void Function(List<ZIMKitConversationEvent> events)? onDeleted
-```
-
-**参数**：
-- `events`: 被删除的会话事件列表
-
-**示例**：
-```dart
-onDeleted: (List<ZIMKitConversationEvent> events) {
-  print('${events.length} 个会话被删除');
-}
-```
-
-#### onUnreadMessageCountChanged
-
-单个会话未读消息数变化。
-
-```dart
-void Function(String conversationID, int count)? onUnreadMessageCountChanged
-```
-
-**参数**：
-- `conversationID`: 会话 ID
-- `count`: 未读消息数
-
-**示例**：
-```dart
-onUnreadMessageCountChanged: (String conversationID, int count) {
-  print('会话 $conversationID 的未读消息数: $count');
-}
-```
-
-#### onTotalUnreadMessageCountChanged
-
-总未读消息数变化。
-
-```dart
-void Function(int totalCount)? onTotalUnreadMessageCountChanged
-```
-
-**参数**：
-- `totalCount`: 总未读消息数
-
-**示例**：
-```dart
-onTotalUnreadMessageCountChanged: (int totalCount) {
-  print('总未读消息数: $totalCount');
-}
-```
-
----
-
-## ZIMKitUserEvents
-
-用户相关事件。
-
-### 构造函数
-
-```dart
-ZIMKitUserEvents({
-  void Function(List<ZIMKitUserEvent> events)? onInfoUpdated,
-  void Function(List<ZIMKitUserEvent> events)? onAvatarUpdated,
-})
-```
-
-### 事件回调
-
-#### onInfoUpdated
-
-用户信息更新。
-
-```dart
-void Function(List<ZIMKitUserEvent> events)? onInfoUpdated
-```
-
-**示例**：
-```dart
-onInfoUpdated: (List<ZIMKitUserEvent> events) {
-  for (var event in events) {
-    print('用户 ${event.user.id} 信息已更新');
-  }
-}
-```
-
-#### onAvatarUpdated
-
-用户头像更新。
-
-```dart
-void Function(List<ZIMKitUserEvent> events)? onAvatarUpdated
-```
-
-**示例**：
-```dart
-onAvatarUpdated: (List<ZIMKitUserEvent> events) {
-  print('${events.length} 个用户头像已更新');
-}
-```
-
----
-
-## ZIMKitGroupEvents
-
-群组相关事件。
-
-### 构造函数
-
-```dart
-ZIMKitGroupEvents({
-  void Function(ZIMKitGroupEvent event)? onInfoUpdated,
-  void Function(ZIMKitGroupEvent event)? onMemberJoined,
-  void Function(ZIMKitGroupEvent event)? onMemberLeft,
-  void Function(ZIMKitGroupEvent event)? onMemberKicked,
-  void Function(ZIMKitGroupEvent event)? onOwnerTransferred,
-})
-```
-
-### 事件回调
-
-#### onInfoUpdated
-
-群组信息更新。
-
-```dart
-void Function(ZIMKitGroupEvent event)? onInfoUpdated
-```
-
-**示例**：
-```dart
-onInfoUpdated: (ZIMKitGroupEvent event) {
-  print('群组 ${event.groupID} 信息已更新');
-}
-```
-
-#### onMemberJoined
-
-成员加入群组。
-
-```dart
-void Function(ZIMKitGroupEvent event)? onMemberJoined
-```
-
-**示例**：
-```dart
-onMemberJoined: (ZIMKitGroupEvent event) {
-  print('用户 ${event.userIDs.join(", ")} 加入群组');
-}
-```
-
-#### onMemberLeft
-
-成员离开群组。
-
-```dart
-void Function(ZIMKitGroupEvent event)? onMemberLeft
-```
-
-**示例**：
-```dart
-onMemberLeft: (ZIMKitGroupEvent event) {
-  print('用户 ${event.userIDs.join(", ")} 离开群组');
-}
-```
-
----
-
-## ZIMKitCallEvents
-
-通话相关事件（与 ZegoUIKitPrebuiltCallInvitationService 集成）。
-
-### 构造函数
-
-```dart
-ZIMKitCallEvents({
-  void Function(String callID, String caller)? onCallInvitationReceived,
-  void Function(String callID)? onCallInvitationAccepted,
-  void Function(String callID)? onCallInvitationRejected,
-  void Function(String callID)? onCallInvitationCancelled,
-  void Function(String callID)? onCallInvitationTimeout,
-})
-```
-
-### 事件回调
-
-#### onCallInvitationReceived
-
-收到通话邀请。
-
-```dart
-void Function(String callID, String caller)? onCallInvitationReceived
-```
-
-**示例**：
-```dart
-onCallInvitationReceived: (String callID, String caller) {
-  print('收到来自 $caller 的通话邀请');
-}
-```
-
----
-
-## ZIMKitConnectionEvents
-
-连接相关事件。
-
-### 构造函数
-
-```dart
-ZIMKitConnectionEvents({
-  void Function(ZIMConnectionState state)? onStateChanged,
-  void Function(ZIMConnectionEvent event)? onEventReceived,
-})
-```
-
-### 事件回调
-
-#### onStateChanged
-
-连接状态变化。
-
-```dart
-void Function(ZIMConnectionState state)? onStateChanged
-```
-
-**参数**：
-- `state`: 连接状态
-
-**示例**：
-```dart
-onStateChanged: (ZIMConnectionState state) {
-  switch (state) {
-    case ZIMConnectionState.disconnected:
-      print('连接已断开');
-      break;
-    case ZIMConnectionState.connecting:
-      print('连接中...');
-      break;
-    case ZIMConnectionState.connected:
-      print('已连接');
-      break;
-    case ZIMConnectionState.reconnecting:
-      print('重新连接中...');
-      break;
-  }
-}
-```
-
-#### onEventReceived
-
-连接事件接收。
-
-```dart
-void Function(ZIMConnectionEvent event)? onEventReceived
-```
-
-**参数**：
-- `event`: 连接事件
-
-**示例**：
-```dart
-onEventReceived: (ZIMConnectionEvent event) {
-  switch (event) {
-    case ZIMConnectionEvent.kickedOut:
-      print('账号在其他设备登录');
-      break;
-    case ZIMConnectionEvent.tokenExpired:
-      print('Token 已过期');
-      break;
-  }
-}
-```
-
----
-
-## 事件数据类型
-
-### ZIMKitMessageEvent
-
-消息事件数据。
-
-```dart
-class ZIMKitMessageEvent {
-  String conversationID;
-  ZIMConversationType conversationType;
-  ZIMKitMessage message;
-  ZIMKitEventReason reason;
-}
-```
-
-### ZIMKitConversationEvent
-
-会话事件数据。
-
-```dart
-class ZIMKitConversationEvent {
-  ZIMKitConversation conversation;
-  ZIMKitEventReason reason;
-}
-```
-
-### ZIMKitUserEvent
-
-用户事件数据。
-
-```dart
-class ZIMKitUserEvent {
-  ZIMKitUser user;
-  ZIMKitEventReason reason;
-}
-```
-
-### ZIMKitGroupEvent
-
-群组事件数据。
-
-```dart
-class ZIMKitGroupEvent {
-  String groupID;
-  String groupName;
-  List<String> userIDs;
-  String operatorUserID;
-  ZIMKitEventReason reason;
-}
-```
+## ZIMKitMessageEvent
+
+Contains detailed information about message-related events.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| message | [ZIMKitMessage](#zimkitmessage) | Message object |
+| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+
+### ZIMKitMessage
+
+Message class for ZIMKit.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| type | [ZIMKitMessageType](#zimkitmessagetype) | Type of the message |
+| info | [ZIMKitMessageBaseInfo](#zimkitmessagebaseinfo) | Basic message info |
+| textContent | [ZIMKitMessageTextContent](#zimkitmessagetextcontent)? | Text message content |
+| imageContent | [ZIMKitMessageImageContent](#zimkitmessageimagecontent)? | Image message content |
+| audioContent | [ZIMKitMessageAudioContent](#zimkitmessageaudiocontent)? | Audio message content |
+| videoContent | [ZIMKitMessageVideoContent](#zimkitmessagevideocontent)? | Video message content |
+| fileContent | [ZIMKitMessageFileContent](#zimkitmessagefilecontent)? | File message content |
+| systemContent | [ZIMKitMessageSystemContent](#zimkitmessagesystemcontent)? | System message content |
+| customContent | [ZIMKitMessageCustomContent](#zimkitmessagecustomcontent)? | Custom message content |
+| combineContent | [ZIMKitMessageCombineContent](#zimkitmessagecombinecontent)? | Combine message content |
+| revokeContent | [ZIMKitMessageRevokeContent](#zimkitmessagerevokecontent)? | Revoke message content |
+| tipsContent | [ZIMKitMessageTipsContent](#zimkitmessagetipscontent)? | Tips message content |
+| replyInfo | [ZIMKitReplyMessageInfo](#zimkitreplymessageinfo)? | Reply message info |
+| reactions | ListNotifier<ZIMMessageReaction> | List of reactions |
+| localExtendedData | ValueNotifier<String> | Local extended data |
+
+### ZIMKitMessageBaseInfo
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| messageID | int | Message ID |
+| localMessageID | int | Local message ID |
+| senderUserID | String | Sender user ID |
+| senderUserName | String | Sender user name |
+| conversationID | String | Conversation ID |
+| direction | ZIMMessageDirection | Message direction (send/receive) |
+| sentStatus | ZIMMessageSentStatus | Message sent status |
+| conversationType | [ZIMKitConversationType](#zimkitconversationtype) | Conversation type |
+| timestamp | int | Message timestamp |
+| conversationSeq | int | Conversation sequence |
+| orderKey | int | Order key |
+| isUserInserted | bool | Whether inserted by user |
+| receiptStatus | ZIMMessageReceiptStatus | Message receipt status |
+
+### ZIMKitMessageTextContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| text | String | Text content |
+
+### ZIMKitMessageImageContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| fileLocalPath | String | Local file path |
+| fileDownloadUrl | String | Download URL |
+| fileName | String | File name |
+| fileSize | int | File size |
+| thumbnailDownloadUrl | String | Thumbnail download URL |
+| thumbnailLocalPath | String | Thumbnail local path |
+| largeImageDownloadUrl | String | Large image download URL |
+| largeImageLocalPath | String | Large image local path |
+| originalImageWidth | int | Original image width |
+| originalImageHeight | int | Original image height |
+
+### ZIMKitMessageAudioContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| fileLocalPath | String | Local file path |
+| fileDownloadUrl | String | Download URL |
+| fileName | String | File name |
+| fileSize | int | File size |
+| audioDuration | int | Audio duration |
+
+### ZIMKitMessageVideoContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| fileLocalPath | String | Local file path |
+| fileDownloadUrl | String | Download URL |
+| fileName | String | File name |
+| fileSize | int | File size |
+| videoDuration | int | Video duration |
+| videoFirstFrameDownloadUrl | String | First frame download URL |
+| videoFirstFrameLocalPath | String | First frame local path |
+| videoFirstFrameWidth | int | First frame width |
+| videoFirstFrameHeight | int | First frame height |
+
+### ZIMKitMessageFileContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| fileLocalPath | String | Local file path |
+| fileDownloadUrl | String | Download URL |
+| fileName | String | File name |
+| fileSize | int | File size |
+
+### ZIMKitMessageSystemContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| info | String | System info |
+
+### ZIMKitMessageCustomContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| message | String | Custom message content |
+| type | int | Custom message type |
+| searchedContent | String | Content for search |
+
+### ZIMKitMessageCombineContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| title | String | Title |
+| summary | List<String> | Summary list |
+| combineID | String | Combine ID |
+| messageList | List<[ZIMKitMessage](#zimkitmessage)>? | Message list |
+
+### ZIMKitMessageRevokeContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| operatorID | String | Revoker ID |
+| operatorName | String | Revoker name |
+| revokeTimestamp | int | Revoke timestamp |
+| originalType | [ZIMKitMessageType](#zimkitmessagetype) | Original message type |
+| canReEdit | bool | Whether can re-edit |
+
+### ZIMKitMessageTipsContent
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| type | [ZIMKitTipsType](#zimkittipstype) | Tips type |
+| content | String | Tips content |
+| extendedData | Map<String, dynamic>? | Extended data |
+
+### ZIMKitReplyMessageInfo
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| messageID | int | Original message ID |
+| senderUserID | String | Sender user ID |
+| senderUserName | String | Sender user name |
+| messageType | [ZIMKitMessageType](#zimkitmessagetype) | Original message type |
+| contentSummary | String | Content summary |
+| originalMessage | [ZIMKitMessage](#zimkitmessage)? | Original message object |
 
 ### ZIMKitEventReason
 
-事件原因枚举。
+Event reason enumeration.
 
-```dart
-enum ZIMKitEventReason {
-  received,        // 接收到新数据
-  sent,            // 发送成功
-  updated,         // 更新
-  deleted,         // 删除
-  revoked,         // 撤回
-  reactionAdded,   // 添加表情反应
-  reactionRemoved, // 移除表情反应
-}
-```
+| Enum Value | Description |
+| :--- | :--- |
+| normal | Normal operation |
+| userAction | User-initiated action |
+| systemAction | System automatic action |
+| networkError | Network issue |
+| permissionDenied | Permission issue |
+| other | Other reasons |
+
+### ZIMKitMessageType
+
+Enum: text, image, audio, video, file, system, custom, combine, revoke, tips, unknown
+
+### ZIMKitTipsType
+
+Enum: groupNotice, memberJoined, memberLeft, memberKicked, groupInfoChanged, other
+
+---
+
+## ZIMKitConversationEvent
+
+Contains detailed information about conversation-related events.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| conversation | [ZIMKitConversation](#zimkitconversation) | Conversation object |
+| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+
+### ZIMKitConversation
+
+Conversation information class for ZIMKit.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| type | [ZIMKitConversationType](#zimkitconversationtype) | Conversation type (peer/group) |
+| id | String | Conversation ID |
+| name | String | Conversation name |
+| avatarUrl | String | Avatar URL |
+| notificationStatus | ZIMConversationNotificationStatus | Notification status |
+| unreadMessageCount | int | Unread message count |
+| orderKey | int | Order key |
+| disable | bool | Whether disabled |
+| isPinned | bool | Whether pinned |
+| lastMessage | [ZIMKitMessage](#zimkitmessage)? | Last message |
+
+### ZIMKitConversationType
+
+Enum: peer, group, room, unknown
+
+---
+
+## ZIMKitUserEvent
+
+Contains detailed information about user-related events.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| user | [ZIMKitUser](#zimkituser) | User object |
+| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+
+### ZIMKitUser
+
+User Information Class.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| id | String | User ID |
+| name | String | User name |
+| avatarUrl | String | User avatar URL |
+
+---
+
+## ZIMKitGroupEvent
+
+Contains detailed information about group-related events.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| group | [ZIMKitGroupInfo](#zimkitgroupinfo) | Group object |
+| reason | [ZIMKitEventReason](#zimkiteventreason)? | Event reason/type |
+
+### ZIMKitGroupInfo
+
+Group information class for ZIMKit.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| notice | String | Group notice |
+| attributes | Map<String, String> | Group attributes |
+| state | ZIMGroupState | Group state |
+| event | ZIMGroupEvent | Group event |
+
+---
+
+## ZIMKitMessageReactionEvent
+
+Contains detailed information about message reaction events.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| message | [ZIMKitMessage](#zimkitmessage) | Message object |
+| reaction | String | Reaction emoji |
+| user | [ZIMKitUser](#zimkituser) | User who performed the action |
+| isAdded | bool | Whether it's an addition |
+
+---
+
+## ZIMKitMediaTransferProgressEvent
+
+Contains detailed information about upload/download progress of media messages.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| message | [ZIMKitMessage](#zimkitmessage) | Message object |
+| currentSize | int | Currently transferred size |
+| totalSize | int | Total size |
+| isUploading | bool | Whether it's uploading |
+| progress | double | Progress percentage (0.0 - 1.0) |
+
+---
+
+## ZIMKitConnectionStateEvent
+
+Contains detailed information about connection state changes.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| state | [ZIMConnectionState](#zimconnectionstate) | Connection state |
+| event | [ZIMConnectionEvent](#zimconnectionevent) | Connection event |
+| extendedData | Map<String, dynamic>? | Extended data |
 
 ### ZIMConnectionState
 
-连接状态枚举。
-
-```dart
-enum ZIMConnectionState {
-  disconnected,  // 断开连接
-  connecting,    // 连接中
-  connected,     // 已连接
-  reconnecting,  // 重新连接中
-}
-```
+Enum: disconnected, connecting, connected, reconnecting
 
 ### ZIMConnectionEvent
 
-连接事件枚举。
-
-```dart
-enum ZIMConnectionEvent {
-  kickedOut,      // 被踢下线
-  tokenExpired,   // Token 过期
-  roomDisconnected, // 房间断开连接
-}
-```
+Enum: success, activeLogin, kickedOut, tokenExpired, networkInterrupted, networkDisconnected
 
 ---
 
-## 完整示例
+## ZIMKitTokenExpiredEvent
 
-```dart
-import 'package:zego_zimkit/zego_zimkit.dart';
-
-void main() async {
-  final events = ZIMKitEvents(
-    // 消息事件
-    message: ZIMKitMessageEvents(
-      onReceived: (List<ZIMKitMessageEvent> events) {
-        for (var event in events) {
-          print('收到新消息: ${event.message.info.message.message}');
-        }
-      },
-      onSent: (ZIMKitMessage message) {
-        print('消息发送成功');
-      },
-      onRevoked: (List<ZIMKitMessageEvent> events) {
-        print('消息被撤回');
-      },
-      onMediaUploadProgress: (String messageID, int progress) {
-        print('上传进度: $progress%');
-      },
-    ),
-
-    // 会话事件
-    conversation: ZIMKitConversationEvents(
-      onUpdated: (List<ZIMKitConversationEvent> events) {
-        print('会话列表更新');
-      },
-      onTotalUnreadMessageCountChanged: (int totalCount) {
-        print('总未读消息数: $totalCount');
-      },
-    ),
-
-    // 用户事件
-    user: ZIMKitUserEvents(
-      onInfoUpdated: (List<ZIMKitUserEvent> events) {
-        print('用户信息更新');
-      },
-    ),
-
-    // 群组事件
-    group: ZIMKitGroupEvents(
-      onMemberJoined: (ZIMKitGroupEvent event) {
-        print('新成员加入群组');
-      },
-      onMemberLeft: (ZIMKitGroupEvent event) {
-        print('成员离开群组');
-      },
-    ),
-
-    // 连接事件
-    connection: ZIMKitConnectionEvents(
-      onStateChanged: (ZIMConnectionState state) {
-        print('连接状态: $state');
-      },
-      onEventReceived: (ZIMConnectionEvent event) {
-        if (event == ZIMConnectionEvent.kickedOut) {
-          print('账号在其他设备登录');
-        }
-      },
-    ),
-  );
-
-  await ZIMKit().init(
-    appID: yourAppID,
-    appSign: yourAppSign,
-    events: events,
-  );
-}
-```
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| remainSeconds | int | Remaining seconds |
 
 ---
 
-**相关文档**：
-- [API 文档](apis.md)
-- [配置文档](configs.md)
-- [快速开始](get-started.md)
+## ZIMKitErrorEvent
 
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| code | int | Error code |
+| message | String | Error message |
+| method | String? | Method that triggered the error |
