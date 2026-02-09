@@ -217,6 +217,58 @@ Audio message content class.
 | **fileSize** | File size | `int` | `0` |
 | **audioDuration** | Audio duration in seconds | `int` | `0` |
 
+---
+
+## Audio Recording Enums and Classes
+
+### ZIMKitRecordState
+
+Enum representing the state of audio recording.
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| **idle** | Recording is idle | `0` |
+| **recording** | Currently recording | `1` |
+| **cancel** | Recording was cancelled | `2` |
+| **complete** | Recording completed | `3` |
+
+### ZIMKitRecordLockerState
+
+Enum representing the state of the record locker (slide-to-cancel feature).
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| **idle** | Locker is idle | `0` |
+| **testing** | User is testing the locker area | `1` |
+| **locked** | Recording is locked (slide complete) | `2` |
+
+### ZIMKitRecordStyle
+
+Style configuration class for audio recording components.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **lockerIconSize** | Size of the locker icon in pixels | `double` | `50` |
+
+### ZIMKitRecordStatus
+
+Status management class for audio recording.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **stateNotifier** | Notifier for recording state changes | `ValueNotifier<ZIMKitRecordState>` | `ZIMKitRecordState.idle` |
+| **lockerStateNotifier** | Notifier for locker state changes | `ValueNotifier<ZIMKitRecordLockerState>` | `ZIMKitRecordLockerState.idle` |
+
+### formatAudioRecordDuration
+
+Formats audio recording duration from milliseconds to MM:SS format.
+
+```dart
+String formatAudioRecordDuration(int milliseconds)
+```
+
+---
+
 ### ZIMKitMessageVideoContent
 
 Video message content class.

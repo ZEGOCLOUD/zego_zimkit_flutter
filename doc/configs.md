@@ -408,3 +408,33 @@ iOS Notification Configuration.
 | :--- | :--- | :--- | :--- |
 | **isSandboxEnvironment** | Whether running in iOS sandbox environment | `bool?` | `null` |
 | **certificateIndex** | Certificate index for push notifications | `ZegoSignalingPluginMultiCertificate` | `firstCertificate` |
+
+---
+
+## ZegoZIMKitPluginLocalNotificationConfig
+
+Local Notification Configuration. Used to configure local notifications for incoming calls. (Android only)
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **id** | Notification ID | `int?` | `null` |
+| **channelID** | Notification channel ID | `String` | Required |
+| **title** | Notification title | `String` | Required |
+| **content** | Notification content | `String` | Required |
+| **iconSource** | Icon source path | `String?` | `null` |
+| **soundSource** | Sound source path | `String?` | `null` |
+| **vibrate** | Whether to enable vibration | `bool` | `false` |
+| **clickCallback** | Callback when notification is clicked | `VoidCallback?` | `null` |
+
+---
+
+## ZegoZIMKitPluginLocalNotificationChannelConfig
+
+Local Notification Channel Configuration. Used to configure notification channels for local notifications. (Android only)
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **channelID** | Notification channel ID | `String` | Required |
+| **channelName** | Notification channel name | `String` | Required |
+| **soundSource** | Sound source path | `String?` | `null` |
+| **vibrate** | Whether to enable vibration | `bool` | `false` |

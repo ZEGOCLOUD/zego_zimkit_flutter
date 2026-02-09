@@ -665,3 +665,100 @@ Connection-related events.
     },
   )
   ```
+
+---
+
+## ZIMKitErrorEvent
+
+Error event class. Contains error information when an error occurs.
+
+### Properties
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| **code** | Error code | `int` |
+| **message** | Error message | `String` |
+| **stream** | Error stream type | `String` |
+
+**Example:**
+```dart
+ZIMKitEvents(
+  onError: (event) {
+    print('Error occurred: ${event.code} - ${event.message}');
+  },
+)
+```
+
+---
+
+## Audio Recording Events
+
+### onAudioRecordStarted
+
+- **Description**
+  Triggered when audio recording starts.
+
+- **Prototype**
+  ```dart
+  final void Function()? onAudioRecordStarted;
+  ```
+
+### onAudioRecordCompleted
+
+- **Description**
+  Triggered when audio recording completes.
+
+- **Prototype**
+  ```dart
+  final void Function(ZIMAudioRecordData recordData)? onAudioRecordCompleted;
+  ```
+
+### onAudioRecordCancelled
+
+- **Description**
+  Triggered when audio recording is cancelled.
+
+- **Prototype**
+  ```dart
+  final void Function()? onAudioRecordCancelled;
+  ```
+
+### onAudioRecordFailed
+
+- **Description**
+  Triggered when audio recording fails.
+
+- **Prototype**
+  ```dart
+  final void Function(int errorCode)? onAudioRecordFailed;
+  ```
+
+### onAudioPlayCompleted
+
+- **Description**
+  Triggered when audio playback completes.
+
+- **Prototype**
+  ```dart
+  final void Function(int messageID)? onAudioPlayCompleted;
+  ```
+
+### onAudioPlayFailed
+
+- **Description**
+  Triggered when audio playback fails.
+
+- **Prototype**
+  ```dart
+  final void Function(int messageID, int errorCode)? onAudioPlayFailed;
+  ```
+
+### onAudioPlayProgress
+
+- **Description**
+  Triggered during audio playback progress.
+
+- **Prototype**
+  ```dart
+  final void Function(int messageID, int progress)? onAudioPlayProgress;
+  ```

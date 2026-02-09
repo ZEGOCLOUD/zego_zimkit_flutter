@@ -951,6 +951,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
   Stream<ZIMKitEventGroupNameUpdated> getGroupNameUpdatedEventStream()
   ```
 
+- **Example**
+  ```dart
+  ZIMKit().getGroupNameUpdatedEventStream().listen((event) {
+    print('Group name updated to: ${event.groupName}');
+  });
+  ```
+
 ### getGroupAvatarUrlUpdatedEventStream
 
 - **Description**
@@ -959,6 +966,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
 - **Prototype**
   ```dart
   Stream<ZIMKitEventGroupAvatarUrlUpdated> getGroupAvatarUrlUpdatedEventStream()
+  ```
+
+- **Example**
+  ```dart
+  ZIMKit().getGroupAvatarUrlUpdatedEventStream().listen((event) {
+    print('Group avatar updated');
+  });
   ```
 
 ### getGroupNoticeUpdatedEventStream
@@ -971,6 +985,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
   Stream<ZIMKitEventGroupNoticeUpdated> getGroupNoticeUpdatedEventStream()
   ```
 
+- **Example**
+  ```dart
+  ZIMKit().getGroupNoticeUpdatedEventStream().listen((event) {
+    print('Group notice updated: ${event.notice}');
+  });
+  ```
+
 ### getGroupAttributesUpdatedEventStream
 
 - **Description**
@@ -979,6 +1000,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
 - **Prototype**
   ```dart
   Stream<ZIMKitEventGroupAttributesUpdated> getGroupAttributesUpdatedEventStream()
+  ```
+
+- **Example**
+  ```dart
+  ZIMKit().getGroupAttributesUpdatedEventStream().listen((event) {
+    print('Group attributes updated');
+  });
   ```
 
 ### getGroupMemberStateChangedEventStream
@@ -991,6 +1019,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
   Stream<ZIMKitEventGroupMemberStateChanged> getGroupMemberStateChangedEventStream()
   ```
 
+- **Example**
+  ```dart
+  ZIMKit().getGroupMemberStateChangedEventStream().listen((event) {
+    print('Member ${event.userID} ${event.state}');
+  });
+  ```
+
 ### getGroupMemberInfoUpdatedEventStream
 
 - **Description**
@@ -999,6 +1034,13 @@ This document describes the APIs available in ZIMKit, including initialization, 
 - **Prototype**
   ```dart
   Stream<ZIMKitEventGroupMemberInfoUpdated> getGroupMemberInfoUpdatedEventStream()
+  ```
+
+- **Example**
+  ```dart
+  ZIMKit().getGroupMemberInfoUpdatedEventStream().listen((event) {
+    print('Member info updated: ${event.userID}');
+  });
   ```
 
 ---
