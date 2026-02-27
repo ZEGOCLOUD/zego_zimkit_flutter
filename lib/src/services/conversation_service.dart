@@ -1,5 +1,12 @@
 part of '../zimkit.dart';
 
+/// Service mixin for conversation-related operations
+///
+/// Provides methods for managing conversations including:
+/// - Listing conversations
+/// - Deleting conversations
+/// - Managing conversation settings (pinned, notification status)
+/// Use with [ZIMKit] to access conversation functionality.
 mixin ZIMKitConversationService {
   Future<ZIMKitConversationListNotifier> getConversationListNotifier() {
     return ZIMKitCore.instance.getConversationListNotifier();

@@ -1,5 +1,10 @@
 part of '../zimkit.dart';
 
+/// Service mixin for helper and utility functions
+///
+/// Provides methods for app lifecycle management, message forwarding,
+/// and platform-specific functionality.
+/// Use with [ZIMKit] to access helper functionality.
 mixin ZIMKitHelperService {
   void registerAppLifecycleStateChangedListener(
     ZegoPluginAdapterMessageHandler listener,

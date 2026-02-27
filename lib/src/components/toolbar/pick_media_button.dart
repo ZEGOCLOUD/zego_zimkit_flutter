@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Button widget for picking media (images and videos) to send
+///
+/// Displays a button that triggers the media picker when pressed.
+/// Used in the message input toolbar.
 class ZIMKitPickMediaButton extends StatelessWidget {
   const ZIMKitPickMediaButton({
     super.key,

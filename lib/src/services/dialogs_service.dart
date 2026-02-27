@@ -1,5 +1,13 @@
 part of '../zimkit.dart';
 
+/// Service mixin for default dialog functionality
+///
+/// Provides default UI dialogs for common operations like:
+/// - Creating new peer chats
+/// - Creating new group chats
+/// - Joining existing groups
+///
+/// Use with [ZIMKit] to access dialog functionality.
 mixin ZIMKitDefaultDialogService {
   void showDefaultNewPeerChatDialog(BuildContext context) {
     final userIDController = TextEditingController();

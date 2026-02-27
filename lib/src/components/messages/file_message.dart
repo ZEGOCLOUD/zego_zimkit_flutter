@@ -7,6 +7,9 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Widget for displaying file messages
+///
+/// Renders a file message with file icon, name, and size information.
 class ZIMKitFileMessage extends StatelessWidget {
   const ZIMKitFileMessage({
     super.key,

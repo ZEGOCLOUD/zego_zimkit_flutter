@@ -13,6 +13,9 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Widget for displaying and playing audio messages
+///
+/// Renders an audio message with a play/pause button, progress indicator, and duration display.
 class ZIMKitAudioMessage extends StatefulWidget {
   const ZIMKitAudioMessage({
     super.key,

@@ -11,6 +11,9 @@ import 'package:zego_zimkit/src/zimkit.dart';
 
 export 'event.dart';
 
+/// Database class for ZIMKit internal data storage
+///
+/// Manages in-memory storage for conversations, messages, group members, and group info.
 class ZIMKitDB {
   ZIMKitConversationList conversations = ZIMKitConversationList();
 
@@ -43,6 +46,10 @@ class ZIMKitDB {
   }
 }
 
+/// Data class for managing group information with reactive updates
+///
+/// Provides ValueNotifier-based storage for group info with methods to update
+/// group state, notice, and attributes.
 class ZIMKitGroupInfoData {
   ValueNotifier<ZIMKitGroupInfo> notifier = ValueNotifier(ZIMKitGroupInfo());
 
@@ -79,6 +86,10 @@ class ZIMKitGroupInfoData {
   }
 }
 
+/// Data class for managing conversation list
+///
+/// Stores conversation list with support for pagination, loading state,
+/// and reactive updates via ListNotifier.
 class ZIMKitConversationList {
   bool inited = false;
 
@@ -208,6 +219,10 @@ class ZIMKitConversationList {
   }
 }
 
+/// Data class for managing message list
+///
+/// Stores message list for a conversation with support for pagination,
+/// loading state, and reactive updates via ListNotifier.
 class ZIMKitMessageList {
   bool inited = false;
 
@@ -299,6 +314,9 @@ class ZIMKitMessageList {
   }
 }
 
+/// Data class representing message reactions
+///
+/// Stores reaction information including the reaction emoji, user list, total count, and whether the current user has reacted.
 class ZIMKitReactions {
   String reaction = '';
   List<ZIMMessageReactionUserInfo> userList = [];
@@ -372,6 +390,10 @@ extension ZIMKitMessageExtension on ZIMKitMessage {
   }
 }
 
+/// Data class for managing group member list
+///
+/// Stores group member list with support for adding, removing, and updating members.
+/// Provides reactive updates via ListNotifier and tracks owner information.
 class ZIMKitGroupMemberList {
   ListNotifier<ZIMGroupMemberInfo> notifier = ListNotifier([]);
   bool fetched = false;

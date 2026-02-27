@@ -7,6 +7,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 
+/// Widget for displaying video message thumbnail preview
+///
+/// Shows a video thumbnail with a play button overlay before the video is played.
 class ZIMKitVideoMessagePreview extends StatelessWidget {
   const ZIMKitVideoMessagePreview(this.message, {super.key});
 

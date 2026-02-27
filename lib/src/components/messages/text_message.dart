@@ -10,6 +10,9 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Widget for displaying text messages
+///
+/// Renders a text message bubble with support for reactions, replies, and click interactions.
 class ZIMKitTextMessage extends StatelessWidget {
   const ZIMKitTextMessage({
     super.key,

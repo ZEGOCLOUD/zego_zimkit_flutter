@@ -5,6 +5,9 @@ import 'package:zego_zim/zego_zim.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 
+/// Widget for displaying message send status indicator
+///
+/// Shows a colored dot indicating whether the message was sent, failed, or is sending.
 class ZIMKitMessageStatusDot extends StatelessWidget {
   const ZIMKitMessageStatusDot(this.message, {super.key});
   final ZIMKitMessage message;

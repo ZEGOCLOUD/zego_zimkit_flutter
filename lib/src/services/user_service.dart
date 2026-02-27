@@ -1,5 +1,9 @@
 part of '../zimkit.dart';
 
+/// Service mixin for user-related operations
+///
+/// Provides methods for connecting, disconnecting, and managing user sessions.
+/// Use with [ZIMKit] to access user functionality.
 mixin ZIMKitUserService {
   Future<int> connectUser({
     required String id,

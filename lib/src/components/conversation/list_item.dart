@@ -8,7 +8,9 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 
-/// TODO config/style/event
+/// Widget for displaying a single conversation item in the conversation list
+///
+/// Shows conversation avatar, name, last message preview, timestamp, and unread count.
 class ZIMKitConversationWidget extends StatelessWidget {
   const ZIMKitConversationWidget({
     super.key,

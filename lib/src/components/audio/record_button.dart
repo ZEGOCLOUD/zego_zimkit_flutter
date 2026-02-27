@@ -18,6 +18,10 @@ import 'events.dart';
 import 'status.dart';
 import 'style.dart';
 
+/// Button widget for recording voice messages
+///
+/// Displays a microphone button that records audio when pressed and held.
+/// Shows recording state with visual feedback and supports slide-to-cancel.
 class ZIMKitRecordButton extends StatefulWidget {
   ZIMKitRecordButton({
     super.key,

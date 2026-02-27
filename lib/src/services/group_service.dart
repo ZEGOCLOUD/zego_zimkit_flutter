@@ -1,5 +1,9 @@
 part of '../zimkit.dart';
 
+/// Service mixin for group-related operations
+///
+/// Provides methods for creating, joining, and managing group conversations.
+/// Use with [ZIMKit] to access group functionality.
 mixin ZIMKitGroupService {
   // return the new group's conversationID
   // If you specify an ID, the group will be created using the ID you specified.

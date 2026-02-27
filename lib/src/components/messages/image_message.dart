@@ -10,6 +10,9 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Widget for displaying image messages
+///
+/// Renders an image message with support for reactions and click/tap interactions.
 class ZIMKitImageMessage extends StatelessWidget {
   const ZIMKitImageMessage({
     super.key,

@@ -12,6 +12,10 @@ import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Generic widget for rendering message content
+///
+/// Automatically selects the appropriate message type widget based on the message content.
+/// Supports text, image, video, audio, file, and combine messages.
 class ZIMKitMessageWidget extends StatelessWidget {
   const ZIMKitMessageWidget({
     super.key,

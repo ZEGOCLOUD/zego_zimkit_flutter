@@ -10,6 +10,9 @@ import 'package:zego_zimkit/src/zimkit.dart';
 import 'player.dart';
 import 'preview.dart';
 
+/// Widget for displaying video messages
+///
+/// Renders a video message with a thumbnail preview and play functionality.
 class ZIMKitVideoMessage extends StatelessWidget {
   const ZIMKitVideoMessage({
     super.key,

@@ -4,6 +4,10 @@ import 'package:zego_zimkit/src/components/defines/style.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 
+/// Widget for displaying message bubble pointer/tail
+///
+/// Renders the triangular pointer on message bubbles to indicate
+/// whether the message was sent or received.
 class ZIMKitTextMessagePointer extends StatelessWidget {
   final ZIMKitMessageType messageType;
   final bool isMine;

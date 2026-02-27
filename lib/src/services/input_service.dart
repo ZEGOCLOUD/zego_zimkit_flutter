@@ -1,5 +1,10 @@
 part of '../zimkit.dart';
 
+/// Service mixin for input and file handling
+///
+/// Provides methods for picking files and detecting message types by file extension.
+/// Handles permission requests for storage and media access.
+/// Use with [ZIMKit] to access input functionality.
 mixin ZIMKitInputService {
   Future<List<ZIMKitPlatformFile>> pickFiles(
       {ZIMKitFileType type = ZIMKitFileType.any,

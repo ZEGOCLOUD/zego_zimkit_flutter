@@ -4,6 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:zego_zimkit/src/components/messages/defines.dart';
 import 'package:zego_zimkit/src/defines.dart';
 
+/// Processor for handling multi-select mode in message list
+///
+/// Manages the state of selected messages and provides methods for
+/// entering/exiting multi-select mode and selecting/deselecting messages.
 class ZIMKitMessageListMultiSelectProcessor {
   /// Multi-select mode notifier for external control
   ValueNotifier<ZIMKitMessageListMultiModeData> modeNotifier =

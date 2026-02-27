@@ -12,6 +12,9 @@ import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'controls.dart';
 import 'preview.dart';
 
+/// Widget for playing video messages
+///
+/// Provides video playback functionality with custom controls using Chewie.
 class ZIMKitVideoMessagePlayer extends StatefulWidget {
   const ZIMKitVideoMessagePlayer(this.message, {super.key});
 

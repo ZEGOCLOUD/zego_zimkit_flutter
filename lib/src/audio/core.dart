@@ -6,6 +6,10 @@ import 'data.dart';
 
 part 'event.dart';
 
+/// Singleton class for managing audio recording and playback
+///
+/// Provides functionality for recording voice messages and playing audio files.
+/// Used internally by ZIMKit for audio message handling.
 class ZIMKitAudioInstance with ZIMKitAudioEventService {
   factory ZIMKitAudioInstance() => instance;
 

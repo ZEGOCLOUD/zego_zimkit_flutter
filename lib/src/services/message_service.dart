@@ -1,5 +1,10 @@
 part of '../zimkit.dart';
 
+/// Service mixin for message-related operations
+///
+/// Provides methods for sending, receiving, and managing messages.
+/// Supports text, media (image, audio, video, file), custom, and combine messages.
+/// Use with [ZIMKit] to access message functionality.
 mixin ZIMKitMessageService {
   // Event
   Future<ZIMKitMessageListNotifier> getMessageListNotifier(

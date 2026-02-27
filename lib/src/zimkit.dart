@@ -36,6 +36,20 @@ part 'services/user_service.dart';
 
 part 'services/dialogs_service.dart';
 
+/// ZIMKit - Zego Instant Messaging Kit
+///
+/// A Flutter SDK that provides instant messaging capabilities for building
+/// chat applications. ZIMKit offers a complete set of UI components and services
+/// for conversations, messages, groups, and user management.
+///
+/// Usage:
+/// ```dart
+/// await ZIMKit().init(
+///   appID: yourAppID,
+///   appSign: yourAppSign,
+/// );
+/// ```
+///
 /// {@category Get started}
 /// {@category APIs}
 /// {@category Events}

@@ -4,6 +4,10 @@ import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'defines.dart';
 import 'status.dart';
 
+/// Widget for locking recording mode
+///
+/// During voice message recording, this widget allows the user to
+/// lock the recording mode to continue recording without holding the button.
 class ZIMKitRecordLocker extends StatefulWidget {
   const ZIMKitRecordLocker({
     super.key,

@@ -17,6 +17,10 @@ import 'package:video_player/video_player.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 
+/// Custom video playback controls for ZIMKit
+///
+/// Provides custom UI controls for video playback including play/pause,
+/// progress bar, and fullscreen toggle.
 class ZIMKitCustomControls extends StatefulWidget {
   const ZIMKitCustomControls({
     this.showPlayButton = true,

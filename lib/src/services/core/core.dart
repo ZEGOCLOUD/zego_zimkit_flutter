@@ -46,6 +46,16 @@ part 'user.dart';
 const int kDefaultLoadCount = 30; // default is 30
 const bool kEnableAutoDownload = true;
 
+/// Core singleton class for ZIMKit internal operations
+///
+/// This class manages the core functionality of ZIMKit including:
+/// - Application initialization and configuration
+/// - User session management
+/// - Database and caching
+/// - Event handling and broadcasting
+/// - Message and conversation state management
+///
+/// Internal use only. Use [ZIMKit] for public APIs.
 class ZIMKitCore
     with ZIMKitCoreEvent, ZIMKitCoreUserData, ZIMKitOfflineMessage {
   factory ZIMKitCore() => instance;

@@ -15,6 +15,13 @@ import 'package:zego_zimkit/src/zimkit.dart';
 
 import 'long_press_event.dart';
 
+/// Widget for displaying a list of messages in a conversation
+///
+/// Renders a scrollable list of messages with support for:
+/// - Message grouping by sender
+/// - Long press interactions
+/// - Multi-select mode
+/// - Auto-loading on scroll
 class ZIMKitMessageListView extends StatefulWidget {
   const ZIMKitMessageListView({
     super.key,

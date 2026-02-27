@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_logs_yoer/flutter_logs_yoer.dart';
 
+/// Logger class for ZIMKit
+///
+/// Provides logging functionality for debugging and monitoring ZIMKit operations.
+/// Supports info, warning, error, and error trace logging levels.
 class ZIMKitLogger {
   static bool isZimKitLoggerInit = false;
 

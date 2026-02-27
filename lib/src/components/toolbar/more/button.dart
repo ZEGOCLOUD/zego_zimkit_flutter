@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:zego_zimkit/src/components/style.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 
+/// Button widget for expanding additional actions in the toolbar
+///
+/// Displays a button that shows additional action options when pressed.
+/// Used in the message input toolbar for features like location, file, etc.
 class ZIMKitMoreButton extends StatelessWidget {
   ZIMKitMoreButton({
     super.key,

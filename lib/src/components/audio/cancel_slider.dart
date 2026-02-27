@@ -11,6 +11,10 @@ import 'package:zego_zimkit/src/components/style.dart';
 import 'defines.dart';
 import 'status.dart';
 
+/// Widget for slide-to-cancel recording
+///
+/// During voice message recording, this widget allows the user to
+/// slide left to cancel the recording.
 class ZIMKitRecordCancelSlider extends StatefulWidget {
   const ZIMKitRecordCancelSlider({
     super.key,

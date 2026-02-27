@@ -4,6 +4,10 @@ import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
+/// Avatar widget for displaying user profile images
+///
+/// Displays a user's avatar image with fallback to initials if no image is available.
+/// Queries user information to get the avatar URL.
 class ZIMKitAvatar extends StatelessWidget {
   const ZIMKitAvatar({
     super.key,
