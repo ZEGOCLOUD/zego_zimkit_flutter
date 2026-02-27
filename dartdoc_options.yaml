@@ -5,15 +5,21 @@ dartdoc:
       markdown: doc/get-started.md
     "APIs":
       markdown: doc/apis.md
-    "Events":
-      markdown: doc/events.md
+    "Components":
+      markdown: doc/components.md
     "Configs":
       markdown: doc/configs.md
+    "Defines":
+      markdown: doc/defines.md
+    "Events":
+      markdown: doc/events.md
   categoryOrder:
     - "Get started"
     - "APIs"
-    - "Events"
+    - "Components"
     - "Configs"
+    - "Defines"
+    - "Events"
   showUndocumentedCategories: true
   ignore:
     - broken-link

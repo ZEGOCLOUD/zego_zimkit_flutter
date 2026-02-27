@@ -57,6 +57,14 @@ Tips message type enumeration. Used to display system prompts, such as group ann
 | **groupInfoChanged** | Group information changed | `4` |
 | **other** | Other tips | `5` |
 
+### ZIMKitInvitationProtocolKey
+
+Invitation Protocol Key. Used for identifying invitation-related operations.
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| **operationType** | Operation type key | `String` |
+
 ### ZIMKitEventReason
 
 Event reason enumeration. Used to identify the reason for an event occurrence.
@@ -371,6 +379,29 @@ Media transfer progress class.
 | **totalSize** | Total size in bytes | `int` | `0` |
 | **transferredSize** | Transferred size in bytes | `int` | `0` |
 | **progress** | Progress percentage | `double` | `0.0` |
+
+### ZIMKitFileType
+
+File type enumeration (from file_picker package).
+
+| Name | Description | Value |
+| :--- | :--- | :--- |
+| **any** | Any file type | `0` |
+| **image** | Image files | `1` |
+| **video** | Video files | `2` |
+| **audio** | Audio files | `3` |
+
+### ZIMKitPlatformFile
+
+Platform file class (from file_picker package).
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| **name** | File name | `String` |
+| **path** | File path | `String?` |
+| **size** | File size in bytes | `int` |
+| **bytes** | File bytes | `Uint8List?` |
+| **extension** | File extension | `String?` |
 
 ### ZegoZIMKitOfflineMessageCacheInfo
 

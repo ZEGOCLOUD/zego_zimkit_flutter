@@ -372,6 +372,22 @@ ZIMKitInnerText(
 
 ---
 
+## ZIMKitInnerTextZhCN
+
+Chinese (Simplified) Text Configuration. Extends ZIMKitInnerText with default Chinese translations.
+
+### Usage
+
+```dart
+ZIMKitConfig(
+  innerText: ZIMKitInnerTextZhCN(),
+)
+```
+
+All properties are inherited from [ZIMKitInnerText](#zimkitinnertext) with default Chinese values.
+
+---
+
 ## ZegoZIMKitNotificationConfig
 
 Notification Configuration Class. Used to configure offline push notifications.

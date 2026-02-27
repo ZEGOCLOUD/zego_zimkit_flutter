@@ -4,6 +4,34 @@ This document describes the main UI components (Widgets) in ZIMKit.
 
 - [ZIMKitConversationListView](#zimkitconversationlistview)
 - [ZIMKitMessageListPage](#zimkitmessagelistpage)
+- [ZIMKitConversationListConfigs](#zimkitconversationlistconfigs)
+- [ZIMKitConversationListEvents](#zimkitconversationlistevents)
+- [ZIMKitConversationListStyles](#zimkitconversationliststyles)
+- [ZIMKitMessageListPageConfigs](#zimkitmessageListpageconfigs)
+- [ZIMKitMessageListPageStyles](#zimkitmessageListpagestyles)
+- [ZIMKitMessageListPageEvents](#zimkitmessageListpageevents)
+- [ZIMKitMessageListConfigs](#zimkitmessagelistconfigs)
+- [ZIMKitMessageListStyles](#zimkitmessagestyles)
+- [ZIMKitMessageListEvents](#zimkitmessagelistevents)
+- [ZIMKitMessageInputConfigs](#zimkitmessageinputconfigs)
+- [ZIMKitMessageInputStyles](#zimkitmessageinputstyles)
+- [ZIMKitMessageInputEvents](#zimkitmessageinputevents)
+- [Audio Recording Components](#audio-recording-components)
+- [Video Message Components](#video-message-components)
+- [Message Style Configuration](#message-style-configuration)
+- [ZIMKitStyle](#zimkitstyle)
+- [ZIMKitAvatar](#zimkitavatar)
+- [ZIMKitMessageInput](#zimkitmessageinput)
+- [ZIMKitMessageListView](#zimkitmessagelistview)
+- [ZIMKitMessageWidget](#zimkitmessagewidget)
+- [ZIMKitTextMessage](#zimkittextmessage)
+- [ZIMKitImageMessage](#zimkitimagemessage)
+- [ZIMKitFileMessage](#zimkitfilemessage)
+- [ZIMKitAudioMessage](#zimkitaudiomessage)
+- [ZIMKitVideoMessage](#zimkitvideomessage)
+- [ZIMKitCombineMessage](#zimkitcombinemessage)
+- [ZIMKitRevokeMessage](#zimkitrevokemessage)
+- [ZIMKitMultiSelectToolbarWidget](#zimkitmultiselecttoolbarwidget)
 
 ---
 
@@ -99,7 +127,31 @@ Future<void> scrollToMessage(String messageIDStr)
 
 ---
 
-## Audio Recording Components
+## ZIMKitStyle
+
+Style configuration class for customizing the visual appearance of ZIMKit.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **primaryColor** | Primary color | `Color?` | `null` |
+| **backgroundColor** | Background color | `Color?` | `null` |
+| **textColor** | Main text color | `Color?` | `null` |
+| **secondaryTextColor** | Secondary text color | `Color?` | `null` |
+| **dividerColor** | Divider color | `Color?` | `null` |
+| **messageBubbleColor** | Message bubble color (general) | `Color?` | `null` |
+| **receivedMessageBubbleColor** | Received message bubble color | `Color?` | `null` |
+| **sentMessageBubbleColor** | Sent message bubble color | `Color?` | `null` |
+
+### Example
+
+```dart
+ZIMKitStyle(
+  primaryColor: Colors.blue,
+  backgroundColor: Colors.white,
+  textColor: Colors.black,
+  messageBubbleColor: Colors.grey[200],
+)
+```
 
 ### ZIMKitRecordState
 
@@ -217,3 +269,253 @@ Style configuration class for message components.
 | :--- | :--- | :--- | :--- |
 | **height** | Default height of message items in pixels | `double` | `70` |
 | **iconSize** | Default size of message icons in pixels | `double` | `32` |
+
+---
+
+## ZIMKitStyle
+
+Style configuration class for customizing the visual appearance of ZIMKit.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **primaryColor** | Primary color | `Color?` | `null` |
+| **backgroundColor** | Background color | `Color?` | `null` |
+| **textColor** | Main text color | `Color?` | `null` |
+| **secondaryTextColor** | Secondary text color | `Color?` | `null` |
+| **dividerColor** | Divider color | `Color?` | `null` |
+| **messageBubbleColor** | Message bubble color (general) | `Color?` | `null` |
+| **receivedMessageBubbleColor** | Received message bubble color | `Color?` | `null` |
+| **sentMessageBubbleColor** | Sent message bubble color | `Color?` | `null` |
+
+### Example
+
+```dart
+ZIMKitStyle(
+  primaryColor: Colors.blue,
+  backgroundColor: Colors.white,
+  textColor: Colors.black,
+  messageBubbleColor: Colors.grey[200],
+)
+```
+
+---
+
+## ZIMKitAvatar
+
+Avatar widget for displaying user or conversation avatars.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **avatarUrl** | Avatar image URL | `String` | Required |
+| **avatarSize** | Size of the avatar | `double` | `40` |
+| **borderRadius** | Border radius | `double` | `20` |
+
+### Example
+
+```dart
+ZIMKitAvatar(
+  avatarUrl: 'https://example.com/avatar.png',
+  avatarSize: 50,
+)
+```
+
+---
+
+## ZIMKitMessageInput
+
+Input widget for composing and sending messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **conversationID** | Conversation ID | `String` | Required |
+| **conversationType** | Conversation type | `ZIMConversationType` | `peer` |
+| **configs** | Input configuration | `ZIMKitMessageInputConfigs?` | `null` |
+| **styles** | Input styles | `ZIMKitMessageInputStyles?` | `null` |
+| **events** | Input events | `ZIMKitMessageInputEvents?` | `null` |
+
+---
+
+## ZIMKitMessageListView
+
+Widget for displaying a list of messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **conversationID** | Conversation ID | `String` | Required |
+| **conversationType** | Conversation type | `ZIMConversationType` | `peer` |
+| **configs** | List configuration | `ZIMKitMessageListConfigs?` | `null` |
+| **styles** | List styles | `ZIMKitMessageListStyles?` | `null` |
+| **events** | List events | `ZIMKitMessageListEvents?` | `null` |
+
+---
+
+## ZIMKitMessageWidget
+
+General message widget for rendering different message types.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+| **isShowAvatar** | Whether to show avatar | `bool` | `true` |
+| **isShowNickname** | Whether to show nickname | `bool` | `true` |
+
+---
+
+## ZIMKitTextMessage
+
+Widget for displaying text messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitImageMessage
+
+Widget for displaying image messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitFileMessage
+
+Widget for displaying file messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitAudioMessage
+
+Widget for displaying and playing audio messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitVideoMessage
+
+Widget for displaying video messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitCombineMessage
+
+Widget for displaying combined/forwarded messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitRevokeMessage
+
+Widget for displaying revoked messages.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **message** | Message to display | `ZIMKitMessage` | Required |
+
+---
+
+## ZIMKitMultiSelectToolbarWidget
+
+Toolbar widget for multi-select mode in message list.
+
+### Parameters
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **selectedMessages** | List of selected messages | `List<ZIMKitMessage>` | Required |
+| **onForward** | Forward callback | `void Function()?` | `null` |
+| **onDelete** | Delete callback | `void Function()?` | `null` |
+
+---
+
+## ZIMKitMessageInputConfigs
+
+Configuration for the message input widget.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **inputConfig** | Input box configuration | `ZIMKitInputConfig?` | `null` |
+| **maxLines** | Maximum lines for input | `int` | `4` |
+
+---
+
+## ZIMKitMessageListConfigs
+
+Configuration for the message list widget.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **scrollController** | Scroll controller | `ScrollController?` | `null` |
+| **enableTypingIndicator** | Show typing indicator | `bool` | `true` |
+
+---
+
+## ZIMKitMessageListPageConfigs
+
+Configuration for the message list page.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **inputConfig** | Input configuration | `ZIMKitInputConfig?` | `null` |
+| **messageListConfig** | Message list configuration | `ZIMKitMessageListConfigs?` | `null` |
+
+---
+
+## ZIMKitConversationListConfigs
+
+Configuration for the conversation list widget.
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **filter** | Filter function | `List<ZIMKitConversation> Function(BuildContext, List<ZIMKitConversation>)?` | `null` |
+| **sorter** | Sort function | `int Function(ZIMKitConversation, ZIMKitConversation)?` | `null` |
+
+---
+
+## ZIMKitConversationListEvents
+
+Events for the conversation list widget.
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| **onPressed** | Item tap event | `void Function(BuildContext, ZIMKitConversation, VoidCallback)?` |
+| **onLongPressed** | Item long press event | `void Function(BuildContext, ZIMKitConversation)?` |
