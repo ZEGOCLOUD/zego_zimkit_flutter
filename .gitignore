@@ -80,3 +80,5 @@
 local.properties
 example/ios/
 example/macos/
+.history
+.claude
