@@ -60,7 +60,8 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
   }
 
   void onMessageReactionsChanged(
-      ZIM zim, List<ZIMMessageReaction> reactions) async {
+      ZIM zim, ZIMMessageReactionsChangedEventResult result) async {
+    final reactions = result.reactions;
     ZIMKitLogger.logInfo('onMessageReactionsChanged: ${reactions.length}');
     if (reactions.isEmpty) return;
 
