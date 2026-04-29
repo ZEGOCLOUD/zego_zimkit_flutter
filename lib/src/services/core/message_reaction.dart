@@ -13,7 +13,7 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
 
     await ZIM
         .getInstance()!
-        .addMessageReaction(reactionType, message.zim)
+        .addMessageReaction(reactionType: reactionType, message: message.zim)
         .then((result) {
       ZIMKitLogger.logInfo(
           'addMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
@@ -42,7 +42,7 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
 
     await ZIM
         .getInstance()!
-        .deleteMessageReaction(reactionType, message.zim)
+        .deleteMessageReaction(reactionType: reactionType, message: message.zim)
         .then((result) {
       ZIMKitLogger.logInfo(
           'deleteMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
@@ -60,7 +60,8 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
   }
 
   void onMessageReactionsChanged(
-      ZIM zim, List<ZIMMessageReaction> reactions) async {
+      ZIM zim, ZIMMessageReactionsChangedEventResult result) async {
+    final reactions = result.reactions;
     ZIMKitLogger.logInfo('onMessageReactionsChanged: ${reactions.length}');
     if (reactions.isEmpty) return;
 

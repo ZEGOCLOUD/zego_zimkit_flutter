@@ -1,6 +1,6 @@
 name: zego_zimkit
 description: A low-code plugin that provides a wrapper for IM widgets. Aims to simplify the development process by offering a user-friendly solution into applications.
-version: 1.19.9
+version: 1.20.0
 homepage: https://www.zegocloud.com/
 screenshots:
   - description: "A full-featured chat kit that enables you to easily build one-on-one or group chat into your app in minutes."
@@ -15,8 +15,8 @@ dependencies:
     sdk: flutter
 
   zego_plugin_adapter: ^2.14.0
-  zego_uikit_signaling_plugin: ^2.8.19
-  zego_zim: ^2.21.1+1
+  zego_uikit_signaling_plugin: ^2.8.20
+  zego_zim: ^2.28.0
   zego_zim_audio: ^1.0.0+1
   zego_zpns: ^2.8.0
 
