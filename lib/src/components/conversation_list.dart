@@ -10,7 +10,7 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitConversationListView extends StatefulWidget {
   const ZIMKitConversationListView({
-    Key? key,
+    super.key,
     this.filter,
     this.sorter,
     this.onPressed,
@@ -23,7 +23,7 @@ class ZIMKitConversationListView extends StatefulWidget {
     this.errorBuilder,
     this.scrollController,
     this.theme,
-  }) : super(key: key);
+  });
 
   // logic function
   final List<ZIMKitConversationNotifier> Function(
@@ -136,7 +136,7 @@ class _ZIMKitConversationListViewState
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ValueListenableBuilder(
-              valueListenable: snapshot.data! as ZIMKitConversationListNotifier,
+              valueListenable: snapshot.data!,
               builder: (
                 BuildContext context,
                 List<ZIMKitConversationNotifier> conversationList,
@@ -314,8 +314,10 @@ class _ZIMKitConversationListViewState
       if (conversationType == ZIMConversationType.group)
         const PopupMenuItem(value: 1, child: Text('Quit'))
     ]).then((value) {
+      if (!mounted) return;
       switch (value) {
         case 0:
+          if (!context.mounted) return;
           showDialog(
             context: context,
             builder: (context) {
@@ -343,6 +345,7 @@ class _ZIMKitConversationListViewState
           );
           break;
         case 1:
+          if (!context.mounted) return;
           showDialog(
             context: context,
             builder: (context) {

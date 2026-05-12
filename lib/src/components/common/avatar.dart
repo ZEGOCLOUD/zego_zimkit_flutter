@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:zego_zim/zego_zim.dart';
-
 import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitAvatar extends StatelessWidget {
   const ZIMKitAvatar({
-    Key? key,
+    super.key,
     required this.userID,
     this.name = '',
     this.height,
     this.width,
-  }) : super(key: key);
+  });
   final String userID;
   final String name;
   final double? height;
@@ -27,7 +25,7 @@ class ZIMKitAvatar extends StatelessWidget {
         future: ZIMKit().queryUser(userID),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return (snapshot.data! as ZIMUserFullInfo).icon;
+            return snapshot.data!.icon;
           } else {
             return CircleAvatar(
                 child: Text(name.isNotEmpty ? name[0] : userID[0]));

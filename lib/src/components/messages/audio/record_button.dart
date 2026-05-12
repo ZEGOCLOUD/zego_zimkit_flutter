@@ -16,7 +16,7 @@ import 'style.dart';
 
 class ZIMKitRecordButton extends StatefulWidget {
   const ZIMKitRecordButton({
-    Key? key,
+    super.key,
     required this.status,
     required this.conversationID,
     this.conversationType = ZIMConversationType.peer,
@@ -25,7 +25,7 @@ class ZIMKitRecordButton extends StatefulWidget {
     this.onMessageSent,
     this.events,
     this.preMessageSending,
-  }) : super(key: key);
+  });
 
   final Widget? icon;
   final EdgeInsetsGeometry padding;

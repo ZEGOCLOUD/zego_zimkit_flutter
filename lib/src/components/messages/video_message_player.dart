@@ -12,7 +12,7 @@ import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitVideoMessagePlayer extends StatefulWidget {
-  const ZIMKitVideoMessagePlayer(this.message, {Key? key}) : super(key: key);
+  const ZIMKitVideoMessagePlayer(this.message, {super.key});
 
   final ZIMKitMessage message;
 

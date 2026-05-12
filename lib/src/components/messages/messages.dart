@@ -10,7 +10,7 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitMessageWidget extends StatelessWidget {
   const ZIMKitMessageWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.onPressed,
     this.onLongPress,
@@ -18,7 +18,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
     this.avatarBuilder,
     this.timestampBuilder,
     this.messageContentBuilder,
-  }) : super(key: key);
+  });
 
   final ZIMKitMessage message;
 
@@ -159,7 +159,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
           message.info.conversationID, message.info.senderUserID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final userInfo = snapshot.data! as ZIMGroupMemberInfo;
+          final userInfo = snapshot.data!;
           return Text(
             userInfo.memberNickname.isNotEmpty
                 ? userInfo.memberNickname

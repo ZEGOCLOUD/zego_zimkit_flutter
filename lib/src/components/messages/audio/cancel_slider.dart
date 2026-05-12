@@ -10,13 +10,13 @@ import 'status.dart';
 
 class ZIMKitRecordCancelSlider extends StatefulWidget {
   const ZIMKitRecordCancelSlider({
-    Key? key,
+    super.key,
     required this.status,
     this.stopIcon,
     this.sendButtonWidget,
     this.onMessageSent,
     this.preMessageSending,
-  }) : super(key: key);
+  });
 
   final Widget? stopIcon;
 

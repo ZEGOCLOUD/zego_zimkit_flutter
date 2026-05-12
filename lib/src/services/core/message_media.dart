@@ -163,41 +163,28 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
 
     final downloadTypes = <ZIMMediaFileType>[];
 
-    switch (kitMessageNotifier.value.zim.runtimeType) {
-      case ZIMVideoMessage:
-        if ((kitMessageNotifier.value.zim as ZIMVideoMessage)
-            .videoFirstFrameLocalPath
-            .isEmpty) {
-          downloadTypes.add(ZIMMediaFileType.videoFirstFrame);
-        }
-        if ((kitMessageNotifier.value.zim as ZIMMediaMessage)
-            .fileLocalPath
-            .isEmpty) {
-          downloadTypes.add(ZIMMediaFileType.originalFile);
-        }
-        break;
-      case ZIMImageMessage:
-        // just use flutter cache manager
-        break;
-      case ZIMAudioMessage:
-        if ((kitMessageNotifier.value.zim as ZIMMediaMessage)
-            .fileLocalPath
-            .isEmpty) {
-          downloadTypes.add(ZIMMediaFileType.originalFile);
-        }
-        break;
-      case ZIMFileMessage:
-        if ((kitMessageNotifier.value.zim as ZIMMediaMessage)
-            .fileLocalPath
-            .isEmpty) {
-          downloadTypes.add(ZIMMediaFileType.originalFile);
-        }
-        break;
-
-      default:
-        ZIMKitLogger.logError(
-            'not support download ${kitMessageNotifier.value.zim.runtimeType}');
-        return;
+    final zimMessage = kitMessageNotifier.value.zim;
+    if (zimMessage is ZIMVideoMessage) {
+      if (zimMessage.videoFirstFrameLocalPath.isEmpty) {
+        downloadTypes.add(ZIMMediaFileType.videoFirstFrame);
+      }
+      if ((zimMessage as ZIMMediaMessage).fileLocalPath.isEmpty) {
+        downloadTypes.add(ZIMMediaFileType.originalFile);
+      }
+    } else if (zimMessage is ZIMImageMessage) {
+      // just use flutter cache manager
+    } else if (zimMessage is ZIMAudioMessage) {
+      if ((zimMessage as ZIMMediaMessage).fileLocalPath.isEmpty) {
+        downloadTypes.add(ZIMMediaFileType.originalFile);
+      }
+    } else if (zimMessage is ZIMFileMessage) {
+      if ((zimMessage as ZIMMediaMessage).fileLocalPath.isEmpty) {
+        downloadTypes.add(ZIMMediaFileType.originalFile);
+      }
+    } else {
+      ZIMKitLogger.logError(
+          'not support download ${zimMessage.runtimeType}');
+      return;
     }
 
     for (final downloadType in downloadTypes) {

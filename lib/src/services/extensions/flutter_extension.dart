@@ -8,7 +8,7 @@ class ListNotifier<T> extends ValueNotifier<List<T>> {
   /// Creates a ListNotifier instance
   ///
   /// [value] The initial list value
-  ListNotifier(List<T> value) : super(value);
+  ListNotifier(super.value);
 
   int get length => value.length;
   bool get isEmpty => value.isEmpty;
@@ -110,7 +110,7 @@ class MapNotifier<K, V> extends ValueNotifier<Map<K, V>> {
   /// Creates a MapNotifier instance
   ///
   /// [value] The initial map value
-  MapNotifier(Map<K, V> value) : super(value);
+  MapNotifier(super.value);
 
   int get length => value.length;
   bool get isEmpty => value.isEmpty;

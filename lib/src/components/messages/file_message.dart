@@ -4,11 +4,11 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitFileMessage extends StatelessWidget {
   const ZIMKitFileMessage({
-    Key? key,
+    super.key,
     required this.message,
     this.onPressed,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   final ZIMKitMessage message;
   final void Function(

@@ -4,10 +4,10 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitPickMediaButton extends StatelessWidget {
   const ZIMKitPickMediaButton({
-    Key? key,
+    super.key,
     required this.onFilePicked,
     this.icon,
-  }) : super(key: key);
+  });
 
   final Function(List<ZIMKitPlatformFile> files) onFilePicked;
   final Widget? icon;

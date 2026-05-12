@@ -5,10 +5,10 @@ import 'status.dart';
 
 class ZIMKitRecordLocker extends StatefulWidget {
   const ZIMKitRecordLocker({
-    Key? key,
+    super.key,
     this.icon,
     required this.processor,
-  }) : super(key: key);
+  });
 
   final Widget? icon;
   final ZIMKitRecordStatus processor;

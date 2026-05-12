@@ -6,13 +6,13 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitConversationWidget extends StatelessWidget {
   const ZIMKitConversationWidget({
-    Key? key,
+    super.key,
     required this.conversation,
     required this.onPressed,
     this.lastMessageTimeBuilder,
     this.lastMessageBuilder,
     required this.onLongPress,
-  }) : super(key: key);
+  });
 
   final ZIMKitConversation conversation;
 

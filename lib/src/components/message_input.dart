@@ -10,7 +10,7 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitMessageInput extends StatefulWidget {
   const ZIMKitMessageInput({
-    Key? key,
+    super.key,
     required this.conversationID,
     required this.recordStatus,
     this.conversationType = ZIMConversationType.peer,
@@ -39,7 +39,7 @@ class ZIMKitMessageInput extends StatefulWidget {
     this.textInputAction,
     this.textCapitalization,
     this.listScrollController,
-  }) : super(key: key);
+  });
 
   /// The conversationID of the conversation to send message.
   final String conversationID;

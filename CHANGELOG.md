@@ -3,6 +3,12 @@
 - Add iOS Swift Package Manager support while retaining CocoaPods support.
 - Require Dart 3.10, Flutter 3.44, and iOS 14 or later.
 - Upgrade `file_picker` to 13.1.0 and `permission_handler` to 13.0.2.
+- update docs.
+
+## 1.20.0
+
+- upgrade zego_zim to ^2.28.0
+
 ## 1.19.8/9
 
 - Update dependency

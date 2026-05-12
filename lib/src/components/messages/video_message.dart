@@ -7,11 +7,11 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitVideoMessage extends StatelessWidget {
   const ZIMKitVideoMessage({
-    Key? key,
+    super.key,
     this.onPressed,
     this.onLongPress,
     required this.message,
-  }) : super(key: key);
+  });
 
   final ZIMKitMessage message;
   final void Function(

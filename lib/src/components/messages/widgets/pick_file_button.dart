@@ -4,11 +4,11 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitPickFileButton extends StatelessWidget {
   const ZIMKitPickFileButton({
-    Key? key,
+    super.key,
     required this.onFilePicked,
     this.type = ZIMKitFileType.any,
     this.icon,
-  }) : super(key: key);
+  });
 
   final Function(List<ZIMKitPlatformFile> files) onFilePicked;
   final Widget? icon;

@@ -12,7 +12,7 @@ import 'package:zego_zimkit/src/services/services.dart';
 // featureList
 class ZIMKitMessageListView extends StatefulWidget {
   const ZIMKitMessageListView({
-    Key? key,
+    super.key,
     required this.conversationID,
     required this.scrollController,
     this.conversationType = ZIMConversationType.peer,
@@ -26,7 +26,7 @@ class ZIMKitMessageListView extends StatefulWidget {
     this.onLongPress,
     this.errorBuilder,
     this.theme,
-  }) : super(key: key);
+  });
 
   final String conversationID;
   final ZIMConversationType conversationType;
@@ -129,7 +129,7 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ValueListenableBuilder(
-              valueListenable: snapshot.data! as ZIMKitMessageListNotifier,
+              valueListenable: snapshot.data!,
               builder: (
                 BuildContext context,
                 List<ValueNotifier<ZIMKitMessage>> messageList,

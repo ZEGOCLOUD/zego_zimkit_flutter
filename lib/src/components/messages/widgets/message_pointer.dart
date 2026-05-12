@@ -8,10 +8,10 @@ class ZIMKitTextMessagePointer extends StatelessWidget {
   final bool isMine;
 
   const ZIMKitTextMessagePointer({
-    Key? key,
+    super.key,
     required this.messageType,
     required this.isMine,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

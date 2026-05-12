@@ -8,11 +8,11 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitImageMessage extends StatelessWidget {
   const ZIMKitImageMessage({
-    Key? key,
+    super.key,
     required this.message,
     this.onPressed,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   final ZIMKitMessage message;
 
@@ -55,7 +55,7 @@ class ZIMKitImageMessage extends StatelessWidget {
                       future:
                           File(message.imageContent!.fileLocalPath).exists(),
                       builder: (context, snapshot) {
-                        return snapshot.hasData && (snapshot.data! as bool)
+                        return snapshot.hasData && snapshot.data!
                             ? Image.file(
                                 File(message.imageContent!.fileLocalPath),
                                 cacheHeight: constraints.maxHeight.floor(),

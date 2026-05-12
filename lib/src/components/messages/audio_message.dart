@@ -10,11 +10,11 @@ import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitAudioMessage extends StatefulWidget {
   const ZIMKitAudioMessage({
-    Key? key,
+    super.key,
     required this.message,
     this.onPressed,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   final ZIMKitMessage message;
 

@@ -4,11 +4,11 @@ import 'package:zego_zimkit/src/components/messages/defines.dart';
 
 class ZIMKitMoreButton extends StatelessWidget {
   const ZIMKitMoreButton({
-    Key? key,
+    super.key,
     required this.buttons,
     this.icon,
     this.padding = const EdgeInsets.all(32.0),
-  }) : super(key: key);
+  });
 
   final Widget? icon;
   final List<Widget> buttons;

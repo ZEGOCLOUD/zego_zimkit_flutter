@@ -1,5 +1,3 @@
-library zego_zimkit;
-
 export 'src/callkit/defines.dart';
 export 'src/components/components.dart';
 export 'src/pages/pages.dart';

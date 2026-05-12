@@ -20,7 +20,7 @@ import 'package:zego_zimkit/src/services/services.dart';
 /// ```
 class ZIMKitMessageListPage extends StatefulWidget {
   const ZIMKitMessageListPage({
-    Key? key,
+    super.key,
     required this.conversationID,
     this.conversationType = ZIMConversationType.peer,
     this.appBarBuilder,
@@ -58,7 +58,7 @@ class ZIMKitMessageListPage extends StatefulWidget {
     this.messageInputMinLines,
     this.messageInputTextInputAction,
     this.messageInputTextCapitalization,
-  }) : super(key: key);
+  });
 
   /// this page's conversationID
   final String conversationID;

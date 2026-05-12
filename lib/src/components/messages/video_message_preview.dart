@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:zego_zimkit/src/services/services.dart';
 
 class ZIMKitVideoMessagePreview extends StatelessWidget {
-  const ZIMKitVideoMessagePreview(this.message, {Key? key}) : super(key: key);
+  const ZIMKitVideoMessagePreview(this.message, {super.key});
 
   final ZIMKitMessage message;
 
