@@ -1,3 +1,9 @@
+## Unreleased
+
+- Add iOS Swift Package Manager support while retaining CocoaPods support.
+- Upgrade `file_picker` to 13.1.0.
+- `PlatformFile` is abstract in `file_picker` 13; consumers that directly instantiated `ZIMKitPlatformFile` must migrate to a concrete `PlatformFile` implementation.
+
 ## 2.0.0
 
 - Functional Features

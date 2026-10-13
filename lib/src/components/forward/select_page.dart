@@ -9,6 +9,7 @@ import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util_config.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
+import 'package:zego_zimkit/src/services/path_platform_file.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
 /// Forward selection page for choosing target conversation
@@ -120,7 +121,8 @@ class ZIMKitForwardSelectPage extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(ZIMKitCore.instance.innerText.forwardSuccessToast)),
+            content: Text(ZIMKitCore.instance.innerText.forwardSuccessToast),
+          ),
         );
         // Pop twice: confirmation dialog and forward select page
         Navigator.of(context).pop(true);
@@ -130,8 +132,10 @@ class ZIMKitForwardSelectPage extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  '${ZIMKitCore.instance.innerText.operationFailedFormat.replaceFirst('%s', '$e')}')),
+            content: Text(
+              '${ZIMKitCore.instance.innerText.operationFailedFormat.replaceFirst('%s', '$e')}',
+            ),
+          ),
         );
       }
     }
@@ -249,71 +253,56 @@ class ZIMKitForwardSelectPage extends StatelessWidget {
 
       case ZIMMessageType.image:
         if (message.imageContent?.fileLocalPath != null) {
-          await ZIMKit().sendMediaMessage(
-            target.id,
-            target.type,
-            [
-              ZIMKitPlatformFile(
-                path: message.imageContent!.fileLocalPath,
-                name: message.imageContent!.fileName,
-                size: message.imageContent!.fileSize,
-              ),
-            ],
-          );
+          await ZIMKit().sendMediaMessage(target.id, target.type, [
+            ZIMKitPathPlatformFile(
+              path: message.imageContent!.fileLocalPath,
+              name: message.imageContent!.fileName,
+              size: message.imageContent!.fileSize,
+            ),
+          ]);
         }
         break;
 
       case ZIMMessageType.video:
         if (message.videoContent?.fileLocalPath != null) {
-          await ZIMKit().sendMediaMessage(
-            target.id,
-            target.type,
-            [
-              ZIMKitPlatformFile(
-                path: message.videoContent!.fileLocalPath,
-                name: message.videoContent!.fileName,
-                size: message.videoContent!.fileSize,
-              ),
-            ],
-          );
+          await ZIMKit().sendMediaMessage(target.id, target.type, [
+            ZIMKitPathPlatformFile(
+              path: message.videoContent!.fileLocalPath,
+              name: message.videoContent!.fileName,
+              size: message.videoContent!.fileSize,
+            ),
+          ]);
         }
         break;
 
       case ZIMMessageType.file:
         if (message.fileContent?.fileLocalPath != null) {
-          await ZIMKit().sendFileMessage(
-            target.id,
-            target.type,
-            [
-              ZIMKitPlatformFile(
-                path: message.fileContent!.fileLocalPath,
-                name: message.fileContent!.fileName,
-                size: message.fileContent!.fileSize,
-              ),
-            ],
-          );
+          await ZIMKit().sendFileMessage(target.id, target.type, [
+            ZIMKitPathPlatformFile(
+              path: message.fileContent!.fileLocalPath,
+              name: message.fileContent!.fileName,
+              size: message.fileContent!.fileSize,
+            ),
+          ]);
         }
         break;
 
       case ZIMMessageType.audio:
         if (message.audioContent?.fileLocalPath != null) {
-          await ZIMKit().sendMediaMessage(
-            target.id,
-            target.type,
-            [
-              ZIMKitPlatformFile(
-                path: message.audioContent!.fileLocalPath,
-                name: message.audioContent!.fileName,
-                size: message.audioContent!.fileSize,
-              ),
-            ],
-          );
+          await ZIMKit().sendMediaMessage(target.id, target.type, [
+            ZIMKitPathPlatformFile(
+              path: message.audioContent!.fileLocalPath,
+              name: message.audioContent!.fileName,
+              size: message.audioContent!.fileSize,
+            ),
+          ]);
         }
         break;
 
       default:
         debugPrint(
-            '[ZIMKit] Unsupported message type for forward: ${message.type}');
+          '[ZIMKit] Unsupported message type for forward: ${message.type}',
+        );
     }
   }
 }

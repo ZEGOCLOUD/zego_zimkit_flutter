@@ -12,6 +12,7 @@ import 'package:zego_zimkit/src/components/reply/input_reply_widget.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
+import 'package:zego_zimkit/src/services/path_platform_file.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
 import 'defines.dart';
@@ -112,7 +113,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
             ),
           // Input area
           Container(
-            decoration: widget.style?.containerDecoration ??
+            decoration:
+                widget.style?.containerDecoration ??
                 BoxDecoration(
                   color: const Color(0xFFF5F6F7),
                   border: Border(
@@ -140,29 +142,34 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                             ),
                             decoration:
                                 widget.style?.inputBackgroundDecoration ??
-                                    BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(6.zR),
-                                      border: Border.all(
-                                        color: Colors.grey[300]!,
-                                        width: 1.zW,
-                                      ),
-                                    ),
+                                BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(6.zR),
+                                  border: Border.all(
+                                    color: Colors.grey[300]!,
+                                    width: 1.zW,
+                                  ),
+                                ),
                             child: TextField(
                               controller: _editingController,
                               focusNode: _focusNode,
                               maxLines: widget.config?.maxLines,
-                              keyboardType: widget.config?.keyboardType ??
+                              keyboardType:
+                                  widget.config?.keyboardType ??
                                   TextInputType.multiline,
-                              textInputAction: widget.config?.textInputAction ??
+                              textInputAction:
+                                  widget.config?.textInputAction ??
                                   TextInputAction.newline,
                               textCapitalization:
                                   widget.config?.textCapitalization ??
-                                      TextCapitalization.sentences,
-                              decoration: widget.style?.inputDecoration ??
+                                  TextCapitalization.sentences,
+                              decoration:
+                                  widget.style?.inputDecoration ??
                                   InputDecoration(
                                     hintText: ZIMKitCore
-                                        .instance.innerText.messageEmptyText,
+                                        .instance
+                                        .innerText
+                                        .messageEmptyText,
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.symmetric(
                                       horizontal: 12.zW,
@@ -290,7 +297,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           color: Theme.of(context).primaryColor,
           shape: BoxShape.circle,
         ),
-        child: widget.style?.sendButtonWidget ??
+        child:
+            widget.style?.sendButtonWidget ??
             Icon(Icons.send, color: Colors.white, size: 20.zW),
       ),
     );
@@ -308,7 +316,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         );
       case ZIMKitInputPanelType.more:
         // Extract widgets from actions with location 'more'
-        final extraActions = widget.config?.actions
+        final extraActions =
+            widget.config?.actions
                 .where(
                   (action) =>
                       action.location == ZIMKitMessageInputActionLocation.more,
@@ -369,7 +378,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         for (final asset in result) {
           final file = await asset.file;
           if (file != null) {
-            final platformFile = ZIMKitPlatformFile(
+            final platformFile = ZIMKitPathPlatformFile(
               path: file.path,
               name: file.path.split('/').last,
               size: await file.length(),
@@ -394,14 +403,16 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
   }
 
   Future<void> _handleMoreAction(
-      ZIMKitMoreActionsPanelAction action, dynamic data) async {
+    ZIMKitMoreActionsPanelAction action,
+    dynamic data,
+  ) async {
     try {
       switch (action) {
         case ZIMKitMoreActionsPanelAction.takePhoto:
           if (data is AssetEntity) {
             final file = await data.file;
             if (file != null) {
-              final platformFile = ZIMKitPlatformFile(
+              final platformFile = ZIMKitPathPlatformFile(
                 path: file.path,
                 name: file.path.split('/').last,
                 size: await file.length(),
@@ -421,7 +432,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
             for (final asset in data) {
               final file = await asset.file;
               if (file != null) {
-                final platformFile = ZIMKitPlatformFile(
+                final platformFile = ZIMKitPathPlatformFile(
                   path: file.path,
                   name: file.path.split('/').last,
                   size: await file.length(),
@@ -446,7 +457,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                   widget.conversationID,
                   widget.conversationType,
                   [
-                    ZIMKitPlatformFile(
+                    ZIMKitPathPlatformFile(
                       path: file.path,
                       name: file.path.split('/').last,
                       size: await file.length(),
