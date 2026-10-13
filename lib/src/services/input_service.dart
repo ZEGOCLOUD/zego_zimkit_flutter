@@ -1,36 +1,38 @@
 part of 'zimkit_services.dart';
 
 mixin ZIMKitInputService {
-  Future<List<ZIMKitPlatformFile>> pickFiles(
-      {ZIMKitFileType type = ZIMKitFileType.any,
-      bool allowMultiple = true}) async {
+  Future<List<ZIMKitPlatformFile>> pickFiles({
+    ZIMKitFileType type = ZIMKitFileType.any,
+    bool allowMultiple = true,
+  }) async {
     try {
       await requestPermission();
       ZIMKitLogger.logInfo(
-          'pickFiles: start, ${DateTime.now().millisecondsSinceEpoch}');
+        'pickFiles: start, ${DateTime.now().millisecondsSinceEpoch}',
+      );
       // see https://github.com/miguelpruivo/flutter_file_picker/wiki/API#-filepickerpickfiles
-      final ret = (await FilePicker.platform.pickFiles(
-            type: FileType.values[type.index],
-            allowMultiple: allowMultiple,
-            onFileLoading: (p0) {
-              ZIMKitLogger.logInfo('onFileLoading: '
-                  '$p0,${DateTime.now().millisecondsSinceEpoch}');
-            },
-          ))
-              ?.files ??
-          [];
+      void onFileLoading(FilePickerStatus status) {
+        ZIMKitLogger.logInfo(
+          'onFileLoading: '
+          '$status,${DateTime.now().millisecondsSinceEpoch}',
+        );
+      }
+
+      final ret = await pickFilesFromPicker<ZIMKitPlatformFile>(
+        allowMultiple: allowMultiple,
+        pickMultiple: () => FilePicker.pickFiles(
+          type: FileType.values[type.index],
+          onFileLoading: onFileLoading,
+        ),
+        pickSingle: () => FilePicker.pickFile(
+          type: FileType.values[type.index],
+          onFileLoading: onFileLoading,
+        ),
+      );
       ZIMKitLogger.logInfo(
-          'pickFiles: $ret, ${DateTime.now().millisecondsSinceEpoch}');
-      return ret
-          .map((file) => ZIMKitPlatformFile(
-                name: file.name,
-                path: file.path,
-                bytes: file.bytes,
-                readStream: file.readStream,
-                size: file.size,
-                identifier: file.identifier,
-              ))
-          .toList();
+        'pickFiles: $ret, ${DateTime.now().millisecondsSinceEpoch}',
+      );
+      return ret;
     } on PlatformException catch (e) {
       ZIMKitLogger.logError('Unsupported operation $e');
     } catch (e) {
@@ -78,7 +80,8 @@ mixin ZIMKitInputService {
       ZIMKitLogger.logError('Warn: Permission.storage not granted, $status');
       if (Platform.isAndroid) {
         ZIMKitLogger.logError(
-            'Warn: On Android TIRAMISU and higher this permission is deprecrated and always returns `PermissionStatus.denied`');
+          'Warn: On Android TIRAMISU and higher this permission is deprecrated and always returns `PermissionStatus.denied`',
+        );
       }
     }
 

@@ -1,3 +1,8 @@
+## 1.20.1
+
+- Add iOS Swift Package Manager support while retaining CocoaPods support.
+- Require Dart 3.10, Flutter 3.44, and iOS 14 or later.
+- Upgrade `file_picker` to 13.1.0 and `permission_handler` to 13.0.2.
 ## 1.19.8/9
 
 - Update dependency

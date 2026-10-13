@@ -15,6 +15,7 @@ import 'package:zego_zimkit/src/channel/platform_interface.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/services/defines.dart';
 import 'package:zego_zimkit/src/services/extensions/extensions.dart';
+import 'package:zego_zimkit/src/services/file_picker_result_adapter.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
 
 part 'conversation_service.dart';
@@ -67,7 +68,7 @@ class ZIMKit
     return ZIMKitCore.instance.uninit();
   }
 
-  String getVersion()  {
+  String getVersion() {
     return ZIMKitCore.instance.version;
   }
 }
