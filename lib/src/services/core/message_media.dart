@@ -72,12 +72,12 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
     late ZIMKitMessageNotifier kitMessageNotifier;
     await ZIM
         .getInstance()!
-        .sendMediaMessage(
+        .sendMessage(
           kitMessage.zim as ZIMMediaMessage,
           conversationID,
           conversationType,
           sendConfig,
-          ZIMMediaMessageSendNotification(
+          ZIMMessageSendNotification(
             onMessageAttached: (zimMessage) {
               ZIMKitLogger.logInfo('sendMediaMessage.onMessageAttached: '
                   '${(zimMessage as ZIMMediaMessage).fileName}');

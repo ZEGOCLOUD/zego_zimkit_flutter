@@ -27,9 +27,8 @@ extension ZIMGroupMemberInfoExtension on ZIMGroupMemberInfo {
         'userAvatarUrl:$userAvatarUrl, '
         'memberNickname:$memberNickname, '
         'memberRole:$memberRole, '
-        'memberAvatarUrl:$memberAvatarUrl, '
         'muteExpiredTime:$muteExpiredTime, '
-        'groupEnterInfo:${groupEnterInfo?.toStringX()}, '
+        'groupEnterInfo:${groupEnterInfo.toStringX()}, '
         '}';
   }
 }
@@ -119,11 +118,6 @@ extension ZIMMessageExtend on ZIMMessage {
           ..videoFirstFrameLocalPath = zimMessage.videoFirstFrameLocalPath
           ..videoFirstFrameWidth = zimMessage.videoFirstFrameWidth
           ..videoFirstFrameHeight = zimMessage.videoFirstFrameHeight);
-        break;
-      case ZIMMessageType.system:
-        final zimMessage = this as ZIMSystemMessage;
-        ret.systemContent =
-            (ZIMKitMessageSystemContent()..info = zimMessage.message);
         break;
       case ZIMMessageType.custom:
         final zimMessage = this as ZIMCustomMessage;
@@ -267,7 +261,6 @@ extension ZIMKitMessageExtend on ZIMKitMessage {
       case ZIMMessageType.unknown:
       case ZIMMessageType.command:
       case ZIMMessageType.barrage:
-      case ZIMMessageType.system:
       case ZIMMessageType.revoke:
         break;
       case ZIMMessageType.tips:
@@ -376,10 +369,8 @@ extension ZIMKitConversationExtend on ZIMKitConversation {
       case ZIMKitConversationType.peer:
         return ZIMKitAvatar(userID: id, name: name);
       case ZIMKitConversationType.room:
-        placeholder =
-            CircleAvatar(child: Text(name.isNotEmpty ? name[0] : id[0]));
-        break;
       case ZIMKitConversationType.group:
+      case ZIMKitConversationType.communityChannel:
         placeholder =
             CircleAvatar(child: Text(name.isNotEmpty ? name[0] : id[0]));
         break;
