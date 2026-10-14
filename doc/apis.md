@@ -1,5 +1,7 @@
 # APIs
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 This document describes the APIs available in ZIMKit, including initialization, conversation management, messaging, group operations, and user management.
 
 ## Table of Contents
@@ -61,6 +63,7 @@ This document describes the APIs available in ZIMKit, including initialization, 
   - [getGroupMemberInfoUpdatedEventStream](#getgroupmemberinfoupdatedeventstream)
 - [User APIs](#user-apis)
   - [connectUser](#connectuser)
+  - [renewToken](#renewtoken)
   - [disconnectUser](#disconnectuser)
   - [currentUser](#currentuser)
   - [queryUser](#queryuser-1)
@@ -452,7 +455,7 @@ This document describes the APIs available in ZIMKit, including initialization, 
 ### sendFileMessage
 
 - **Description**
-  Sends file messages to a conversation.
+  Sends files sequentially. By default, known image, video, and audio extensions select their matching message type; set `autoDetectType` to `false` to send each item as a file message. The optional progress callback reports upload progress for this call.
 
 - **Prototype**
   ```dart
@@ -479,7 +482,7 @@ This document describes the APIs available in ZIMKit, including initialization, 
 ### sendMediaMessage
 
 - **Description**
-  Sends media messages (images, videos, audio) to a conversation.
+  Sends media messages (images, videos, audio) sequentially. The optional progress callback reports upload progress for this call.
 
 - **Prototype**
   ```dart
@@ -874,11 +877,12 @@ This document describes the APIs available in ZIMKit, including initialization, 
 ### queryGroupMemberList
 
 - **Description**
-  Gets a notifier for the list of group members.
+  Gets a notifier for the list of group members. `onError` receives a final query failure after any eligible relogin retry; callers can show an error and retry the query.
 
 - **Prototype**
   ```dart
-  ListNotifier<ZIMGroupMemberInfo> queryGroupMemberList(String conversationID)
+  ListNotifier<ZIMGroupMemberInfo> queryGroupMemberList(
+    String conversationID, {void Function(Object error)? onError})
   ```
 
 - **Example**
@@ -1058,6 +1062,7 @@ This document describes the APIs available in ZIMKit, including initialization, 
     required String id,
     String name = '',
     String avatarUrl = '',
+    String token = '',
   })
   ```
 
@@ -1067,7 +1072,29 @@ This document describes the APIs available in ZIMKit, including initialization, 
     id: 'user123',
     name: 'John Doe',
     avatarUrl: 'https://example.com/avatar.png',
+    token: tokenFromYourServer,
   );
+  ```
+
+### renewToken
+
+- **Description**
+  Renews the current login token. Obtain the new token from your server.
+
+- **Prototype**
+  ```dart
+  Future<int> renewToken(String token)
+  ```
+
+- **Returns**
+  Returns `0` on success, or the ZIM error code on failure.
+
+- **Example**
+  ```dart
+  final errorCode = await ZIMKit().renewToken(tokenFromYourServer);
+  if (errorCode != 0) {
+    debugPrint('Token renewal failed: $errorCode');
+  }
   ```
 
 ### disconnectUser

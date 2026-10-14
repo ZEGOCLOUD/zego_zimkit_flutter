@@ -79,22 +79,21 @@ class ZIMKitInputConfig {
   ZIMKitInputConfig({
     List<ZIMKitInputButtonName>? smallButtons,
     List<ZIMKitInputButtonName>? expandButtons,
-    List<String>? emojis,
+    this.emojis,
     this.maxSmallButtonCount = 4,
     this.placeholder,
     this.customButtonBuilders,
-  })  : smallButtons = smallButtons ??
-            const [
-              ZIMKitInputButtonName.audio,
-              ZIMKitInputButtonName.emoji,
-              ZIMKitInputButtonName.picture,
-              ZIMKitInputButtonName.expand,
-            ],
-        expandButtons = expandButtons ??
-            const [
-              ZIMKitInputButtonName.takePhoto,
-              ZIMKitInputButtonName.file,
-            ];
+  }) : smallButtons =
+           smallButtons ??
+           const [
+             ZIMKitInputButtonName.audio,
+             ZIMKitInputButtonName.emoji,
+             ZIMKitInputButtonName.picture,
+             ZIMKitInputButtonName.expand,
+           ],
+       expandButtons =
+           expandButtons ??
+           const [ZIMKitInputButtonName.takePhoto, ZIMKitInputButtonName.file];
 
   /// List of small buttons displayed at the bottom
   final List<ZIMKitInputButtonName> smallButtons;
@@ -108,9 +107,13 @@ class ZIMKitInputConfig {
   /// Input box placeholder
   final String? placeholder;
 
+  /// Custom emoji list displayed by the input panel. Null uses the full picker;
+  /// an empty list hides quick emojis.
+  final List<String>? emojis;
+
   /// Custom button builders
   final Map<ZIMKitInputButtonName, Widget Function(BuildContext)>?
-      customButtonBuilders;
+  customButtonBuilders;
 
   @override
   String toString() {
@@ -119,6 +122,7 @@ class ZIMKitInputConfig {
         'expandButtons:$expandButtons, '
         'maxSmallButtonCount:$maxSmallButtonCount, '
         'placeholder:$placeholder, '
+        'emojis:$emojis, '
         'customButtonBuilders:$customButtonBuilders, '
         '}';
   }
@@ -126,18 +130,18 @@ class ZIMKitInputConfig {
 
 /// Text Message Configuration
 class ZIMKitTextMessageConfig {
-  ZIMKitTextMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.copy,
-              ZIMKitMessageOperationName.reply,
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.revoke,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitTextMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.copy,
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -150,17 +154,17 @@ class ZIMKitTextMessageConfig {
 
 /// Image Message Configuration
 class ZIMKitImageMessageConfig {
-  ZIMKitImageMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.reply,
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.revoke,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitImageMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -173,18 +177,18 @@ class ZIMKitImageMessageConfig {
 
 /// Audio Message Configuration
 class ZIMKitAudioMessageConfig {
-  ZIMKitAudioMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.speaker,
-              ZIMKitMessageOperationName.reply,
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.revoke,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitAudioMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.speaker,
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -197,17 +201,17 @@ class ZIMKitAudioMessageConfig {
 
 /// Video Message Configuration
 class ZIMKitVideoMessageConfig {
-  ZIMKitVideoMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.reply,
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.revoke,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitVideoMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -220,17 +224,17 @@ class ZIMKitVideoMessageConfig {
 
 /// File Message Configuration
 class ZIMKitFileMessageConfig {
-  ZIMKitFileMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.reply,
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.revoke,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitFileMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -243,15 +247,17 @@ class ZIMKitFileMessageConfig {
 
 /// Combine Message Configuration
 class ZIMKitCombineMessageConfig {
-  ZIMKitCombineMessageConfig({
-    List<ZIMKitMessageOperationName>? operations,
-  }) : operations = operations ??
-            const [
-              ZIMKitMessageOperationName.forward,
-              ZIMKitMessageOperationName.multipleChoice,
-              ZIMKitMessageOperationName.delete,
-              ZIMKitMessageOperationName.reaction,
-            ];
+  ZIMKitCombineMessageConfig({List<ZIMKitMessageOperationName>? operations})
+    : operations =
+          operations ??
+          const [
+            ZIMKitMessageOperationName.reply,
+            ZIMKitMessageOperationName.forward,
+            ZIMKitMessageOperationName.multipleChoice,
+            ZIMKitMessageOperationName.delete,
+            ZIMKitMessageOperationName.revoke,
+            ZIMKitMessageOperationName.reaction,
+          ];
 
   /// Supported operations list
   final List<ZIMKitMessageOperationName> operations;
@@ -273,14 +279,14 @@ class ZIMKitMessageConfig {
     ZIMKitVideoMessageConfig? videoMessageConfig,
     ZIMKitFileMessageConfig? fileMessageConfig,
     ZIMKitCombineMessageConfig? combineMessageConfig,
-    List<String>? messageReactions,
-  })  : textMessageConfig = textMessageConfig ?? ZIMKitTextMessageConfig(),
-        imageMessageConfig = imageMessageConfig ?? ZIMKitImageMessageConfig(),
-        audioMessageConfig = audioMessageConfig ?? ZIMKitAudioMessageConfig(),
-        videoMessageConfig = videoMessageConfig ?? ZIMKitVideoMessageConfig(),
-        fileMessageConfig = fileMessageConfig ?? ZIMKitFileMessageConfig(),
-        combineMessageConfig =
-            combineMessageConfig ?? ZIMKitCombineMessageConfig();
+    this.messageReactions,
+  }) : textMessageConfig = textMessageConfig ?? ZIMKitTextMessageConfig(),
+       imageMessageConfig = imageMessageConfig ?? ZIMKitImageMessageConfig(),
+       audioMessageConfig = audioMessageConfig ?? ZIMKitAudioMessageConfig(),
+       videoMessageConfig = videoMessageConfig ?? ZIMKitVideoMessageConfig(),
+       fileMessageConfig = fileMessageConfig ?? ZIMKitFileMessageConfig(),
+       combineMessageConfig =
+           combineMessageConfig ?? ZIMKitCombineMessageConfig();
 
   /// Text message configuration
   final ZIMKitTextMessageConfig textMessageConfig;
@@ -300,9 +306,14 @@ class ZIMKitMessageConfig {
   /// Combine message configuration
   final ZIMKitCombineMessageConfig combineMessageConfig;
 
+  /// Custom quick reaction emojis. Null uses defaults; an empty list hides the
+  /// quick reaction bar.
+  final List<String>? messageReactions;
+
   /// Get operations list by message type
   List<ZIMKitMessageOperationName> getOperationsByMessageType(
-      ZIMMessageType type) {
+    ZIMMessageType type,
+  ) {
     switch (type) {
       case ZIMMessageType.text:
         return textMessageConfig.operations;
@@ -330,6 +341,7 @@ class ZIMKitMessageConfig {
         'videoMessageConfig:$videoMessageConfig, '
         'fileMessageConfig:$fileMessageConfig, '
         'combineMessageConfig:$combineMessageConfig, '
+        'messageReactions:$messageReactions, '
         '}';
   }
 }

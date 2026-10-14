@@ -1,5 +1,7 @@
 # ZIMKit Flutter API 参考文档
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 本文档列出了 ZIMKit Flutter 版本的所有公开 API。
 
 ---
@@ -61,12 +63,22 @@ await ZIMKit().init(
 连接用户到 ZIM 服务。
 
 ```dart
-Future<void> connectUser({
+Future<int> connectUser({
   required String id,
-  required String name,
-  String? avatarUrl,
-  String? token,
+  String name = '',
+  String avatarUrl = '',
+  String token = '',
 });
+```
+
+`token` 是可选项。启用 Token 鉴权时由服务端生成，并在登录时传入。
+
+### renewToken
+
+续期当前登录用户的 Token。成功返回 `0`，失败返回 ZIM 错误码。
+
+```dart
+Future<int> renewToken(String token);
 ```
 
 ---
@@ -520,7 +532,8 @@ Future<ZIMKitGroupInfo?> queryGroupInfo(String groupID);
 查询群组成员列表。
 
 ```dart
-Future<List<ZIMKitGroupMember>> queryGroupMemberList(String groupID);
+ListNotifier<ZIMGroupMemberInfo> queryGroupMemberList(
+  String groupID, {void Function(Object error)? onError});
 ```
 
 ---

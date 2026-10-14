@@ -1,5 +1,7 @@
 # Events
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 This document describes the event callback classes in ZIMKit. These classes are used to listen to various events occurring in ZIMKit.
 
 - [ZIMKitEvents](#zimkitevents)
@@ -223,7 +225,7 @@ Message-related events.
 ### onMediaTransferProgress
 
 - **Description**
-  Triggered during media upload/download progress.
+  Triggered for each media upload or download progress update, including image messages loaded through the SDK image cache. `isUploading` distinguishes the direction; sizes are in bytes. Image downloads can report `totalSize` as `0` when the server does not provide the content length.
 
 - **Prototype**
   ```dart
@@ -234,7 +236,8 @@ Message-related events.
   ```dart
   ZIMKitMessageEvents(
     onMediaTransferProgress: (event) {
-      print('Progress: ${(event.progress * 100).toStringAsFixed(0)}%');
+      print('${event.isUploading ? 'Upload' : 'Download'}: '
+          '${(event.progress * 100).toStringAsFixed(0)}%');
     },
   )
   ```
@@ -650,7 +653,7 @@ Connection-related events.
 ### onTokenExpired
 
 - **Description**
-  Triggered when the token has expired.
+  Triggered when the login token expires. Fetch a new token from your server and call `ZIMKit().renewToken(token)`.
 
 - **Prototype**
   ```dart

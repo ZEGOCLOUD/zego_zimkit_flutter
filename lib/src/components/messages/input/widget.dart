@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/components/emoji/picker_widget.dart';
 import 'package:zego_zimkit/src/components/toolbar/more/panel.dart';
 import 'package:zego_zimkit/src/components/reply/input_reply_widget.dart';
+import 'package:zego_zimkit/src/config.defines.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
@@ -16,6 +18,7 @@ import 'package:zego_zimkit/src/services/path_platform_file.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
 import 'defines.dart';
+import 'config_resolver.dart';
 
 /// Message input component with two-row layout
 /// First row: Text input field with send button
@@ -27,6 +30,7 @@ class ZIMKitMessageInput extends StatefulWidget {
     required this.recordStatus,
     this.recordEvents,
     this.conversationType = ZIMConversationType.peer,
+    this.inputConfig,
     this.config,
     this.events,
     this.style,
@@ -34,6 +38,9 @@ class ZIMKitMessageInput extends StatefulWidget {
 
   final String conversationID;
   final ZIMConversationType conversationType;
+
+  /// Global ZIMKit input configuration.
+  final ZIMKitInputConfig? inputConfig;
 
   /// record abouts
   final ZIMKitAudioRecordEvents? recordEvents;
@@ -63,6 +70,14 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       widget.config?.inputFocusNode ?? _defaultFocusNode;
 
   ZIMKitInputPanelType _currentPanel = ZIMKitInputPanelType.none;
+
+  ZIMKitInputConfig get _inputConfig =>
+      widget.inputConfig ?? ZIMKitInputConfig();
+
+  ZIMKitResolvedInputButtons get _resolvedButtons => resolveZIMKitInputButtons(
+    globalConfig: _inputConfig,
+    pageConfig: widget.config ?? const ZIMKitMessageInputConfigs(),
+  );
 
   @override
   void initState() {
@@ -163,19 +178,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                               textCapitalization:
                                   widget.config?.textCapitalization ??
                                   TextCapitalization.sentences,
-                              decoration:
-                                  widget.style?.inputDecoration ??
-                                  InputDecoration(
-                                    hintText: ZIMKitCore
-                                        .instance
-                                        .innerText
-                                        .messageEmptyText,
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 12.zW,
-                                      vertical: 8.zH,
-                                    ),
-                                  ),
+                              decoration: _inputDecoration,
                               onChanged: (text) {
                                 setState(() {});
                               },
@@ -205,51 +208,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // + button
-                        if (widget.config?.showMoreButton ?? true)
-                          _buildToolbarButton(
-                            icon: Icons.add_circle_outline,
-                            isActive:
-                                _currentPanel == ZIMKitInputPanelType.more,
-                            onTap: _toggleMorePanel,
-                          ),
-                        // Emoji button
-                        if (widget.config?.showEmojiButton ?? true)
-                          _buildToolbarButton(
-                            icon: Icons.sentiment_satisfied_outlined,
-                            isActive:
-                                _currentPanel == ZIMKitInputPanelType.emoji,
-                            onTap: _toggleEmojiPanel,
-                          ),
-                        // Photo button
-                        if (widget.config?.showPickMediaButton ?? true)
-                          _buildToolbarButton(
-                            icon: Icons.image_outlined,
-                            onTap: _pickImages,
-                          ),
-                        // Microphone button (Record audio)
-                        if (widget.config?.showRecordButton ?? true)
-                          SizedBox(
-                            width: 40.zW,
-                            height: 40.zH,
-                            child: ZIMKitRecordButton(
-                              status: widget.recordStatus,
-                              conversationID: widget.conversationID,
-                              conversationType: widget.conversationType,
-                              onMessageSent: widget.events?.onMessageSent,
-                              preMessageSending:
-                                  widget.events?.preMessageSending,
-                              events: widget.recordEvents,
-                              padding: EdgeInsets.zero,
-                              icon: Icon(
-                                Icons.mic_none,
-                                size: 28.zW,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ),
-                      ],
+                      children: _resolvedButtons.smallButtons
+                          .map(_buildConfiguredButton)
+                          .toList(),
                     ),
                   ),
                 ],
@@ -264,6 +225,73 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         ],
       ),
     );
+  }
+
+  InputDecoration get _inputDecoration {
+    final configured = widget.style?.inputDecoration;
+    final defaultHint =
+        _inputConfig.placeholder ??
+        ZIMKitCore.instance.innerText.messageEmptyText;
+    if (configured != null) {
+      return configured.copyWith(hintText: configured.hintText ?? defaultHint);
+    }
+    return InputDecoration(
+      hintText: defaultHint,
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.symmetric(horizontal: 12.zW, vertical: 8.zH),
+    );
+  }
+
+  Widget _buildConfiguredButton(ZIMKitInputButtonName button) {
+    final customBuilder = _inputConfig.customButtonBuilders?[button];
+    if (customBuilder != null) return customBuilder(context);
+
+    return switch (button) {
+      ZIMKitInputButtonName.audio => SizedBox(
+        width: 40.zW,
+        height: 40.zH,
+        child: ZIMKitRecordButton(
+          status: widget.recordStatus,
+          conversationID: widget.conversationID,
+          conversationType: widget.conversationType,
+          onMessageSent: widget.events?.onMessageSent,
+          preMessageSending: widget.events?.preMessageSending,
+          events: widget.recordEvents,
+          padding: EdgeInsets.zero,
+          icon: Icon(Icons.mic_none, size: 28.zW, color: Colors.grey[600]),
+        ),
+      ),
+      ZIMKitInputButtonName.emoji => _buildToolbarButton(
+        icon: Icons.sentiment_satisfied_outlined,
+        isActive: _currentPanel == ZIMKitInputPanelType.emoji,
+        onTap: _toggleEmojiPanel,
+      ),
+      ZIMKitInputButtonName.picture => _buildToolbarButton(
+        icon: Icons.image_outlined,
+        onTap: _pickImages,
+      ),
+      ZIMKitInputButtonName.takePhoto => _buildToolbarButton(
+        icon: Icons.camera_alt_outlined,
+        onTap: _takePhoto,
+      ),
+      ZIMKitInputButtonName.voiceCall => _buildToolbarButton(
+        icon: Icons.call_outlined,
+        onTap: () => _onCallButtonTap(button),
+      ),
+      ZIMKitInputButtonName.videoCall => _buildToolbarButton(
+        icon: Icons.videocam_outlined,
+        onTap: () => _onCallButtonTap(button),
+      ),
+      ZIMKitInputButtonName.file => _buildToolbarButton(
+        icon: Icons.attach_file,
+        onTap: _pickFiles,
+      ),
+      ZIMKitInputButtonName.expand => _buildToolbarButton(
+        icon: Icons.add_circle_outline,
+        isActive: _currentPanel == ZIMKitInputPanelType.more,
+        onTap: _toggleMorePanel,
+      ),
+    };
   }
 
   Widget _buildToolbarButton({
@@ -309,6 +337,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       case ZIMKitInputPanelType.emoji:
         return ZIMKitEmojiPickerWidget(
           key: const ValueKey('emoji'),
+          emojis: _inputConfig.emojis,
           onEmojiSelected: (emoji) {
             _editingController.text += emoji;
             setState(() {});
@@ -331,10 +360,88 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           conversationType: widget.conversationType,
           onActionSelected: _handleMoreAction,
           extraActions: extraActions,
+          configuredButtons: _resolvedButtons.expandButtons
+              .map(_buildExpandedButton)
+              .toList(),
         );
       default:
         return const SizedBox.shrink(key: ValueKey('none'));
     }
+  }
+
+  Widget _buildExpandedButton(ZIMKitInputButtonName button) {
+    final customBuilder = _inputConfig.customButtonBuilders?[button];
+    if (customBuilder != null) return customBuilder(context);
+
+    final innerText = ZIMKitCore.instance.innerText;
+    return switch (button) {
+      ZIMKitInputButtonName.audio => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 55.zW,
+            height: 55.zH,
+            child: ZIMKitRecordButton(
+              status: widget.recordStatus,
+              conversationID: widget.conversationID,
+              conversationType: widget.conversationType,
+              onMessageSent: widget.events?.onMessageSent,
+              preMessageSending: widget.events?.preMessageSending,
+              events: widget.recordEvents,
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.mic_none, size: 28.zW, color: Colors.grey[700]),
+            ),
+          ),
+          SizedBox(height: 6.zH),
+          Text(
+            innerText.voiceInputText,
+            style: TextStyle(fontSize: 11.zSP, color: Colors.grey[700]),
+          ),
+        ],
+      ),
+      ZIMKitInputButtonName.emoji => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.sentiment_satisfied_outlined,
+        label: innerText.emojiInputText,
+        onTap: _toggleEmojiPanel,
+      ),
+      ZIMKitInputButtonName.picture => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.image,
+        label: innerText.photoText,
+        onTap: _pickImages,
+      ),
+      ZIMKitInputButtonName.takePhoto => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.camera_alt,
+        label: innerText.takePhotoText,
+        onTap: _takePhoto,
+      ),
+      ZIMKitInputButtonName.voiceCall => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.call_outlined,
+        label: innerText.voiceCallInputText,
+        onTap: () => _onCallButtonTap(button),
+      ),
+      ZIMKitInputButtonName.videoCall => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.videocam_outlined,
+        label: innerText.videoCallInputText,
+        onTap: () => _onCallButtonTap(button),
+      ),
+      ZIMKitInputButtonName.file => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.folder,
+        label: innerText.fileText,
+        onTap: _pickFiles,
+      ),
+      ZIMKitInputButtonName.expand => const SizedBox.shrink(),
+    };
+  }
+
+  void _onCallButtonTap(ZIMKitInputButtonName button) {
+    setState(() => _currentPanel = ZIMKitInputPanelType.none);
+    widget.events?.onCallTap?.call(button);
   }
 
   void _toggleEmojiPanel() {
@@ -376,21 +483,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
       if (result != null && result.isNotEmpty) {
         for (final asset in result) {
-          final file = await asset.file;
-          if (file != null) {
-            final platformFile = ZIMKitPathPlatformFile(
-              path: file.path,
-              name: file.path.split('/').last,
-              size: await file.length(),
-            );
-            await ZIMKit().sendMediaMessage(
-              widget.conversationID,
-              widget.conversationType,
-              [platformFile],
-              onMessageSent: _onMessageSent,
-              preMessageSending: _onMessagePreSend,
-            );
-          }
+          await _sendAsset(asset);
         }
       }
 
@@ -402,6 +495,66 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     }
   }
 
+  Future<void> _takePhoto() async {
+    try {
+      final asset = await CameraPicker.pickFromCamera(
+        context,
+        pickerConfig: const CameraPickerConfig(),
+      );
+      if (asset != null) await _sendAsset(asset);
+      if (mounted) setState(() => _currentPanel = ZIMKitInputPanelType.none);
+    } catch (error) {
+      debugPrint('Take photo error: $error');
+    }
+  }
+
+  Future<void> _pickFiles() async {
+    try {
+      final assets = await AssetPicker.pickAssets(
+        context,
+        pickerConfig: const AssetPickerConfig(
+          maxAssets: 9,
+          requestType: RequestType.common,
+        ),
+      );
+      if (assets != null) {
+        for (final asset in assets) {
+          await _sendAsset(asset, asFile: true);
+        }
+      }
+      if (mounted) setState(() => _currentPanel = ZIMKitInputPanelType.none);
+    } catch (error) {
+      debugPrint('Pick files error: $error');
+    }
+  }
+
+  Future<void> _sendAsset(AssetEntity asset, {bool asFile = false}) async {
+    final file = await asset.file;
+    if (file == null) return;
+    final platformFile = ZIMKitPathPlatformFile(
+      path: file.path,
+      name: file.path.split('/').last,
+      size: await file.length(),
+    );
+    if (asFile) {
+      await ZIMKit().sendFileMessage(
+        widget.conversationID,
+        widget.conversationType,
+        [platformFile],
+        onMessageSent: _onMessageSent,
+        preMessageSending: _onMessagePreSend,
+      );
+    } else {
+      await ZIMKit().sendMediaMessage(
+        widget.conversationID,
+        widget.conversationType,
+        [platformFile],
+        onMessageSent: _onMessageSent,
+        preMessageSending: _onMessagePreSend,
+      );
+    }
+  }
+
   Future<void> _handleMoreAction(
     ZIMKitMoreActionsPanelAction action,
     dynamic data,
@@ -410,63 +563,20 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       switch (action) {
         case ZIMKitMoreActionsPanelAction.takePhoto:
           if (data is AssetEntity) {
-            final file = await data.file;
-            if (file != null) {
-              final platformFile = ZIMKitPathPlatformFile(
-                path: file.path,
-                name: file.path.split('/').last,
-                size: await file.length(),
-              );
-              await ZIMKit().sendMediaMessage(
-                widget.conversationID,
-                widget.conversationType,
-                [platformFile],
-                onMessageSent: _onMessageSent,
-                preMessageSending: _onMessagePreSend,
-              );
-            }
+            await _sendAsset(data);
           }
           break;
         case ZIMKitMoreActionsPanelAction.pickImages:
           if (data is List<AssetEntity>) {
             for (final asset in data) {
-              final file = await asset.file;
-              if (file != null) {
-                final platformFile = ZIMKitPathPlatformFile(
-                  path: file.path,
-                  name: file.path.split('/').last,
-                  size: await file.length(),
-                );
-                await ZIMKit().sendMediaMessage(
-                  widget.conversationID,
-                  widget.conversationType,
-                  [platformFile],
-                  onMessageSent: _onMessageSent,
-                  preMessageSending: _onMessagePreSend,
-                );
-              }
+              await _sendAsset(asset);
             }
           }
           break;
         case ZIMKitMoreActionsPanelAction.pickFiles:
           if (data is List<AssetEntity>) {
             for (final asset in data) {
-              final file = await asset.file;
-              if (file != null) {
-                await ZIMKit().sendFileMessage(
-                  widget.conversationID,
-                  widget.conversationType,
-                  [
-                    ZIMKitPathPlatformFile(
-                      path: file.path,
-                      name: file.path.split('/').last,
-                      size: await file.length(),
-                    ),
-                  ],
-                  onMessageSent: _onMessageSent,
-                  preMessageSending: _onMessagePreSend,
-                );
-              }
+              await _sendAsset(asset, asFile: true);
             }
           }
           break;

@@ -9,12 +9,21 @@ mixin ZIMKitUserService {
     required String id,
     String name = '',
     String avatarUrl = '',
+    String token = '',
   }) async {
     return ZIMKitCore.instance.connectUser(
       id: id,
       name: name,
       avatarUrl: avatarUrl,
+      token: token,
     );
+  }
+
+  /// Renews the current user's authentication token.
+  ///
+  /// Returns 0 on success, or the ZIM error code on failure.
+  Future<int> renewToken(String token) async {
+    return ZIMKitCore.instance.renewToken(token);
   }
 
   Future<void> disconnectUser() async {
@@ -35,7 +44,7 @@ mixin ZIMKitUserService {
   }
 
   Stream<ZegoSignalingPluginConnectionStateChangedEvent>
-      getConnectionStateChangedEventStream() {
+  getConnectionStateChangedEventStream() {
     return ZIMKitCore.instance.getConnectionStateChangedEventStream();
   }
 }

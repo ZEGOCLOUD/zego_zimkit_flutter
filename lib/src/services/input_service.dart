@@ -49,33 +49,7 @@ mixin ZIMKitInputService {
   }
 
   ZIMMessageType getMessageTypeByFileExtension(ZIMKitPlatformFile file) {
-    const supportImageList = <String>[
-      'jpg',
-      'jpeg',
-      'png',
-      'bmp',
-      'gif',
-      'tiff',
-      'webp',
-    ]; // <10M
-    const supportVideoList = <String>['mp4', 'mov']; // <100M
-    const supportAudioList = <String>['mp3', 'm4a']; // <300s, <6M
-
-    var messageType = ZIMMessageType.file;
-
-    if (file.extension == null) {
-      return messageType;
-    }
-    if (supportImageList.contains(file.extension!.toLowerCase())) {
-      messageType = ZIMMessageType.image;
-    } else if (supportVideoList.contains(file.extension!.toLowerCase())) {
-      messageType = ZIMMessageType.video;
-    } else if (supportAudioList.contains(file.extension!.toLowerCase())) {
-      messageType = ZIMMessageType.audio;
-    }
-
-    // TODO check file limit
-    return messageType;
+    return resolveZIMKitFileMessageType(file.extension, autoDetectType: true);
   }
 
   Future<void> requestPermission() async {

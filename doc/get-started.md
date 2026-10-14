@@ -1,5 +1,7 @@
 # ZIMKit 快速开始
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 本文档将引导您快速集成并使用 ZIMKit。
 
 ## 目录
@@ -158,6 +160,8 @@ class _HomePageState extends State<HomePage> {
         id: 'user_001',           // 用户 ID
         name: 'John Doe',         // 用户名
         avatarUrl: 'https://...',  // 用户头像 URL（可选）
+        // 启用 Token 鉴权时传入服务端签发的 token
+        // token: tokenFromYourServer,
       );
       print('用户连接成功');
     } catch (e) {

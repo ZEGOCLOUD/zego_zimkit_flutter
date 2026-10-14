@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:zego_zim/zego_zim.dart';
-
 import 'package:zego_zimkit/src/components/emoji/picker_dialog.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
+import 'package:zego_zimkit/src/config.defines.dart';
 
-/// Message operation types
-enum ZIMKitMessageOperation {
-  copy,
-  reply,
-  forward,
-  select,
-  delete,
-  revoke,
-  turnOffSpeaker,
-}
+import 'message_operation_resolver.dart';
+
+export 'message_operation_resolver.dart' show ZIMKitMessageOperation;
 
 /// Callback for multi-select mode
-typedef OnMultiSelectModeChanged = void Function(
-    bool enabled, String? initialMessageID);
+typedef OnMultiSelectModeChanged =
+    void Function(bool enabled, String? initialMessageID);
 typedef GetSelectedMessages = List<ZIMKitMessage> Function();
 
 /// Message options menu shown when long-pressing a message
@@ -32,12 +24,19 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
     required this.position,
     required this.onActionSelected,
     required this.isSentByMe,
+    this.messageConfig,
   });
 
   final ZIMKitMessage message;
   final Offset position;
   final Function(ZIMKitMessageOperation action) onActionSelected;
   final bool isSentByMe;
+  final ZIMKitMessageConfig? messageConfig;
+
+  ZIMKitMessageConfig get _messageConfig =>
+      messageConfig ??
+      ZIMKitCore.instance.config?.messageConfig ??
+      ZIMKitMessageConfig();
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +45,7 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
         // Semi-transparent background
         GestureDetector(
           onTap: () => Navigator.of(context).pop(),
-          child: Container(
-            color: Colors.black.withValues(alpha: 0.3),
-          ),
+          child: Container(color: Colors.black.withValues(alpha: 0.3)),
         ),
         // Menu
         Positioned(
@@ -81,8 +78,10 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
   }
 
   Widget _buildEmojiReactionBar(BuildContext context) {
-    // Commonly used emojis (aligned with iOS ZIMKit)
-    final emojis = ['❤️', '👍', '👎', '😄', '😢', '😮', '😡'];
+    if (!shouldShowZIMKitMessageReactions(_messageConfig, message.type)) {
+      return const SizedBox.shrink();
+    }
+    final emojis = resolveZIMKitMessageReactions(_messageConfig);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.zW, vertical: 8.zH),
@@ -104,19 +103,26 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
                         // Check if already reacted
                         final currentUserID =
                             ZIMKitCore.instance.currentUser?.baseInfo.userID ??
-                                '';
+                            '';
                         final hasReacted = message.reactions.value
                             .where((r) => r.reactionType == emoji)
-                            .any((r) => r.userList
-                                .any((u) => u.userID == currentUserID));
+                            .any(
+                              (r) => r.userList.any(
+                                (u) => u.userID == currentUserID,
+                              ),
+                            );
 
                         if (hasReacted) {
-                          await ZIMKitCore.instance
-                              .deleteMessageReaction(message, emoji);
+                          await ZIMKitCore.instance.deleteMessageReaction(
+                            message,
+                            emoji,
+                          );
                           debugPrint('[ZIMKit] Deleted reaction: $emoji');
                         } else {
-                          await ZIMKitCore.instance
-                              .addMessageReaction(message, emoji);
+                          await ZIMKitCore.instance.addMessageReaction(
+                            message,
+                            emoji,
+                          );
                           debugPrint('[ZIMKit] Added reaction: $emoji');
                         }
                       } catch (e) {
@@ -194,34 +200,17 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
   }
 
   List<ZIMKitMessageOperation> _getAvailableActions() {
-    final actions = <ZIMKitMessageOperation>[];
-
-    // Copy available for text messages
-    if (message.type == ZIMMessageType.text) {
-      actions.add(ZIMKitMessageOperation.copy);
-    }
-
-    // Common actions
-    actions.add(ZIMKitMessageOperation.reply);
-    actions.add(ZIMKitMessageOperation.forward);
-    actions.add(ZIMKitMessageOperation.select);
-    actions.add(ZIMKitMessageOperation.delete);
-
-    // Revoke only for own messages
-    if (isSentByMe) {
-      actions.add(ZIMKitMessageOperation.revoke);
-    }
-
-    // Speaker toggle for audio messages
-    if (message.type == ZIMMessageType.audio) {
-      actions.add(ZIMKitMessageOperation.turnOffSpeaker);
-    }
-
-    return actions;
+    return resolveZIMKitMessageOperations(
+      config: _messageConfig,
+      messageType: message.type,
+      isSentByMe: isSentByMe,
+    );
   }
 
   Widget _buildActionButton(
-      ZIMKitMessageOperation action, BuildContext context) {
+    ZIMKitMessageOperation action,
+    BuildContext context,
+  ) {
     IconData icon;
     String label;
 
@@ -271,10 +260,7 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.zSP,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 10.zSP),
             ),
           ],
         ),
@@ -293,8 +279,10 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
   }
 
   double _calculateMenuTop(BuildContext context) {
-    return (position.dy - 120)
-        .clamp(60.0, MediaQuery.of(context).size.height - 200);
+    return (position.dy - 120).clamp(
+      60.0,
+      MediaQuery.of(context).size.height - 200,
+    );
   }
 }
 
@@ -326,9 +314,10 @@ class _AnimatedEmojiButtonState extends State<_AnimatedEmojiButton>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -371,10 +360,7 @@ class _AnimatedEmojiButtonState extends State<_AnimatedEmojiButton>
               width: 1.zW,
             ),
           ),
-          child: Text(
-            widget.emoji,
-            style: TextStyle(fontSize: 24.zSP),
-          ),
+          child: Text(widget.emoji, style: TextStyle(fontSize: 24.zSP)),
         ),
       ),
     );
@@ -387,8 +373,9 @@ Future<void> showZIMKitMessageOptionsMenu(
   ZIMKitMessage message,
   Offset position,
   bool isSentByMe,
-  Function(ZIMKitMessageOperation action) onActionSelected,
-) async {
+  Function(ZIMKitMessageOperation action) onActionSelected, {
+  ZIMKitMessageConfig? messageConfig,
+}) async {
   await showDialog(
     context: context,
     barrierColor: Colors.transparent,
@@ -397,6 +384,7 @@ Future<void> showZIMKitMessageOptionsMenu(
       position: position,
       onActionSelected: onActionSelected,
       isSentByMe: isSentByMe,
+      messageConfig: messageConfig,
     ),
   );
 }

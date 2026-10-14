@@ -1,72 +1,73 @@
-# ZIMKit(ZegoCloud In-App Chat UIKit)
+# ZIMKit for Flutter
 
-🥳beta support:
-- Create peer-to-peer chat / Create group chat/ Join group chat
-- Send text, picture(<10M), gif(<10M), video(<100M), file(<100M)
-- Long press the conversation list item to delete the conversation or exit the group chat
-- custom ui (Please check widgets' parameters)
+Baseline: ZIMKit Flutter v2.0.0 (verified against code on 2026-10-14)
 
-✨Coming soon: 
-- Invite to join group chat / set user avatar /set group avatar
-- download files
+ZIMKit is a Flutter UI kit for adding one-to-one and group chat to an app. It provides ready-to-use conversation and message screens, messaging APIs, and controls for adapting the UI to your app.
 
-## 1. init imkit
+[![pub package](https://img.shields.io/pub/v/zego_zimkit.svg)](https://pub.dev/packages/zego_zimkit)
 
-```
-void main() {
-  ZIMKit().init(
-    appID: , // your appid
-    appSign: '', // your appSign
+![ZIMKit chat preview](images/img_chat.png)
+
+## Features
+
+- **Conversation list:** display conversations and unread counts; pin conversations and set notification status.
+- **One-to-one and group chat:** open a chat page with text, image, voice, video, and file messages. Send custom and combined messages through the API.
+- **Message actions:** configure the long-press menu for reply, forward, revoke, delete, multi-select, and emoji reactions. Available actions can vary by message type and permissions.
+- **Group details and member management:** use the built-in `ZIMKitGroupDetailPage` to view group information and members, invite users, and manage member roles. The host app provides the user picker; ZIMKit performs the invite.
+- **Customizable composer and UI:** configure input buttons, emoji choices, message actions, styles, and visible text. Handle voice/video call buttons in the host app and connect them to your calling kit.
+- **Authentication and events:** connect with a user ID and an optional server-issued token, renew tokens, and listen for connection, message, and media transfer events.
+
+## Quick start
+
+Add `zego_zimkit` to your `pubspec.yaml`, then initialize the SDK and connect a user before showing chat UI:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:zego_zimkit/zego_zimkit.dart';
+
+Future<void> initializeZIMKit() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await ZIMKit().init(
+    appID: yourAppID,
+    appSign: yourAppSign,
   );
-  runApp(const ZIMKitDemo());
+
+  final errorCode = await ZIMKit().connectUser(
+    id: userID,
+    name: userName,
+    // For Token authentication, pass a token issued by your server.
+    // token: tokenFromYourServer,
+  );
+  if (errorCode != 0) {
+    throw StateError('ZIMKit user connection failed: $errorCode');
+  }
 }
 ```
 
-## 2. user login
+Show the conversation list and open the selected conversation:
 
 ```dart
-ElevatedButton(
-    onPressed: () async {
-        await ZIMKit()
-            .connectUser(id: userID.text, name: userName.text);
-            Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (context) =>
-                    const ZIMKitDemoHomePage(),
-            ),
-        );
+ZIMKitConversationListView(
+  events: ZIMKitConversationListEvents(
+    onPressed: (context, conversation, defaultAction) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ZIMKitMessageListPage(
+            conversationID: conversation.id,
+            conversationType: conversation.type,
+          ),
+        ),
+      );
     },
-    child: const Text("login"),
+  ),
 )
 ```
 
-## 3. enjoy it
+## Documentation
 
-```dart
-class ZIMKitDemoHomePage extends StatelessWidget {
-  const ZIMKitDemoHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Conversations')),
-        body: ZIMKitConversationListView(
-          onPressed: (context, conversation, defaultAction) {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return ZIMKitMessageListPage(
-                  conversationID: conversation.id,
-                  conversationType: conversation.type,
-                );
-              },
-            ));
-          },
-        ),
-      ),
-    );
-  }
-}
-
-```
+- [UI components](doc/components.md)
+- [Configuration options](doc/configs.md)
+- [SDK APIs](doc/apis.md)
+- [Events](doc/events.md)

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/components/audio/style.dart';
+import 'package:zego_zimkit/src/config.defines.dart';
 import 'package:zego_zimkit/src/components/messages/style.dart';
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util_config.dart';
+import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/services/services.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
@@ -93,7 +95,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
         return Theme(
           data: widget.style?.theme ?? Theme.of(context),
           child: Scaffold(
-            appBar: widget.style?.appBarBuilder?.call(
+            appBar:
+                widget.style?.appBarBuilder?.call(
                   context,
                   buildAppBar(context),
                 ) ??
@@ -162,7 +165,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
 
       if (targetIndex == -1) {
         debugPrint(
-            '[ZIMKit] Message with ID $messageID not found in current list');
+          '[ZIMKit] Message with ID $messageID not found in current list',
+        );
         // Show a toast to indicate message not found
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -191,7 +195,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
         // Calculate approximate position (assuming uniform item height)
         // This is a rough estimate - actual implementation may vary
         final totalItems = messageList.length;
-        final approximatePosition = minScrollExtent +
+        final approximatePosition =
+            minScrollExtent +
             (maxScrollExtent - minScrollExtent) * (targetIndex / totalItems);
 
         // Animate to the calculated position
@@ -202,7 +207,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
         );
 
         debugPrint(
-            '[ZIMKit] Scrolled to message at index $targetIndex (position: $approximatePosition)');
+          '[ZIMKit] Scrolled to message at index $targetIndex (position: $approximatePosition)',
+        );
       } else {
         debugPrint('[ZIMKit] ScrollController has no clients');
       }
@@ -213,7 +219,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
 
   Widget messageRecordLocker() {
     return Positioned(
-      bottom: widget.config?.messageInput?.height ??
+      bottom:
+          widget.config?.messageInput?.height ??
           ZIMKitMessageStyle.inputHeight - 5,
       right: 5,
       child: SizedBox(
@@ -232,7 +239,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
       bottom: multiModeData.isMultiMode
           ? 0
           : (widget.config?.messageInput?.height ??
-              ZIMKitMessageStyle.inputHeight),
+                ZIMKitMessageStyle.inputHeight),
       child: GestureDetector(
         onTap: () {
           // Hide keyboard when tapping message list
@@ -252,13 +259,11 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
           ),
           events: (widget.events?.messageList ?? ZIMKitMessageListEvents())
               .copyWith(
-            onReplyMessageTap: scrollToMessage,
-            onReplyMessage: setReplyMessage,
-          ),
-          style:
-              (widget.style?.messageList ?? ZIMKitMessageListStyles()).copyWith(
-            theme: widget.style?.theme,
-          ),
+                onReplyMessageTap: scrollToMessage,
+                onReplyMessage: setReplyMessage,
+              ),
+          style: (widget.style?.messageList ?? ZIMKitMessageListStyles())
+              .copyWith(theme: widget.style?.theme),
         ),
       ),
     );
@@ -276,26 +281,28 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
             recordStatus: recordStatus,
             conversationID: widget.conversationID,
             conversationType: widget.conversationType,
-            config: (widget.config?.messageInput ??
-                    const ZIMKitMessageInputConfigs())
-                .copyWith(
-              inputFocusNode: inputFocusNode,
-              listScrollController: listScrollController,
-              closePanelNotifier: _closePanelNotifier,
-              repliedMessage: repliedMessage,
-            ),
-            events: (widget.events?.messageInput ??
-                    const ZIMKitMessageInputEvents())
-                .copyWith(
-              onReplyCancelled: () {
-                _repliedMessageNotifier.value = null;
-              },
-            ),
+            inputConfig:
+                ZIMKitCore.instance.config?.inputConfig ?? ZIMKitInputConfig(),
+            config:
+                (widget.config?.messageInput ??
+                        const ZIMKitMessageInputConfigs())
+                    .copyWith(
+                      inputFocusNode: inputFocusNode,
+                      listScrollController: listScrollController,
+                      closePanelNotifier: _closePanelNotifier,
+                      repliedMessage: repliedMessage,
+                    ),
+            events:
+                (widget.events?.messageInput ??
+                        const ZIMKitMessageInputEvents())
+                    .copyWith(
+                      onReplyCancelled: () {
+                        _repliedMessageNotifier.value = null;
+                      },
+                    ),
             style:
                 (widget.style?.messageInput ?? const ZIMKitMessageInputStyles())
-                    .copyWith(
-              theme: widget.style?.theme,
-            ),
+                    .copyWith(theme: widget.style?.theme),
           );
         },
       ),

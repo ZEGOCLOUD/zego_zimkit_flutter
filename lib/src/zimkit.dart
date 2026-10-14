@@ -20,6 +20,7 @@ import 'package:zego_zimkit/src/events.dart';
 import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/services/core/defines.dart';
+import 'package:zego_zimkit/src/services/file_message_type.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
 
 part 'services/conversation_service.dart';

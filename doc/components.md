@@ -1,9 +1,12 @@
 # Components
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 This document describes the main UI components (Widgets) in ZIMKit.
 
 - [ZIMKitConversationListView](#zimkitconversationlistview)
 - [ZIMKitMessageListPage](#zimkitmessagelistpage)
+- [ZIMKitGroupDetailPage](#zimkitgroupdetailpage)
 - [ZIMKitConversationListConfigs](#zimkitconversationlistconfigs)
 - [ZIMKitConversationListEvents](#zimkitconversationlistevents)
 - [ZIMKitConversationListStyles](#zimkitconversationliststyles)
@@ -97,15 +100,15 @@ ZIMKitMessageListPage(
   conversationID: 'user_123',
   conversationType: ZIMConversationType.peer,
   config: ZIMKitMessageListPageConfigs(
-    inputConfig: ZIMKitInputConfig(
-      smallButtons: [
-        ZIMKitInputButtonName.emoji,
-        ZIMKitInputButtonName.picture,
-      ],
+    messageInput: ZIMKitMessageInputConfigs(
+      showEmojiButton: true,
+      showPickMediaButton: true,
     ),
   ),
 )
 ```
+
+Global toolbar buttons, expansion actions, placeholder text, and emojis are configured in `ZIMKitConfig.inputConfig` during `ZIMKit.init`.
 
 ### Methods
 
@@ -124,6 +127,23 @@ Scrolls to a specific message by messageID.
 ```dart
 Future<void> scrollToMessage(String messageIDStr)
 ```
+
+---
+
+## ZIMKitGroupDetailPage
+
+SDK-owned group details and member management page. The host supplies a member picker callback because user search belongs to the host application.
+
+```dart
+ZIMKitGroupDetailPage(
+  groupID: groupID,
+  onInviteMembers: (context, currentMembers) async {
+    return showYourMemberPicker(context, currentMembers);
+  },
+)
+```
+
+The page displays group name, ID, notice, member count, and members. It exposes member actions allowed for the current user's group role, plus shared pin and do-not-disturb settings. The callback returns selected user IDs; the SDK page performs the group invite.
 
 ---
 
@@ -336,6 +356,7 @@ Input widget for composing and sending messages.
 | **configs** | Input configuration | `ZIMKitMessageInputConfigs?` | `null` |
 | **styles** | Input styles | `ZIMKitMessageInputStyles?` | `null` |
 | **events** | Input events | `ZIMKitMessageInputEvents?` | `null` |
+| **inputConfig** | Global input toolbar configuration. Usually supplied by `ZIMKitConfig.inputConfig`. | `ZIMKitInputConfig?` | `null` |
 
 ---
 
@@ -473,8 +494,34 @@ Configuration for the message input widget.
 
 | Name | Description | Type | Default Value |
 | :--- | :--- | :--- | :--- |
-| **inputConfig** | Input box configuration | `ZIMKitInputConfig?` | `null` |
-| **maxLines** | Maximum lines for input | `int` | `4` |
+| **showPickFileButton** | Show the file button | `bool` | `true` |
+| **showPickMediaButton** | Show picture and camera buttons | `bool` | `true` |
+| **showMoreButton** | Show the expansion panel button | `bool` | `true` |
+| **showRecordButton** | Show the voice recording button | `bool` | `true` |
+| **showEmojiButton** | Show the emoji button | `bool` | `true` |
+| **actions** | Additional actions in the input panel | `List<ZIMKitMessageInputAction>` | `[]` |
+| **maxLines** | Maximum input lines | `int?` | `null` |
+| **repliedMessage** | Message currently being replied to | `ZIMKitMessage?` | `null` |
+
+Global button order, overflow behavior, emojis, and placeholder text come from `ZIMKitConfig.inputConfig`. Page-level visibility flags filter the built-in buttons.
+
+---
+
+## ZIMKitMessageInputEvents
+
+Input callbacks include message send hooks and a typed call action callback.
+
+```dart
+ZIMKitMessageInputEvents(
+  onCallTap: (button) {
+    if (button == ZIMKitInputButtonName.voiceCall) {
+      // Start or present a voice call.
+    }
+  },
+)
+```
+
+`onCallTap` receives `voiceCall` or `videoCall`. The host application owns call handling.
 
 ---
 
@@ -495,8 +542,9 @@ Configuration for the message list page.
 
 | Name | Description | Type | Default Value |
 | :--- | :--- | :--- | :--- |
-| **inputConfig** | Input configuration | `ZIMKitInputConfig?` | `null` |
-| **messageListConfig** | Message list configuration | `ZIMKitMessageListConfigs?` | `null` |
+| **messageInput** | Page-level input visibility and behavior | `ZIMKitMessageInputConfigs?` | `null` |
+| **messageListScrollController** | Message list scroll controller | `ScrollController?` | `null` |
+| **inputFocusNode** | Input focus node | `FocusNode?` | `null` |
 
 ---
 

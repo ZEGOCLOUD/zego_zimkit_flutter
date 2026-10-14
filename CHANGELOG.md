@@ -1,10 +1,14 @@
-## Unreleased
+## 2.0.0
 
+- Add `ZIMKitGroupDetailPage` for group information, member management, and conversation settings.
+- Add configurable message input buttons and host-app callbacks for voice and video call actions.
+- Add per-message-type operation configuration and configurable quick reactions.
+- Add token renewal and connection-state events; clear provisional user state after failed login and retry eligible requests after `UserIsNotLogged`.
+- Add file extension detection for file messages and media transfer progress events for uploads, downloads, and cached image loads.
+- Report group member query failures to the group details page and allow retry.
 - Add iOS Swift Package Manager support while retaining CocoaPods support.
 - Upgrade `file_picker` to 13.1.0.
-- `PlatformFile` is abstract in `file_picker` 13; consumers that directly instantiated `ZIMKitPlatformFile` must migrate to a concrete `PlatformFile` implementation.
-
-## 2.0.0
+- **Breaking change:** `ZIMKitPlatformFile` follows `file_picker` 13.1.0, where `PlatformFile` is abstract. Consumers that directly instantiated this alias must migrate to a concrete `PlatformFile` implementation.
 
 - Functional Features
   - **Internationalization Support**: A complete internationalization system with built-in support for Chinese and English

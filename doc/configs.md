@@ -1,5 +1,7 @@
 # Configs
 
+基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+
 This document describes the configuration classes in ZIMKit.
 
 - [ZIMKitConfig](#zimkitconfig)
@@ -64,12 +66,12 @@ Input Box Configuration. Used to configure input box buttons, emojis, etc.
 
 | Name | Description | Type | Default Value |
 | :--- | :--- | :--- | :--- |
-| **smallButtons** | List of small buttons displayed at the bottom | `List<ZIMKitInputButtonName>` | `[audio, emoji, picture, expand]` |
-| **expandButtons** | List of buttons displayed in the expansion panel | `List<ZIMKitInputButtonName>` | `[takePhoto, file]` |
-| **emojis** | List of emojis | `List<String>?` | `null` |
-| **maxSmallButtonCount** | Maximum number of buttons at the bottom | `int` | `4` |
-| **placeholder** | Input box placeholder | `String?` | `null` |
-| **customButtonBuilders** | Custom button builders | `Map<ZIMKitInputButtonName, Widget Function(BuildContext)>?` | `null` |
+| **smallButtons** | Ordered buttons in the input toolbar. Overflow buttons move into the expansion panel. | `List<ZIMKitInputButtonName>` | `[audio, emoji, picture, expand]` |
+| **expandButtons** | Ordered buttons in the expansion panel. The SDK shows the expand control when this list or overflow contains actions. | `List<ZIMKitInputButtonName>` | `[takePhoto, file]` |
+| **emojis** | Emojis shown in the input panel. `null` uses the full picker; an empty list shows no quick emojis. | `List<String>?` | `null` |
+| **maxSmallButtonCount** | Maximum number of toolbar buttons, including the expand control when shown. | `int` | `4` |
+| **placeholder** | Input box placeholder. An explicit input style hint takes precedence. | `String?` | `null` |
+| **customButtonBuilders** | Custom button builders for configured toolbar and expansion buttons. | `Map<ZIMKitInputButtonName, Widget Function(BuildContext)>?` | `null` |
 
 ---
 
@@ -85,7 +87,7 @@ Message Configuration. Used to configure operation items and message reactions f
 | **videoMessageConfig** | Video message configuration | [ZIMKitVideoMessageConfig](#zimvideomessageconfig) | `ZIMKitVideoMessageConfig()` |
 | **fileMessageConfig** | File message configuration | [ZIMKitFileMessageConfig](#zimfilemessageconfig) | `ZIMKitFileMessageConfig()` |
 | **combineMessageConfig** | Combine message configuration | [ZIMKitCombineMessageConfig](#zimcombinemessageconfig) | `ZIMKitCombineMessageConfig()` |
-| **messageReactions** | List of reaction emojis | `List<String>?` | `null` |
+| **messageReactions** | Quick reactions in the message menu. `null` uses the defaults; an empty list hides the quick reaction bar. | `List<String>?` | `null` |
 
 ### getOperationsByMessageType
 
@@ -261,6 +263,18 @@ Internal Text Configuration. Used to configure the internationalization of all v
 | **groupNoticeText** | Group notice text | `String` | `'Notice'` |
 | **groupLeaveText** | Leave group text | `String` | `'Leave Group'` |
 | **groupDismissText** | Dismiss group text | `String` | `'Dismiss Group'` |
+| **groupDetailTitle** | Group details page title | `String` | `'Group details'` |
+| **groupAddMemberText** | Add member button | `String` | `'Add'` |
+| **groupOwnerRoleText** | Group owner role | `String` | `'Owner'` |
+| **groupAdminRoleText** | Group admin role | `String` | `'Admin'` |
+| **groupMemberRoleText** | Regular member role | `String` | `'Member'` |
+| **groupRemoveMemberText** | Remove member action | `String` | `'Remove member'` |
+| **groupMakeAdminText** | Make admin action | `String` | `'Make admin'` |
+| **groupRemoveAdminText** | Remove admin action | `String` | `'Remove admin'` |
+| **groupTransferOwnershipText** | Transfer ownership action | `String` | `'Transfer ownership'` |
+| **groupNoMembersText** | Empty member list message | `String` | `'No members found'` |
+| **groupRetryText** | Retry button text after loading group members fails | `String` | `'Retry'` |
+| **groupPickerUnavailableText** | Missing host member picker message | `String` | `'The host app has not provided a member picker.'` |
 
 ### Message Type Display
 
@@ -353,6 +367,10 @@ Internal Text Configuration. Used to configure the internationalization of all v
 | **takePhotoText** | Take photo text | `String` | `'Take Photo'` |
 | **photoText** | Photo album text | `String` | `'Photo'` |
 | **fileText** | File text | `String` | `'File'` |
+| **voiceInputText** | Voice input action label | `String` | `'Voice'` |
+| **emojiInputText** | Emoji input action label | `String` | `'Emoji'` |
+| **voiceCallInputText** | Voice call action label | `String` | `'Voice call'` |
+| **videoCallInputText** | Video call action label | `String` | `'Video call'` |
 
 ### Badge Related
 

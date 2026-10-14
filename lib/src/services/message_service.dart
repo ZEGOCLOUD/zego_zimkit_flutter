@@ -75,11 +75,15 @@ mixin ZIMKitMessageService {
     Function(ZIMKitMessage)? onMessageSent,
   }) async {
     for (final file in files) {
-      ZIMKitCore.instance.sendMediaMessage(
+      await ZIMKitCore.instance.sendMediaMessage(
         conversationID,
         type,
         file.path!,
-        ZIMMessageType.file,
+        resolveZIMKitFileMessageType(
+          file.extension,
+          autoDetectType: autoDetectType,
+        ),
+        mediaUploadingProgress: mediaUploadingProgress,
         preMessageSending: preMessageSending,
         onMessageSent: onMessageSent,
       );
@@ -103,6 +107,7 @@ mixin ZIMKitMessageService {
         type,
         file.path!,
         ZIMKit().getMessageTypeByFileExtension(file),
+        mediaUploadingProgress: mediaUploadingProgress,
         preMessageSending: preMessageSending,
         onMessageSent: onMessageSent,
       );

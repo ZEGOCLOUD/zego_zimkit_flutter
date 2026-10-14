@@ -18,15 +18,19 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
     required this.conversationType,
     required this.onActionSelected,
     this.extraActions = const [],
+    this.configuredButtons,
   });
 
   final String conversationID;
   final ZIMConversationType conversationType;
   final Function(ZIMKitMoreActionsPanelAction action, dynamic data)?
-      onActionSelected;
+  onActionSelected;
 
   /// please use [buildZIMKitInputMoreActionItem] to build a same style widget
   final List<Widget> extraActions;
+
+  /// Buttons generated from the global input configuration.
+  final List<Widget>? configuredButtons;
 
   @override
   Widget build(BuildContext context) {
@@ -44,33 +48,42 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
         mainAxisSpacing: 20.zH,
         crossAxisSpacing: 20.zW,
         childAspectRatio: 0.75, // Adjust aspect ratio to fit icon + label
-        children: [
-          buildZIMKitInputMoreActionItem(
-            context,
-            icon: Icons.camera_alt,
-            label: ZIMKitCore.instance.innerText.takePhotoText,
-            onTap: () => _handleTakePhoto(context),
-          ),
-          buildZIMKitInputMoreActionItem(
-            context,
-            icon: Icons.image,
-            label: ZIMKitCore.instance.innerText.photoText,
-            onTap: () => _handlePickImages(context),
-          ),
-          buildZIMKitInputMoreActionItem(
-            context,
-            icon: Icons.folder,
-            label: ZIMKitCore.instance.innerText.fileText,
-            onTap: () => _handlePickFiles(context),
-          ),
-          ...extraActions.map(
-            (widget) => SizedBox(
-              width: 55.zW,
-              height: 55.zH,
-              child: widget,
-            ),
-          ),
-        ],
+        children: configuredButtons == null
+            ? [
+                buildZIMKitInputMoreActionItem(
+                  context,
+                  icon: Icons.camera_alt,
+                  label: ZIMKitCore.instance.innerText.takePhotoText,
+                  onTap: () => _handleTakePhoto(context),
+                ),
+                buildZIMKitInputMoreActionItem(
+                  context,
+                  icon: Icons.image,
+                  label: ZIMKitCore.instance.innerText.photoText,
+                  onTap: () => _handlePickImages(context),
+                ),
+                buildZIMKitInputMoreActionItem(
+                  context,
+                  icon: Icons.folder,
+                  label: ZIMKitCore.instance.innerText.fileText,
+                  onTap: () => _handlePickFiles(context),
+                ),
+                ...extraActions.map(
+                  (widget) =>
+                      SizedBox(width: 55.zW, height: 55.zH, child: widget),
+                ),
+                ...extraActions.map(
+                  (widget) =>
+                      SizedBox(width: 55.zW, height: 55.zH, child: widget),
+                ),
+              ]
+            : [
+                ...configuredButtons!,
+                ...extraActions.map(
+                  (widget) =>
+                      SizedBox(width: 55.zW, height: 55.zH, child: widget),
+                ),
+              ],
       ),
     );
   }

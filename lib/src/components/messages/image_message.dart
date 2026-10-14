@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:zego_zimkit/src/components/messages/widgets/reactions.dart';
 import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/extensions/extensions.dart';
+import 'package:zego_zimkit/src/services/core/event.dart';
 import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/zimkit.dart';
 
@@ -28,14 +29,16 @@ class ZIMKitImageMessage extends StatelessWidget {
     BuildContext context,
     ZIMKitMessage message,
     Function defaultAction,
-  )? onPressed;
+  )?
+  onPressed;
 
   final void Function(
     BuildContext context,
     LongPressStartDetails details,
     ZIMKitMessage message,
     Function defaultAction,
-  )? onLongPress;
+  )?
+  onLongPress;
 
   final void Function(String repliedMessageID)? onReplyMessageTap;
 
@@ -44,17 +47,10 @@ class ZIMKitImageMessage extends StatelessWidget {
     return Flexible(
       child: GestureDetector(
         // TODO save image
-        onTap: () => onPressed?.call(
-          context,
-          message,
-          () {},
-        ), // TODO default onPressed
-        onLongPressStart: (details) => onLongPress?.call(
-          context,
-          details,
-          message,
-          () {},
-        ),
+        onTap: () =>
+            onPressed?.call(context, message, () {}), // TODO default onPressed
+        onLongPressStart: (details) =>
+            onLongPress?.call(context, details, message, () {}),
         child: Column(
           crossAxisAlignment: message.isMine
               ? CrossAxisAlignment.end
@@ -71,56 +67,87 @@ class ZIMKitImageMessage extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: message.imageContent!.aspectRatio,
                   child: LayoutBuilder(
-                      builder: (context, BoxConstraints constraints) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8.zR),
-                      child: message.isMine
-                          ? FutureBuilder(
-                              future: File(message.imageContent!.fileLocalPath)
-                                  .exists(),
-                              builder: (context, snapshot) {
-                                return snapshot.hasData && snapshot.data!
-                                    ? Image.file(
-                                        File(message
-                                            .imageContent!.fileLocalPath),
-                                        cacheHeight:
-                                            constraints.maxHeight.floor(),
-                                        cacheWidth:
-                                            constraints.maxWidth.floor(),
-                                      )
-                                    : CachedNetworkImage(
-                                        imageUrl: message.isNetworkUrl
-                                            ? message
-                                                .imageContent!.fileDownloadUrl
-                                            : message.imageContent!
-                                                .largeImageDownloadUrl,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, _, _) =>
-                                            const Icon(Icons
-                                                .image_not_supported_outlined),
-                                        placeholder: (context, url) =>
-                                            const Icon(Icons.image_outlined),
-                                        memCacheHeight:
-                                            constraints.maxHeight.floor(),
-                                        memCacheWidth:
-                                            constraints.maxWidth.floor(),
+                    builder: (context, BoxConstraints constraints) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8.zR),
+                        child: message.isMine
+                            ? FutureBuilder(
+                                future: File(
+                                  message.imageContent!.fileLocalPath,
+                                ).exists(),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData && snapshot.data!
+                                      ? Image.file(
+                                          File(
+                                            message.imageContent!.fileLocalPath,
+                                          ),
+                                          cacheHeight: constraints.maxHeight
+                                              .floor(),
+                                          cacheWidth: constraints.maxWidth
+                                              .floor(),
+                                        )
+                                      : CachedNetworkImage(
+                                          imageUrl: message.isNetworkUrl
+                                              ? message
+                                                    .imageContent!
+                                                    .fileDownloadUrl
+                                              : message
+                                                    .imageContent!
+                                                    .largeImageDownloadUrl,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, _, _) =>
+                                              const Icon(
+                                                Icons
+                                                    .image_not_supported_outlined,
+                                              ),
+                                          progressIndicatorBuilder:
+                                              (context, url, progress) {
+                                                dispatchZIMKitImageDownloadProgress(
+                                                  message: message,
+                                                  currentSize:
+                                                      progress.downloaded,
+                                                  totalSize: progress.totalSize,
+                                                );
+                                                return const Icon(
+                                                  Icons.image_outlined,
+                                                );
+                                              },
+                                          placeholder: (context, url) =>
+                                              const Icon(Icons.image_outlined),
+                                          memCacheHeight: constraints.maxHeight
+                                              .floor(),
+                                          memCacheWidth: constraints.maxWidth
+                                              .floor(),
+                                        );
+                                },
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: message.isNetworkUrl
+                                    ? message.imageContent!.fileDownloadUrl
+                                    : message
+                                          .imageContent!
+                                          .largeImageDownloadUrl,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, _, _) => const Icon(
+                                  Icons.image_not_supported_outlined,
+                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                      dispatchZIMKitImageDownloadProgress(
+                                        message: message,
+                                        currentSize: progress.downloaded,
+                                        totalSize: progress.totalSize,
                                       );
-                              },
-                            )
-                          : CachedNetworkImage(
-                              imageUrl: message.isNetworkUrl
-                                  ? message.imageContent!.fileDownloadUrl
-                                  : message.imageContent!.largeImageDownloadUrl,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, _, _) => const Icon(
-                                  Icons.image_not_supported_outlined),
-                              placeholder: (context, url) =>
-                                  const Icon(Icons.image_outlined),
-                              memCacheHeight: constraints.maxHeight.floor(),
-                              memCacheWidth: constraints.maxWidth.floor(),
-                            ),
-                    );
-                  }),
+                                      return const Icon(Icons.image_outlined);
+                                    },
+                                placeholder: (context, url) =>
+                                    const Icon(Icons.image_outlined),
+                                memCacheHeight: constraints.maxHeight.floor(),
+                                memCacheWidth: constraints.maxWidth.floor(),
+                              ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

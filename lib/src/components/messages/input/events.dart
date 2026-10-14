@@ -2,20 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:zego_zimkit/src/config.defines.dart';
 import 'package:zego_zimkit/src/defines.dart';
 
-typedef ZIMKitMessageInputMessageSentEvent = void Function(
-  ZIMKitMessage message,
-);
-typedef ZIMKitMessageInputPreMessageSendingEvent = FutureOr<ZIMKitMessage>
-    Function(
-  ZIMKitMessage message,
-);
-typedef ZIMKitMessageInputMediaFilesPickedEvent = void Function(
-  BuildContext context,
-  List<ZIMKitPlatformFile> files,
-  Function defaultAction,
-);
+typedef ZIMKitMessageInputMessageSentEvent =
+    void Function(ZIMKitMessage message);
+typedef ZIMKitMessageInputPreMessageSendingEvent =
+    FutureOr<ZIMKitMessage> Function(ZIMKitMessage message);
+typedef ZIMKitMessageInputMediaFilesPickedEvent =
+    void Function(
+      BuildContext context,
+      List<ZIMKitPlatformFile> files,
+      Function defaultAction,
+    );
 
 /// Events class for ZIMKitMessageInput
 class ZIMKitMessageInputEvents {
@@ -24,6 +23,7 @@ class ZIMKitMessageInputEvents {
     this.preMessageSending,
     this.onMediaFilesPicked,
     this.onReplyCancelled,
+    this.onCallTap,
     this.onTextFieldTap,
   });
 
@@ -39,6 +39,9 @@ class ZIMKitMessageInputEvents {
   /// Called when reply is cancelled
   final VoidCallback? onReplyCancelled;
 
+  /// Called when the user taps a voice or video call input button.
+  final ValueChanged<ZIMKitInputButtonName>? onCallTap;
+
   /// [onTextFieldTap] Callback when text field is tapped
   final VoidCallback? onTextFieldTap;
 
@@ -48,7 +51,7 @@ class ZIMKitMessageInputEvents {
     ZIMKitMessageInputPreMessageSendingEvent? preMessageSending,
     ZIMKitMessageInputMediaFilesPickedEvent? onMediaFilesPicked,
     VoidCallback? onReplyCancelled,
-    VoidCallback? onCallTap,
+    ValueChanged<ZIMKitInputButtonName>? onCallTap,
     VoidCallback? onTextFieldTap,
   }) {
     return ZIMKitMessageInputEvents(
@@ -56,6 +59,7 @@ class ZIMKitMessageInputEvents {
       preMessageSending: preMessageSending ?? this.preMessageSending,
       onMediaFilesPicked: onMediaFilesPicked ?? this.onMediaFilesPicked,
       onReplyCancelled: onReplyCancelled ?? this.onReplyCancelled,
+      onCallTap: onCallTap ?? this.onCallTap,
       onTextFieldTap: onTextFieldTap ?? this.onTextFieldTap,
     );
   }

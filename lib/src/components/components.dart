@@ -39,3 +39,4 @@ export 'select/multi_select_toolbar_widget.dart';
 export 'select/message_list_multi_select_processor.dart';
 
 export 'settings/widget.dart';
+export 'settings/group_detail_page.dart';

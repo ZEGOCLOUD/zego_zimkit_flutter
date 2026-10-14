@@ -22,6 +22,7 @@ import 'package:zego_zimkit/src/events.dart';
 import 'package:zego_zimkit/src/extensions/extensions.dart';
 import 'package:zego_zimkit/src/inner_text.dart';
 import 'package:zego_zimkit/src/utils/notification/ios_im_message.dart';
+import 'package:zego_zimkit/src/services/core/group_member_query_error.dart';
 import 'package:zego_zimkit/src/services/core/offline_message.dart';
 import 'package:zego_zimkit/src/services/logger_service.dart';
 import 'package:zego_zimkit/src/services/services.dart';
@@ -31,6 +32,7 @@ import 'package:zego_zimkit/src/zimkit.dart';
 part 'conversation.dart';
 
 part 'group.dart';
+
 
 part 'notification.dart';
 
@@ -66,6 +68,7 @@ class ZIMKitCore
   int appID = 0;
   String appSign = '';
   String appSecret = '';
+  String currentToken = '';
   bool useToken = false;
 
   bool isInited = false;
@@ -85,7 +88,7 @@ class ZIMKitCore
 
   final Map<String, AsyncCache<ZIMGroupFullInfo?>> _queryGroupCache = {};
   final Map<String, AsyncCache<ZIMGroupMemberInfo?>>
-      _queryGroupMemberInfoCache = {};
+  _queryGroupMemberInfoCache = {};
   final Map<int, AsyncCache<ZIMUserFullInfo>> _queryUserCache = {};
 
   // User info memory cache (like Android's GroupUserInfoNameMap/AvatarMap)
@@ -170,7 +173,7 @@ class ZIMKitCore
       return;
     }
 
-    uninitEventHandler();
+    await uninitEventHandler();
 
     ZIMKitLogger.logInfo('destroy.');
     await disconnectUser();
@@ -216,7 +219,7 @@ class ZIMKitCore
   }
 
   Stream<ZegoSignalingPluginTokenWillExpireEvent>
-      getTokenWillExpireEventStream() {
+  getTokenWillExpireEventStream() {
     return ZegoUIKitSignalingPlugin().getTokenWillExpireEventStream();
   }
 }

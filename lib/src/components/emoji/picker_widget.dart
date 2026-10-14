@@ -9,23 +9,46 @@ class ZIMKitEmojiPickerWidget extends StatelessWidget {
     super.key,
     required this.onEmojiSelected,
     this.textEditingController,
+    this.emojis,
   });
 
   final Function(String emoji) onEmojiSelected;
   final TextEditingController? textEditingController;
 
+  /// If provided, displays only these emojis instead of the full picker.
+  final List<String>? emojis;
+
   @override
   Widget build(BuildContext context) {
+    if (emojis != null) {
+      return Container(
+        height: 250,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F6F7),
+          border: Border(top: BorderSide(color: Colors.grey[300]!, width: 0.5)),
+        ),
+        child: GridView.count(
+          crossAxisCount: 8,
+          children: emojis!
+              .map(
+                (emoji) => InkWell(
+                  onTap: () => onEmojiSelected(emoji),
+                  child: Center(
+                    child: Text(emoji, style: const TextStyle(fontSize: 28)),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      );
+    }
+
     return Container(
       height: 250,
       decoration: BoxDecoration(
         color: const Color(0xFFF5F6F7),
-        border: Border(
-          top: BorderSide(
-            color: Colors.grey[300]!,
-            width: 0.5,
-          ),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey[300]!, width: 0.5)),
       ),
       child: EmojiPicker(
         textEditingController: textEditingController,

@@ -86,6 +86,18 @@ class ZIMKitInnerText {
     String? groupNoticeText,
     String? groupLeaveText,
     String? groupDismissText,
+    String? groupDetailTitle,
+    String? groupAddMemberText,
+    String? groupNoMembersText,
+    String? groupRetryText,
+    String? groupOwnerRoleText,
+    String? groupAdminRoleText,
+    String? groupMemberRoleText,
+    String? groupRemoveMemberText,
+    String? groupMakeAdminText,
+    String? groupRemoveAdminText,
+    String? groupTransferOwnershipText,
+    String? groupPickerUnavailableText,
 
     /// Message Type Display
     String? imageMessageText,
@@ -154,156 +166,178 @@ class ZIMKitInnerText {
     String? takePhotoText,
     String? photoText,
     String? fileText,
+    String? voiceInputText,
+    String? emojiInputText,
+    String? voiceCallInputText,
+    String? videoCallInputText,
 
     /// Badge Related
     String? maxBadgeCountText,
-  })  :
+  }) : /// Message Input Related
+       messageEmptyText = messageEmptyText ?? 'Say something...',
 
-        /// Message Input Related
-        messageEmptyText = messageEmptyText ?? 'Say something...',
+       /// Message Operation Related
+       copyMenuText = copyMenuText ?? 'Copy',
+       replyMenuText = replyMenuText ?? 'Reply',
+       forwardMenuText = forwardMenuText ?? 'Forward',
+       revokeMenuText = revokeMenuText ?? 'Revoke',
+       deleteMenuText = deleteMenuText ?? 'Delete',
+       multipleChoiceMenuText = multipleChoiceMenuText ?? 'Select',
+       reactionMenuText = reactionMenuText ?? 'React',
+       speakerMenuText = speakerMenuText ?? 'Speaker',
+       cancelMenuText = cancelMenuText ?? 'Cancel',
 
-        /// Message Operation Related
-        copyMenuText = copyMenuText ?? 'Copy',
-        replyMenuText = replyMenuText ?? 'Reply',
-        forwardMenuText = forwardMenuText ?? 'Forward',
-        revokeMenuText = revokeMenuText ?? 'Revoke',
-        deleteMenuText = deleteMenuText ?? 'Delete',
-        multipleChoiceMenuText = multipleChoiceMenuText ?? 'Select',
-        reactionMenuText = reactionMenuText ?? 'React',
-        speakerMenuText = speakerMenuText ?? 'Speaker',
-        cancelMenuText = cancelMenuText ?? 'Cancel',
+       /// Toast Notifications
+       copySuccessToast = copySuccessToast ?? 'Copied to clipboard',
+       revokeSuccessToast = revokeSuccessToast ?? 'Message revoked',
+       deleteSuccessToast = deleteSuccessToast ?? 'Message deleted',
+       deletedToast = deletedToast ?? 'Deleted',
+       forwardSuccessToast = forwardSuccessToast ?? 'Message forwarded',
+       networkErrorToast = networkErrorToast ?? 'Network error',
 
-        /// Toast Notifications
-        copySuccessToast = copySuccessToast ?? 'Copied to clipboard',
-        revokeSuccessToast = revokeSuccessToast ?? 'Message revoked',
-        deleteSuccessToast = deleteSuccessToast ?? 'Message deleted',
-        deletedToast = deletedToast ?? 'Deleted',
-        forwardSuccessToast = forwardSuccessToast ?? 'Message forwarded',
-        networkErrorToast = networkErrorToast ?? 'Network error',
+       /// Confirmation Dialogs
+       deleteMessageTitle = deleteMessageTitle ?? 'Delete Message',
+       deleteMessageContent =
+           deleteMessageContent ?? 'Are you sure to delete this message?',
+       deleteMessagesTitle = deleteMessagesTitle ?? 'Delete Messages',
+       deleteMessagesContentFormat =
+           deleteMessagesContentFormat ?? 'Delete %d messages?',
+       revokeMessageTitle = revokeMessageTitle ?? 'Revoke Message',
+       revokeMessageContent =
+           revokeMessageContent ?? 'Are you sure to revoke this message?',
+       confirmButtonText = confirmButtonText ?? 'Confirm',
+       cancelButtonText = cancelButtonText ?? 'Cancel',
 
-        /// Confirmation Dialogs
-        deleteMessageTitle = deleteMessageTitle ?? 'Delete Message',
-        deleteMessageContent =
-            deleteMessageContent ?? 'Are you sure to delete this message?',
-        deleteMessagesTitle = deleteMessagesTitle ?? 'Delete Messages',
-        deleteMessagesContentFormat =
-            deleteMessagesContentFormat ?? 'Delete %d messages?',
-        revokeMessageTitle = revokeMessageTitle ?? 'Revoke Message',
-        revokeMessageContent =
-            revokeMessageContent ?? 'Are you sure to revoke this message?',
-        confirmButtonText = confirmButtonText ?? 'Confirm',
-        cancelButtonText = cancelButtonText ?? 'Cancel',
+       /// Multiple Selection Mode
+       selectedCountText = selectedCountText ?? '%d selected',
+       selectAllText = selectAllText ?? 'Select All',
+       deselectAllText = deselectAllText ?? 'Deselect All',
 
-        /// Multiple Selection Mode
-        selectedCountText = selectedCountText ?? '%d selected',
-        selectAllText = selectAllText ?? 'Select All',
-        deselectAllText = deselectAllText ?? 'Deselect All',
+       /// Forward Related
+       forwardTitle = forwardTitle ?? 'Forward',
+       forwardSeparatelyText = forwardSeparatelyText ?? 'Forward Separately',
+       forwardCombinedText = forwardCombinedText ?? 'Forward as Combined',
+       forwardSelectTitle = forwardSelectTitle ?? 'Select Conversation',
+       forwardConfirmTitle = forwardConfirmTitle ?? 'Confirm Forward',
+       forwardToText = forwardToText ?? 'Forward to:',
 
-        /// Forward Related
-        forwardTitle = forwardTitle ?? 'Forward',
-        forwardSeparatelyText = forwardSeparatelyText ?? 'Forward Separately',
-        forwardCombinedText = forwardCombinedText ?? 'Forward as Combined',
-        forwardSelectTitle = forwardSelectTitle ?? 'Select Conversation',
-        forwardConfirmTitle = forwardConfirmTitle ?? 'Confirm Forward',
-        forwardToText = forwardToText ?? 'Forward to:',
+       /// Reply Related
+       replyToText = replyToText ?? 'Reply to %s',
+       replyMessageDeletedText =
+           replyMessageDeletedText ?? 'Original message deleted',
 
-        /// Reply Related
-        replyToText = replyToText ?? 'Reply to %s',
-        replyMessageDeletedText =
-            replyMessageDeletedText ?? 'Original message deleted',
+       /// Conversation Related
+       conversationPinText = conversationPinText ?? 'Pin',
+       conversationUnpinText = conversationUnpinText ?? 'Unpin',
+       conversationDeleteText = conversationDeleteText ?? 'Delete',
+       conversationMuteText = conversationMuteText ?? 'Mute',
+       conversationUnmuteText = conversationUnmuteText ?? 'Unmute',
 
-        /// Conversation Related
-        conversationPinText = conversationPinText ?? 'Pin',
-        conversationUnpinText = conversationUnpinText ?? 'Unpin',
-        conversationDeleteText = conversationDeleteText ?? 'Delete',
-        conversationMuteText = conversationMuteText ?? 'Mute',
-        conversationUnmuteText = conversationUnmuteText ?? 'Unmute',
+       /// Group Chat Related
+       groupNameText = groupNameText ?? 'Group Name',
+       groupMembersText = groupMembersText ?? 'Members',
+       groupNoticeText = groupNoticeText ?? 'Notice',
+       groupLeaveText = groupLeaveText ?? 'Leave Group',
+       groupDismissText = groupDismissText ?? 'Dismiss Group',
+       groupDetailTitle = groupDetailTitle ?? 'Group details',
+       groupAddMemberText = groupAddMemberText ?? 'Add',
+       groupNoMembersText = groupNoMembersText ?? 'No members found',
+       groupRetryText = groupRetryText ?? 'Retry',
+       groupOwnerRoleText = groupOwnerRoleText ?? 'Owner',
+       groupAdminRoleText = groupAdminRoleText ?? 'Admin',
+       groupMemberRoleText = groupMemberRoleText ?? 'Member',
+       groupRemoveMemberText = groupRemoveMemberText ?? 'Remove member',
+       groupMakeAdminText = groupMakeAdminText ?? 'Make admin',
+       groupRemoveAdminText = groupRemoveAdminText ?? 'Remove admin',
+       groupTransferOwnershipText =
+           groupTransferOwnershipText ?? 'Transfer ownership',
+       groupPickerUnavailableText =
+           groupPickerUnavailableText ??
+           'The host app has not provided a member picker.',
 
-        /// Group Chat Related
-        groupNameText = groupNameText ?? 'Group Name',
-        groupMembersText = groupMembersText ?? 'Members',
-        groupNoticeText = groupNoticeText ?? 'Notice',
-        groupLeaveText = groupLeaveText ?? 'Leave Group',
-        groupDismissText = groupDismissText ?? 'Dismiss Group',
+       /// Message Type Display
+       imageMessageText = imageMessageText ?? '[Image]',
+       videoMessageText = videoMessageText ?? '[Video]',
+       audioMessageText = audioMessageText ?? '[Audio]',
+       fileMessageText = fileMessageText ?? '[File]',
+       combineMessageText = combineMessageText ?? '[Chat History]',
+       customMessageText = customMessageText ?? '[Custom Message]',
+       revokeMessageText = revokeMessageText ?? 'Message revoked',
 
-        /// Message Type Display
-        imageMessageText = imageMessageText ?? '[Image]',
-        videoMessageText = videoMessageText ?? '[Video]',
-        audioMessageText = audioMessageText ?? '[Audio]',
-        fileMessageText = fileMessageText ?? '[File]',
-        combineMessageText = combineMessageText ?? '[Chat History]',
-        customMessageText = customMessageText ?? '[Custom Message]',
-        revokeMessageText = revokeMessageText ?? 'Message revoked',
+       /// Revoked Message Display
+       youRevokedMessage = youRevokedMessage ?? 'You recalled a message',
+       someoneRevokedMessageFormat =
+           someoneRevokedMessageFormat ?? '%s recalled a message',
 
-        /// Revoked Message Display
-        youRevokedMessage = youRevokedMessage ?? 'You recalled a message',
-        someoneRevokedMessageFormat =
-            someoneRevokedMessageFormat ?? '%s recalled a message',
+       /// Conversation Operation Related
+       deleteConversationTitle =
+           deleteConversationTitle ?? 'Delete Conversation',
+       deleteConversationContent =
+           deleteConversationContent ??
+           'Do you want to delete this conversation?',
+       leaveGroupTitle = leaveGroupTitle ?? 'Leave Group',
+       leaveGroupContent =
+           leaveGroupContent ?? 'Do you want to leave this group?',
+       quitGroupText = quitGroupText ?? 'Quit',
+       okButtonText = okButtonText ?? 'OK',
 
-        /// Conversation Operation Related
-        deleteConversationTitle =
-            deleteConversationTitle ?? 'Delete Conversation',
-        deleteConversationContent = deleteConversationContent ??
-            'Do you want to delete this conversation?',
-        leaveGroupTitle = leaveGroupTitle ?? 'Leave Group',
-        leaveGroupContent =
-            leaveGroupContent ?? 'Do you want to leave this group?',
-        quitGroupText = quitGroupText ?? 'Quit',
-        okButtonText = okButtonText ?? 'OK',
+       /// Dialog Titles
+       newChatTitle = newChatTitle ?? 'New Chat',
+       newGroupTitle = newGroupTitle ?? 'New Group',
+       joinGroupTitle = joinGroupTitle ?? 'Join Group',
 
-        /// Dialog Titles
-        newChatTitle = newChatTitle ?? 'New Chat',
-        newGroupTitle = newGroupTitle ?? 'New Group',
-        joinGroupTitle = joinGroupTitle ?? 'Join Group',
+       /// Input Field Labels
+       userIdLabel = userIdLabel ?? 'User ID',
+       groupNameLabel = groupNameLabel ?? 'Group Name',
+       groupIdOptionalLabel = groupIdOptionalLabel ?? 'ID(optional)',
+       groupIdLabel = groupIdLabel ?? 'Group ID',
+       inviteUserIdsLabel = inviteUserIdsLabel ?? 'Invite User IDs',
+       inviteUserIdsHint =
+           inviteUserIdsHint ?? 'separate by comma, e.g. 123,987,229',
 
-        /// Input Field Labels
-        userIdLabel = userIdLabel ?? 'User ID',
-        groupNameLabel = groupNameLabel ?? 'Group Name',
-        groupIdOptionalLabel = groupIdOptionalLabel ?? 'ID(optional)',
-        groupIdLabel = groupIdLabel ?? 'Group ID',
-        inviteUserIdsLabel = inviteUserIdsLabel ?? 'Invite User IDs',
-        inviteUserIdsHint =
-            inviteUserIdsHint ?? 'separate by comma, e.g. 123,987,229',
+       /// Reply Message Display
+       replyingToFormat = replyingToFormat ?? 'Replying to %s',
 
-        /// Reply Message Display
-        replyingToFormat = replyingToFormat ?? 'Replying to %s',
+       /// Error Notifications
+       loadCombineMessageError =
+           loadCombineMessageError ?? 'Failed to load chat history',
+       loadMessageListError =
+           loadMessageListError ?? 'Load failed, please click to retry',
+       messageNotFoundToast =
+           messageNotFoundToast ?? 'Message not found in current conversation',
 
-        /// Error Notifications
-        loadCombineMessageError =
-            loadCombineMessageError ?? 'Failed to load chat history',
-        loadMessageListError =
-            loadMessageListError ?? 'Load failed, please click to retry',
-        messageNotFoundToast =
-            messageNotFoundToast ?? 'Message not found in current conversation',
+       /// Video Live Streaming Related
+       liveText = liveText ?? 'LIVE',
 
-        /// Video Live Streaming Related
-        liveText = liveText ?? 'LIVE',
+       /// Chat Settings Related
+       chatSettingsTitle = chatSettingsTitle ?? 'Chat Settings',
+       chatPinnedTitle = chatPinnedTitle ?? 'Pin Chat',
+       chatNotDisturbTitle = chatNotDisturbTitle ?? 'Mute Notifications',
+       pinnedToast = pinnedToast ?? 'Pinned',
+       unpinnedToast = unpinnedToast ?? 'Unpinned',
+       notDisturbEnabledToast = notDisturbEnabledToast ?? 'Muted',
+       notDisturbDisabledToast = notDisturbDisabledToast ?? 'Unmuted',
+       operationFailedFormat = operationFailedFormat ?? 'Operation failed: %s',
 
-        /// Chat Settings Related
-        chatSettingsTitle = chatSettingsTitle ?? 'Chat Settings',
-        chatPinnedTitle = chatPinnedTitle ?? 'Pin Chat',
-        chatNotDisturbTitle = chatNotDisturbTitle ?? 'Mute Notifications',
-        pinnedToast = pinnedToast ?? 'Pinned',
-        unpinnedToast = unpinnedToast ?? 'Unpinned',
-        notDisturbEnabledToast = notDisturbEnabledToast ?? 'Muted',
-        notDisturbDisabledToast = notDisturbDisabledToast ?? 'Unmuted',
-        operationFailedFormat = operationFailedFormat ?? 'Operation failed: %s',
+       /// Time Display
+       justNowText = justNowText ?? 'just now',
+       minutesAgoFormat = minutesAgoFormat ?? '%d minutes ago',
+       hoursAgoFormat = hoursAgoFormat ?? '%d hours ago',
 
-        /// Time Display
-        justNowText = justNowText ?? 'just now',
-        minutesAgoFormat = minutesAgoFormat ?? '%d minutes ago',
-        hoursAgoFormat = hoursAgoFormat ?? '%d hours ago',
+       /// Voice Recording Related
+       slideToCancelText = slideToCancelText ?? 'slide to cancel',
 
-        /// Voice Recording Related
-        slideToCancelText = slideToCancelText ?? 'slide to cancel',
+       /// More Operation Panel
+       takePhotoText = takePhotoText ?? 'Take Photo',
+       photoText = photoText ?? 'Photo',
+       fileText = fileText ?? 'File',
+       voiceInputText = voiceInputText ?? 'Voice',
+       emojiInputText = emojiInputText ?? 'Emoji',
+       voiceCallInputText = voiceCallInputText ?? 'Voice call',
+       videoCallInputText = videoCallInputText ?? 'Video call',
 
-        /// More Operation Panel
-        takePhotoText = takePhotoText ?? 'Take Photo',
-        photoText = photoText ?? 'Photo',
-        fileText = fileText ?? 'File',
-
-        /// Badge Related
-        maxBadgeCountText = maxBadgeCountText ?? '9999+';
+       /// Badge Related
+       maxBadgeCountText = maxBadgeCountText ?? '9999+';
 
   /// ========== Message Input Related ==========
 
@@ -457,6 +491,20 @@ class ZIMKitInnerText {
 
   /// Dismiss group text
   final String groupDismissText;
+
+  /// Group details page title and member management labels
+  final String groupDetailTitle;
+  final String groupAddMemberText;
+  final String groupNoMembersText;
+  final String groupRetryText;
+  final String groupOwnerRoleText;
+  final String groupAdminRoleText;
+  final String groupMemberRoleText;
+  final String groupRemoveMemberText;
+  final String groupMakeAdminText;
+  final String groupRemoveAdminText;
+  final String groupTransferOwnershipText;
+  final String groupPickerUnavailableText;
 
   /// ========== Message Type Display ==========
 
@@ -613,6 +661,12 @@ class ZIMKitInnerText {
 
   /// File text
   final String fileText;
+
+  /// Configurable input panel labels
+  final String voiceInputText;
+  final String emojiInputText;
+  final String voiceCallInputText;
+  final String videoCallInputText;
 
   /// ========== Badge Related ==========
 
