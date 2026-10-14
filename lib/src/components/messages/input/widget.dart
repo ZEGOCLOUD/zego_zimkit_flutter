@@ -20,9 +20,7 @@ import 'package:zego_zimkit/src/zimkit.dart';
 import 'defines.dart';
 import 'config_resolver.dart';
 
-/// Message input component with two-row layout
-/// First row: Text input field with send button
-/// Second row: Action toolbar with +, emoji, photo, and microphone buttons
+/// Message input component with text and voice input modes.
 class ZIMKitMessageInput extends StatefulWidget {
   const ZIMKitMessageInput({
     super.key,
@@ -70,6 +68,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       widget.config?.inputFocusNode ?? _defaultFocusNode;
 
   ZIMKitInputPanelType _currentPanel = ZIMKitInputPanelType.none;
+  bool _isVoiceInputMode = false;
 
   ZIMKitInputConfig get _inputConfig =>
       widget.inputConfig ?? ZIMKitInputConfig();
@@ -78,6 +77,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     globalConfig: _inputConfig,
     pageConfig: widget.config ?? const ZIMKitMessageInputConfigs(),
   );
+
+  bool get _hasInlineAudioButton =>
+      _resolvedButtons.smallButtons.contains(ZIMKitInputButtonName.audio);
 
   @override
   void initState() {
@@ -140,65 +142,15 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Row 1: Input field
+                  // Row 1: Text input or hold-to-talk button
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 8.zW,
                       vertical: 8.zH,
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            constraints: BoxConstraints(
-                              minHeight: 36.zH,
-                              maxHeight: 100.zH,
-                            ),
-                            decoration:
-                                widget.style?.inputBackgroundDecoration ??
-                                BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(6.zR),
-                                  border: Border.all(
-                                    color: Colors.grey[300]!,
-                                    width: 1.zW,
-                                  ),
-                                ),
-                            child: TextField(
-                              controller: _editingController,
-                              focusNode: _focusNode,
-                              maxLines: widget.config?.maxLines,
-                              keyboardType:
-                                  widget.config?.keyboardType ??
-                                  TextInputType.multiline,
-                              textInputAction:
-                                  widget.config?.textInputAction ??
-                                  TextInputAction.newline,
-                              textCapitalization:
-                                  widget.config?.textCapitalization ??
-                                  TextCapitalization.sentences,
-                              decoration: _inputDecoration,
-                              onChanged: (text) {
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8.zW),
-                        // Send button or placeholder
-                        ValueListenableBuilder<TextEditingValue>(
-                          valueListenable: _editingController,
-                          builder: (context, textValue, child) {
-                            if (textValue.text.trim().isNotEmpty) {
-                              return _buildSendButton();
-                            } else {
-                              return SizedBox(width: 36.zW, height: 36.zH);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                    child: _isVoiceInputMode
+                        ? _buildVoiceInputButton()
+                        : _buildTextInputRow(),
                   ),
                   // Row 2: Toolbar
                   Container(
@@ -208,9 +160,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: _resolvedButtons.smallButtons
-                          .map(_buildConfiguredButton)
-                          .toList(),
+                      children: _buildToolbarButtons(),
                     ),
                   ),
                 ],
@@ -242,24 +192,123 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     );
   }
 
+  Widget _buildTextInputRow() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: Container(
+            constraints: BoxConstraints(minHeight: 36.zH, maxHeight: 100.zH),
+            decoration:
+                widget.style?.inputBackgroundDecoration ??
+                BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6.zR),
+                  border: Border.all(color: Colors.grey[300]!, width: 1.zW),
+                ),
+            child: TextField(
+              controller: _editingController,
+              focusNode: _focusNode,
+              maxLines: widget.config?.maxLines,
+              keyboardType:
+                  widget.config?.keyboardType ?? TextInputType.multiline,
+              textInputAction:
+                  widget.config?.textInputAction ?? TextInputAction.newline,
+              textCapitalization:
+                  widget.config?.textCapitalization ??
+                  TextCapitalization.sentences,
+              decoration: _inputDecoration,
+              onChanged: (text) {
+                setState(() {});
+              },
+            ),
+          ),
+        ),
+        SizedBox(width: 8.zW),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _editingController,
+          builder: (context, textValue, child) {
+            if (textValue.text.trim().isNotEmpty) {
+              return _buildSendButton();
+            } else {
+              return SizedBox(width: 36.zW, height: 36.zH);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVoiceInputButton() {
+    final innerText = ZIMKitCore.instance.innerText;
+    return SizedBox(
+      width: double.infinity,
+      height: 36.zH,
+      child: ZIMKitRecordButton(
+        status: widget.recordStatus,
+        conversationID: widget.conversationID,
+        conversationType: widget.conversationType,
+        onMessageSent: widget.events?.onMessageSent,
+        preMessageSending: widget.events?.preMessageSending,
+        events: widget.recordEvents,
+        padding: EdgeInsets.zero,
+        icon: Container(
+          width: double.infinity,
+          height: double.infinity,
+          alignment: Alignment.center,
+          decoration:
+              widget.style?.inputBackgroundDecoration ??
+              BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6.zR),
+                border: Border.all(color: Colors.grey[300]!, width: 1.zW),
+              ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.mic_none, size: 20.zW, color: Colors.grey[700]),
+              SizedBox(width: 8.zW),
+              Text(
+                innerText.holdToTalkText,
+                style: TextStyle(fontSize: 14.zSP, color: Colors.grey[700]),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildToolbarButtons() {
+    final buttons = _resolvedButtons.smallButtons
+        .map(_buildConfiguredButton)
+        .toList();
+    final customButtons = _inputConfig.customButtonBuilders;
+    final customModeToggle = _hasInlineAudioButton
+        ? customButtons?.containsKey(ZIMKitInputButtonName.audio) ?? false
+        : customButtons?.containsKey(ZIMKitInputButtonName.expand) ?? false;
+
+    if (_isVoiceInputMode && customModeToggle) {
+      buttons.add(_buildTextModeButton());
+    }
+    return buttons;
+  }
+
   Widget _buildConfiguredButton(ZIMKitInputButtonName button) {
     final customBuilder = _inputConfig.customButtonBuilders?[button];
     if (customBuilder != null) return customBuilder(context);
 
+    if (_isVoiceInputMode &&
+        (button == ZIMKitInputButtonName.audio ||
+            (button == ZIMKitInputButtonName.expand &&
+                !_hasInlineAudioButton))) {
+      return _buildTextModeButton();
+    }
+
     return switch (button) {
-      ZIMKitInputButtonName.audio => SizedBox(
-        width: 40.zW,
-        height: 40.zH,
-        child: ZIMKitRecordButton(
-          status: widget.recordStatus,
-          conversationID: widget.conversationID,
-          conversationType: widget.conversationType,
-          onMessageSent: widget.events?.onMessageSent,
-          preMessageSending: widget.events?.preMessageSending,
-          events: widget.recordEvents,
-          padding: EdgeInsets.zero,
-          icon: Icon(Icons.mic_none, size: 28.zW, color: Colors.grey[600]),
-        ),
+      ZIMKitInputButtonName.audio => _buildToolbarButton(
+        icon: Icons.mic_none,
+        onTap: _showVoiceInputMode,
       ),
       ZIMKitInputButtonName.emoji => _buildToolbarButton(
         icon: Icons.sentiment_satisfied_outlined,
@@ -292,6 +341,10 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         onTap: _toggleMorePanel,
       ),
     };
+  }
+
+  Widget _buildTextModeButton() {
+    return _buildToolbarButton(icon: Icons.keyboard, onTap: _showTextInputMode);
   }
 
   Widget _buildToolbarButton({
@@ -375,29 +428,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
     final innerText = ZIMKitCore.instance.innerText;
     return switch (button) {
-      ZIMKitInputButtonName.audio => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 55.zW,
-            height: 55.zH,
-            child: ZIMKitRecordButton(
-              status: widget.recordStatus,
-              conversationID: widget.conversationID,
-              conversationType: widget.conversationType,
-              onMessageSent: widget.events?.onMessageSent,
-              preMessageSending: widget.events?.preMessageSending,
-              events: widget.recordEvents,
-              padding: EdgeInsets.zero,
-              icon: Icon(Icons.mic_none, size: 28.zW, color: Colors.grey[700]),
-            ),
-          ),
-          SizedBox(height: 6.zH),
-          Text(
-            innerText.voiceInputText,
-            style: TextStyle(fontSize: 11.zSP, color: Colors.grey[700]),
-          ),
-        ],
+      ZIMKitInputButtonName.audio => buildZIMKitInputMoreActionItem(
+        context,
+        icon: Icons.mic_none,
+        label: innerText.voiceInputText,
+        onTap: _showVoiceInputMode,
       ),
       ZIMKitInputButtonName.emoji => buildZIMKitInputMoreActionItem(
         context,
@@ -442,6 +477,24 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
   void _onCallButtonTap(ZIMKitInputButtonName button) {
     setState(() => _currentPanel = ZIMKitInputPanelType.none);
     widget.events?.onCallTap?.call(button);
+  }
+
+  void _showVoiceInputMode() {
+    _focusNode.unfocus();
+    setState(() {
+      _isVoiceInputMode = true;
+      _currentPanel = ZIMKitInputPanelType.none;
+    });
+  }
+
+  void _showTextInputMode() {
+    setState(() {
+      _isVoiceInputMode = false;
+      _currentPanel = ZIMKitInputPanelType.none;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focusNode.requestFocus();
+    });
   }
 
   void _toggleEmojiPanel() {

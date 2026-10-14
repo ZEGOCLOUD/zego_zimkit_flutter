@@ -7,6 +7,7 @@
 - Add file extension detection for file messages and media transfer progress events for uploads, downloads, and cached image loads.
 - Report group member query failures to the group details page and allow retry.
 - Keep pinned conversations ahead of unpinned conversations in the SDK-managed list.
+- Separate voice-mode selection from recording; start recording only from the hold-to-talk input.
 - Add iOS Swift Package Manager support while retaining CocoaPods support.
 - Upgrade `file_picker` to 13.1.0.
 - **Breaking change:** `ZIMKitPlatformFile` follows `file_picker` 13.1.0, where `PlatformFile` is abstract. Consumers that directly instantiated this alias must migrate to a concrete `PlatformFile` implementation.

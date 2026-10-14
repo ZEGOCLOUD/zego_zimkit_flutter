@@ -148,6 +148,7 @@ class ZIMKitInnerTextZhCN extends ZIMKitInnerText {
 
         /// 录音相关
         slideToCancelText: '滑动取消',
+        holdToTalkText: '按住说话',
 
         /// 更多操作面板
         takePhotoText: '拍摄',

@@ -161,6 +161,7 @@ class ZIMKitInnerText {
 
     /// Voice Recording Related
     String? slideToCancelText,
+    String? holdToTalkText,
 
     /// More Operation Panel
     String? takePhotoText,
@@ -326,6 +327,7 @@ class ZIMKitInnerText {
 
        /// Voice Recording Related
        slideToCancelText = slideToCancelText ?? 'slide to cancel',
+       holdToTalkText = holdToTalkText ?? 'Hold to talk',
 
        /// More Operation Panel
        takePhotoText = takePhotoText ?? 'Take Photo',
@@ -650,6 +652,9 @@ class ZIMKitInnerText {
 
   /// Slide to cancel text
   final String slideToCancelText;
+
+  /// Label shown on the hold-to-talk recording button
+  final String holdToTalkText;
 
   /// ========== More Operation Panel ==========
 
