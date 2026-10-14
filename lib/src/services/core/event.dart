@@ -14,14 +14,12 @@ mixin ZIMKitCoreEvent {
       ..onConversationChanged = target.onConversationChanged
       ..onConversationTotalUnreadMessageCountUpdated =
           target.onConversationTotalUnreadMessageCountUpdated
-
       /*Message*/
       ..onReceivePeerMessage = target.onReceivePeerMessage
       ..onReceiveRoomMessage = target.onReceiveRoomMessage
       ..onReceiveGroupMessage = target.onReceiveGroupMessage
       ..onMessageRevokeReceived = target.onMessageRevokeReceived
       ..onMessageReactionsChanged = target.onMessageReactionsChanged
-
       /*Group*/
       ..onGroupStateChanged = target.onGroupStateChanged
       ..onGroupNameUpdated = target.onGroupNameUpdated
@@ -30,7 +28,6 @@ mixin ZIMKitCoreEvent {
       ..onGroupAttributesUpdated = target.onGroupAttributesUpdated
       ..onGroupMemberStateChanged = target.onGroupMemberStateChanged
       ..onGroupMemberInfoUpdated = target.onGroupMemberInfoUpdated
-
       // zpns notification
       ..onZPNsRegistered = target.onZPNsRegistered
       ..onZPNsNotificationArrived = target.onZPNsNotificationArrived
@@ -43,14 +40,12 @@ mixin ZIMKitCoreEvent {
       /*Conversation*/
       ..onConversationChanged = null
       ..onConversationTotalUnreadMessageCountUpdated = null
-
       /*Message*/
       ..onReceivePeerMessage = null
       ..onReceiveRoomMessage = null
       ..onReceiveGroupMessage = null
       ..onMessageRevokeReceived = null
       ..onMessageReactionsChanged = null
-
       /*Group*/
       ..onGroupStateChanged = null
       ..onGroupNameUpdated = null

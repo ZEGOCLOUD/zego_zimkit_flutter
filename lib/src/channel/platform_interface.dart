@@ -37,13 +37,15 @@ abstract class ZegoZIMKitPluginPlatform extends PlatformInterface {
     ZegoZIMKitPluginLocalNotificationChannelConfig config,
   ) {
     throw UnimplementedError(
-        'createNotificationChannel has not been implemented.');
+      'createNotificationChannel has not been implemented.',
+    );
   }
 
   /// dismissAllNotifications
   Future<void> dismissAllNotifications() {
     throw UnimplementedError(
-        'dismissAllNotifications has not been implemented.');
+      'dismissAllNotifications has not been implemented.',
+    );
   }
 
   /// activeAppToForeground
@@ -53,7 +55,8 @@ abstract class ZegoZIMKitPluginPlatform extends PlatformInterface {
 
   Future<void> requestDismissKeyguard() {
     throw UnimplementedError(
-        'requestDismissKeyguard has not been implemented.');
+      'requestDismissKeyguard has not been implemented.',
+    );
   }
 
   Future<bool> isLockScreen() {

@@ -13,7 +13,7 @@ class ZIMKitDB {
 
   /// New Message Notification
   final Map<ZIMKitConversationType, Map<String, ZIMKitMessageList>>
-      _messageList = {};
+  _messageList = {};
   final Map<String, ZIMKitGroupMemberList> _groupMemberList = {};
   final Map<String, ZIMKitGroupInfoData> _groupInfo = {};
 
@@ -35,8 +35,9 @@ class ZIMKitDB {
 
   void clear() {
     conversations.clear();
-    _messageList
-        .forEach((type, map) => map.forEach((id, list) => list.clear()));
+    _messageList.forEach(
+      (type, map) => map.forEach((id, list) => list.clear()),
+    );
   }
 }
 
@@ -44,12 +45,17 @@ class ZIMKitGroupInfoData {
   ValueNotifier<ZIMKitGroupInfo> notifier = ValueNotifier(ZIMKitGroupInfo());
 
   void update(ZIMGroupFullInfo groupInfo) {
-    notifier.value = notifier.value
-        .copyWith(notice: groupInfo.notice, attributes: groupInfo.attributes);
+    notifier.value = notifier.value.copyWith(
+      notice: groupInfo.notice,
+      attributes: groupInfo.attributes,
+    );
   }
 
   void onGroupStateChanged(
-      ZIMGroupState state, ZIMGroupEvent event, ZIMGroupFullInfo groupInfo) {
+    ZIMGroupState state,
+    ZIMGroupEvent event,
+    ZIMGroupFullInfo groupInfo,
+  ) {
     notifier.value = notifier.value.copyWith(
       notice: groupInfo.notice,
       attributes: groupInfo.attributes,
@@ -68,8 +74,9 @@ class ZIMKitGroupInfoData {
       if (element.action == ZIMGroupAttributesUpdateAction.set) {
         newAttributes.addAll(element.groupAttributes ?? {});
       } else {
-        element.groupAttributes
-            ?.forEach((key, value) => newAttributes.remove(key));
+        element.groupAttributes?.forEach(
+          (key, value) => newAttributes.remove(key),
+        );
       }
     }
     notifier.value = notifier.value.copyWith(attributes: newAttributes);
@@ -92,8 +99,9 @@ class ZIMKitConversationList {
   ListNotifier<ValueNotifier<ZIMKitConversation>> notifier = ListNotifier([]);
 
   void init(List<ZIMConversation> zimConversationList) {
-    notifier.value =
-        zimConversationList.map((e) => ValueNotifier(e.toKIT())).toList();
+    notifier.value = zimConversationList
+        .map((e) => ValueNotifier(e.toKIT()))
+        .toList();
     inited = true;
   }
 
@@ -108,7 +116,9 @@ class ZIMKitConversationList {
   }
 
   ValueNotifier<ZIMKitConversation> get(
-      String id, ZIMKitConversationType type) {
+    String id,
+    ZIMKitConversationType type,
+  ) {
     ValueNotifier<ZIMKitConversation>? ret;
     for (var i = 0; i < notifier.length; i++) {
       if (notifier[i].value.equal(id, type)) {
@@ -132,10 +142,9 @@ class ZIMKitConversationList {
           ret.value = newConversation;
         });
       } else if (type == ZIMKitConversationType.group) {
-        ZIM
-            .getInstance()!
-            .queryGroupInfo(id)
-            .then((ZIMGroupInfoQueriedResult? zimResult) {
+        ZIM.getInstance()!.queryGroupInfo(id).then((
+          ZIMGroupInfoQueriedResult? zimResult,
+        ) {
           if (zimResult != null) {
             ret!.value = ret.value.clone()
               ..name = zimResult.groupInfo.name
@@ -154,7 +163,8 @@ class ZIMKitConversationList {
 
   void addAll(List<ZIMConversation> zimConversationList) {
     notifier.addAll(
-        zimConversationList.map((e) => ValueNotifier(e.toKIT())).toList());
+      zimConversationList.map((e) => ValueNotifier(e.toKIT())).toList(),
+    );
   }
 
   void deleteAll() {
@@ -172,8 +182,10 @@ class ZIMKitConversationList {
   }
 
   void insertOrUpdate(ZIMKitConversation kitConversation) {
-    final index = notifier.value.indexWhere((element) =>
-        element.value.equal(kitConversation.id, kitConversation.type));
+    final index = notifier.value.indexWhere(
+      (element) =>
+          element.value.equal(kitConversation.id, kitConversation.type),
+    );
     if (index != -1) {
       final oldElement = notifier.value.removeAt(index);
       notifier.insert(0, oldElement);
@@ -286,8 +298,9 @@ class ZIMKitMessageList {
   }
 
   void onMessageReactionsChanged(ZIMMessageReaction reaction) {
-    final index = notifier.value
-        .indexWhere((e) => (e.value.info.messageID == reaction.messageID));
+    final index = notifier.value.indexWhere(
+      (e) => (e.value.info.messageID == reaction.messageID),
+    );
     if (index == -1) {
       ZIMKitLogger.logWarn("[db]onMessageReactionsChanged: can't find message");
     } else {
@@ -317,8 +330,9 @@ extension ZIMKitMessageExtension on ZIMKitMessage {
   }
 
   void onMessageReactionsChanged(ZIMMessageReaction reaction) {
-    final index = reactions.value
-        .indexWhere((e) => (e.reactionType == reaction.reactionType));
+    final index = reactions.value.indexWhere(
+      (e) => (e.reactionType == reaction.reactionType),
+    );
     if (index == -1) {
       reactions.add(reaction);
     } else {
@@ -374,8 +388,9 @@ class ZIMKitGroupMemberList {
   ValueNotifier<ZIMGroupMemberInfo?> owner = ValueNotifier(null);
 
   void updateOwnerOrNot() {
-    final search =
-        notifier.value.where((e) => (e.memberRole == ZIMGroupMemberRole.owner));
+    final search = notifier.value.where(
+      (e) => (e.memberRole == ZIMGroupMemberRole.owner),
+    );
     if (search.isNotEmpty) {
       owner.value = search.first;
     }
@@ -397,8 +412,10 @@ class ZIMKitGroupMemberList {
     if (notify) notifier.triggerNotify();
   }
 
-  void removeWhere(bool Function(ZIMGroupMemberInfo memberInfo) test,
-      {bool notify = true}) {
+  void removeWhere(
+    bool Function(ZIMGroupMemberInfo memberInfo) test, {
+    bool notify = true,
+  }) {
     notifier.removeWhere(test, notify: notify);
   }
 
@@ -447,15 +464,15 @@ class ZIMKitGroupMemberList {
 class ZIMKitReceivedMessages {
   /// Conversation ID
   String id;
-  
+
   /// Conversation type
   ZIMKitConversationType type;
-  
+
   /// List of received messages
   List<ZIMKitMessage> receiveMessages;
 
   /// Creates a received messages instance
-  /// 
+  ///
   /// [id] Conversation ID
   /// [type] Conversation type
   /// [receiveMessages] List of received messages

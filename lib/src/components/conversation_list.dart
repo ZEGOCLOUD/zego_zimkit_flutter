@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import 'package:zego_zim/zego_zim.dart';
 
@@ -29,57 +30,58 @@ class ZIMKitConversationListView extends StatefulWidget {
   final List<ZIMKitConversationNotifier> Function(
     BuildContext context,
     List<ZIMKitConversationNotifier>,
-  )? filter;
+  )?
+  filter;
   final List<ZIMKitConversationNotifier> Function(
     BuildContext context,
     List<ZIMKitConversationNotifier>,
-  )? sorter;
+  )?
+  sorter;
 
   // item event
   final void Function(
     BuildContext context,
     ZIMKitConversation conversation,
     Function defaultAction,
-  )? onPressed;
+  )?
+  onPressed;
   final void Function(
     BuildContext context,
     ZIMKitConversation conversation,
     LongPressStartDetails longPressDetails,
     Function defaultAction,
-  )? onLongPress;
+  )?
+  onLongPress;
 
   // ui builder
-  final Widget Function(
-    BuildContext context,
-    Widget defaultWidget,
-  )? errorBuilder;
-  final Widget Function(
-    BuildContext context,
-    Widget defaultWidget,
-  )? emptyBuilder;
-  final Widget Function(
-    BuildContext context,
-    Widget defaultWidget,
-  )? loadingBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  errorBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  emptyBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  loadingBuilder;
 
   // item ui builder
   final Widget Function(
     BuildContext context,
     DateTime? messageTime,
     Widget defaultWidget,
-  )? lastMessageTimeBuilder;
+  )?
+  lastMessageTimeBuilder;
   final Widget Function(
     BuildContext context,
     ZIMKitMessage? message,
     Widget defaultWidget,
-  )? lastMessageBuilder;
+  )?
+  lastMessageBuilder;
 
   // item builder
   final Widget Function(
     BuildContext context,
     ZIMKitConversation conversation,
     Widget defaultWidget,
-  )? itemBuilder;
+  )?
+  itemBuilder;
 
   // scroll controller
   final ScrollController? scrollController;
@@ -137,119 +139,124 @@ class _ZIMKitConversationListViewState
           if (snapshot.hasData) {
             return ValueListenableBuilder(
               valueListenable: snapshot.data!,
-              builder: (
-                BuildContext context,
-                List<ZIMKitConversationNotifier> conversationList,
-                Widget? child,
-              ) {
-                if (conversationList.isEmpty) {
-                  return widget.emptyBuilder?.call(
-                        context,
-                        const SizedBox.shrink(),
-                      ) ??
-                      const SizedBox.shrink();
-                }
-
-                conversationList = widget.filter?.call(
-                      context,
-                      conversationList,
-                    ) ??
-                    conversationList;
-                conversationList = widget.sorter?.call(
-                      context,
-                      conversationList,
-                    ) ??
-                    conversationList;
-
-                return LayoutBuilder(
-                  builder: (
-                    context,
-                    BoxConstraints constraints,
+              builder:
+                  (
+                    BuildContext context,
+                    List<ZIMKitConversationNotifier> conversationList,
+                    Widget? child,
                   ) {
-                    return ListView.builder(
-                      cacheExtent: constraints.maxHeight * 3,
-                      controller: _scrollController,
-                      itemCount: conversationList.length,
-                      itemBuilder: (context, index) {
-                        final conversation = conversationList[index];
+                    if (conversationList.isEmpty) {
+                      return widget.emptyBuilder?.call(
+                            context,
+                            const SizedBox.shrink(),
+                          ) ??
+                          const SizedBox.shrink();
+                    }
 
-                        return ValueListenableBuilder(
-                          valueListenable: conversation,
-                          builder: (
-                            BuildContext context,
-                            ZIMKitConversation conversation,
-                            Widget? child,
-                          ) {
-                            // defaultWidget
-                            final Widget defaultWidget =
-                                ZIMKitConversationWidget(
-                              conversation: conversation,
-                              lastMessageTimeBuilder:
-                                  widget.lastMessageTimeBuilder,
-                              lastMessageBuilder: widget.lastMessageBuilder,
-                              onLongPress: (
-                                BuildContext context,
-                                LongPressStartDetails longPressDetails,
-                              ) {
-                                void onLongPressDefaultAction() {
-                                  _onLongPressDefaultAction(
-                                    context,
-                                    longPressDetails,
-                                    conversation.id,
-                                    conversation.type,
-                                  );
-                                }
+                    conversationList =
+                        widget.filter?.call(context, conversationList) ??
+                        conversationList;
+                    conversationList =
+                        widget.sorter?.call(context, conversationList) ??
+                        conversationList;
 
-                                if (widget.onLongPress != null) {
-                                  widget.onLongPress!(
-                                    context,
-                                    conversation,
-                                    longPressDetails,
-                                    onLongPressDefaultAction,
-                                  );
-                                } else {
-                                  onLongPressDefaultAction();
-                                }
-                              },
-                              onPressed: (BuildContext context) {
-                                void onPressedDefaultAction() {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return ZIMKitMessageListPage(
-                                        conversationID: conversation.id,
-                                        conversationType: conversation.type,
-                                        theme: widget.theme,
-                                      );
-                                    },
-                                  ));
-                                }
+                    return LayoutBuilder(
+                      builder: (context, BoxConstraints constraints) {
+                        return ListView.builder(
+                          scrollCacheExtent: const ScrollCacheExtent.viewport(
+                            3,
+                          ),
+                          controller: _scrollController,
+                          itemCount: conversationList.length,
+                          itemBuilder: (context, index) {
+                            final conversation = conversationList[index];
 
-                                if (widget.onPressed != null) {
-                                  widget.onPressed!(
-                                    context,
-                                    conversation,
-                                    onPressedDefaultAction,
-                                  );
-                                } else {
-                                  onPressedDefaultAction();
-                                }
-                              },
+                            return ValueListenableBuilder(
+                              valueListenable: conversation,
+                              builder:
+                                  (
+                                    BuildContext context,
+                                    ZIMKitConversation conversation,
+                                    Widget? child,
+                                  ) {
+                                    // defaultWidget
+                                    final Widget
+                                    defaultWidget = ZIMKitConversationWidget(
+                                      conversation: conversation,
+                                      lastMessageTimeBuilder:
+                                          widget.lastMessageTimeBuilder,
+                                      lastMessageBuilder:
+                                          widget.lastMessageBuilder,
+                                      onLongPress:
+                                          (
+                                            BuildContext context,
+                                            LongPressStartDetails
+                                            longPressDetails,
+                                          ) {
+                                            void onLongPressDefaultAction() {
+                                              _onLongPressDefaultAction(
+                                                context,
+                                                longPressDetails,
+                                                conversation.id,
+                                                conversation.type,
+                                              );
+                                            }
+
+                                            if (widget.onLongPress != null) {
+                                              widget.onLongPress!(
+                                                context,
+                                                conversation,
+                                                longPressDetails,
+                                                onLongPressDefaultAction,
+                                              );
+                                            } else {
+                                              onLongPressDefaultAction();
+                                            }
+                                          },
+                                      onPressed: (BuildContext context) {
+                                        void onPressedDefaultAction() {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return ZIMKitMessageListPage(
+                                                  conversationID:
+                                                      conversation.id,
+                                                  conversationType:
+                                                      conversation.type,
+                                                  theme: widget.theme,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        }
+
+                                        if (widget.onPressed != null) {
+                                          widget.onPressed!(
+                                            context,
+                                            conversation,
+                                            onPressedDefaultAction,
+                                          );
+                                        } else {
+                                          onPressedDefaultAction();
+                                        }
+                                      },
+                                    );
+
+                                    // customWidget
+                                    return widget.itemBuilder?.call(
+                                          context,
+                                          conversation,
+                                          defaultWidget,
+                                        ) ??
+                                        defaultWidget;
+                                  },
                             );
-
-                            // customWidget
-                            return widget.itemBuilder?.call(
-                                  context,
-                                  conversation,
-                                  defaultWidget,
-                                ) ??
-                                defaultWidget;
                           },
                         );
                       },
                     );
                   },
-                );
-              },
             );
           } else if (snapshot.hasError) {
             // defaultWidget
@@ -269,10 +276,8 @@ class _ZIMKitConversationListViewState
             // customWidget
             return GestureDetector(
               onTap: () => setState(() {}),
-              child: widget.errorBuilder?.call(
-                    context,
-                    defaultWidget,
-                  ) ??
+              child:
+                  widget.errorBuilder?.call(context, defaultWidget) ??
                   defaultWidget,
             );
           } else {
@@ -282,10 +287,7 @@ class _ZIMKitConversationListViewState
             );
 
             // customWidget
-            return widget.loadingBuilder?.call(
-                  context,
-                  defaultWidget,
-                ) ??
+            return widget.loadingBuilder?.call(context, defaultWidget) ??
                 defaultWidget;
           }
         },
@@ -300,8 +302,9 @@ class _ZIMKitConversationListViewState
     ZIMConversationType conversationType,
   ) {
     final conversationBox = context.findRenderObject()! as RenderBox;
-    final offset = conversationBox
-        .localToGlobal(Offset(0, conversationBox.size.height / 2));
+    final offset = conversationBox.localToGlobal(
+      Offset(0, conversationBox.size.height / 2),
+    );
     final position = RelativeRect.fromLTRB(
       longPressDetails.globalPosition.dx,
       offset.dy,
@@ -309,11 +312,15 @@ class _ZIMKitConversationListViewState
       offset.dy,
     );
 
-    showMenu(context: context, position: position, items: [
-      const PopupMenuItem(value: 0, child: Text('Delete')),
-      if (conversationType == ZIMConversationType.group)
-        const PopupMenuItem(value: 1, child: Text('Quit'))
-    ]).then((value) {
+    showMenu(
+      context: context,
+      position: position,
+      items: [
+        const PopupMenuItem(value: 0, child: Text('Delete')),
+        if (conversationType == ZIMConversationType.group)
+          const PopupMenuItem(value: 1, child: Text('Quit')),
+      ],
+    ).then((value) {
       if (!mounted) return;
       switch (value) {
         case 0:

@@ -25,8 +25,11 @@ class ListNotifier<T> extends ValueNotifier<List<T>> {
     return changed;
   }
 
-  void addAll(Iterable<T> iterable,
-      {bool Function(T element)? add, bool notify = true}) {
+  void addAll(
+    Iterable<T> iterable, {
+    bool Function(T element)? add,
+    bool notify = true,
+  }) {
     if (add != null) {
       for (final element in iterable) {
         if (add(element)) {
@@ -81,8 +84,11 @@ class ListNotifier<T> extends ValueNotifier<List<T>> {
     }
   }
 
-  bool moveItemTo(int targetIndex, bool Function(T) test,
-      {bool notify = true}) {
+  bool moveItemTo(
+    int targetIndex,
+    bool Function(T) test, {
+    bool notify = true,
+  }) {
     final index = value.indexWhere(test);
     bool valueChanged = false;
     if ((index != -1) && (index != targetIndex)) {

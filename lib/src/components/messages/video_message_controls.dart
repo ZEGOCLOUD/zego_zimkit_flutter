@@ -15,10 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class ZIMKitCustomControls extends StatefulWidget {
-  const ZIMKitCustomControls({
-    this.showPlayButton = true,
-    super.key,
-  });
+  const ZIMKitCustomControls({this.showPlayButton = true, super.key});
 
   final bool showPlayButton;
 
@@ -64,11 +61,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
             chewieController.videoPlayerController.value.errorDescription!,
           ) ??
           const Center(
-            child: Icon(
-              Icons.error,
-              color: Colors.orange,
-              size: 42,
-            ),
+            child: Icon(Icons.error, color: Colors.orange, size: 42),
           );
     }
 
@@ -83,16 +76,12 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
           child: Stack(
             children: [
               if (_displayBufferingIndicator)
-                const Center(
-                  child: CircularProgressIndicator(),
-                )
+                const Center(child: CircularProgressIndicator())
               else
                 _buildHitArea(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  _buildBottomBar(context),
-                ],
+                children: <Widget>[_buildBottomBar(context)],
               ),
             ],
           ),
@@ -128,10 +117,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
     super.didChangeDependencies();
   }
 
-  Widget _buildOptionsButton({
-    IconData? icon,
-    bool isPadded = false,
-  }) {
+  Widget _buildOptionsButton({IconData? icon, bool isPadded = false}) {
     final options = <OptionItem>[
       OptionItem(
         onTap: (context) async {
@@ -139,9 +125,10 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
           _onSpeedButtonTap();
         },
         iconData: Icons.speed,
-        title: chewieController.optionsTranslation?.playbackSpeedButtonText ??
+        title:
+            chewieController.optionsTranslation?.playbackSpeedButtonText ??
             'Playback speed',
-      )
+      ),
     ];
 
     if (chewieController.additionalOptions != null &&
@@ -176,16 +163,12 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
             _startHideTimer();
           }
         },
-        icon: Icon(
-          icon ?? Icons.more_vert,
-        ),
+        icon: Icon(icon ?? Icons.more_vert),
       ),
     );
   }
 
-  AnimatedOpacity _buildBottomBar(
-    BuildContext context,
-  ) {
+  AnimatedOpacity _buildBottomBar(BuildContext context) {
     final iconColor = Theme.of(context).textTheme.labelLarge!.color;
 
     return AnimatedOpacity(
@@ -193,8 +176,9 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
       duration: const Duration(milliseconds: 300),
       child: Container(
         height: barHeight + (chewieController.isFullScreen ? 20.0 : 0),
-        padding:
-            EdgeInsets.only(bottom: chewieController.isFullScreen ? 10.0 : 15),
+        padding: EdgeInsets.only(
+          bottom: chewieController.isFullScreen ? 10.0 : 15,
+        ),
         child: SafeArea(
           bottom: chewieController.isFullScreen,
           child: Column(
@@ -226,11 +210,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
                       left: 20,
                       bottom: chewieController.isFullScreen ? 5.0 : 0,
                     ),
-                    child: Row(
-                      children: [
-                        _buildProgressBar(),
-                      ],
-                    ),
+                    child: Row(children: [_buildProgressBar()]),
                   ),
                 ),
             ],
@@ -249,10 +229,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
         child: Container(
           height: barHeight + (chewieController.isFullScreen ? 15.0 : 0),
           margin: const EdgeInsets.only(right: 12),
-          padding: const EdgeInsets.only(
-            left: 8,
-            right: 8,
-          ),
+          padding: const EdgeInsets.only(left: 8, right: 8),
           child: Center(
             child: Icon(
               chewieController.isFullScreen
@@ -320,9 +297,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
     }
   }
 
-  GestureDetector _buildMuteButton(
-    VideoPlayerController controller,
-  ) {
+  GestureDetector _buildMuteButton(VideoPlayerController controller) {
     return GestureDetector(
       onTap: () {
         _cancelAndRestartTimer();
@@ -340,9 +315,7 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
         child: ClipRect(
           child: Container(
             height: barHeight,
-            padding: const EdgeInsets.only(
-              right: 15,
-            ),
+            padding: const EdgeInsets.only(right: 15),
             child: Icon(
               _latestValue.volume > 0 ? Icons.volume_up : Icons.volume_off,
             ),
@@ -359,13 +332,8 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 8, right: 4),
-        padding: const EdgeInsets.only(
-          left: 12,
-          right: 12,
-        ),
-        child: AnimatedPlayPause(
-          playing: controller.value.isPlaying,
-        ),
+        padding: const EdgeInsets.only(left: 12, right: 12),
+        child: AnimatedPlayPause(playing: controller.value.isPlaying),
       ),
     );
   }
@@ -413,10 +381,12 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
       notifier.hideStuff = true;
 
       chewieController.toggleFullScreen();
-      _showAfterExpandCollapseTimer =
-          Timer(const Duration(milliseconds: 300), () {
-        setState(_cancelAndRestartTimer);
-      });
+      _showAfterExpandCollapseTimer = Timer(
+        const Duration(milliseconds: 300),
+        () {
+          setState(_cancelAndRestartTimer);
+        },
+      );
     });
   }
 
@@ -505,13 +475,17 @@ class _ZIMKitCustomControlsState extends State<ZIMKitCustomControls>
 
           _startHideTimer();
         },
-        colors: chewieController.materialProgressColors ??
+        colors:
+            chewieController.materialProgressColors ??
             ChewieProgressColors(
               playedColor: Theme.of(context).colorScheme.secondary,
               handleColor: Theme.of(context).colorScheme.secondary,
-              bufferedColor:
-                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
-              backgroundColor: Theme.of(context).disabledColor.withValues(alpha: 0.5),
+              bufferedColor: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: 0.5),
+              backgroundColor: Theme.of(
+                context,
+              ).disabledColor.withValues(alpha: 0.5),
             ),
       ),
     );

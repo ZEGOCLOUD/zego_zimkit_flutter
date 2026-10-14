@@ -64,11 +64,7 @@ class _ZIMKitRecordCancelSliderState extends State<ZIMKitRecordCancelSlider> {
               startOffset = Offset.zero;
             },
             child: Stack(
-              children: [
-                duration(),
-                slider(constraints),
-                sendButton(),
-              ],
+              children: [duration(), slider(constraints), sendButton()],
             ),
           );
         },
@@ -101,16 +97,10 @@ class _ZIMKitRecordCancelSliderState extends State<ZIMKitRecordCancelSlider> {
               Text(
                 'slide to cancel',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 17,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 17),
               ),
               SizedBox(width: 10),
-              Icon(
-                Icons.arrow_back_ios,
-                color: Colors.grey,
-              )
+              Icon(Icons.arrow_back_ios, color: Colors.grey),
             ],
           ),
         ),
@@ -128,10 +118,7 @@ class _ZIMKitRecordCancelSliderState extends State<ZIMKitRecordCancelSlider> {
           builder: (context, duration, _) {
             return Text(
               formatAudioRecordDuration(duration),
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 17,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 17),
             );
           },
         ),

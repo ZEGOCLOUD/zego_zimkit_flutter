@@ -25,7 +25,7 @@ extension ZIMGroupMemberInfoExtension on ZIMGroupMemberInfo {
         'memberNickname:$memberNickname, '
         'memberRole:$memberRole, '
         'muteExpiredTime:$muteExpiredTime, '
-        'groupEnterInfo:${groupEnterInfo?.toStringX()}, '
+        'groupEnterInfo:${groupEnterInfo.toStringX()}, '
         '}';
   }
 }
@@ -130,8 +130,9 @@ extension ZIMMessageExtend on ZIMMessage {
     if (this is ZIMMediaMessage &&
         ret.isNetworkUrl &&
         ret.autoContent.fileDownloadUrl.isNotEmpty) {
-      ret.autoContent.fileName =
-          Uri.parse(ret.autoContent.fileDownloadUrl).pathSegments.last;
+      ret.autoContent.fileName = Uri.parse(
+        ret.autoContent.fileDownloadUrl,
+      ).pathSegments.last;
     }
 
     return ret;
@@ -183,14 +184,15 @@ extension ZIMKitMessageExtend on ZIMKitMessage {
       case ZIMMessageType.video:
       case ZIMMessageType.file:
       case ZIMMessageType.image:
-        zim = ZIMKitMessageUtils.mediaMessageFactory(
-          autoContent.fileLocalPath,
-          type,
-          audioDuration: audioContent?.audioDuration ?? 0,
-        )
-          ..fileDownloadUrl = autoContent.fileDownloadUrl
-          ..fileName = autoContent.fileName
-          ..fileSize = autoContent.fileSize;
+        zim =
+            ZIMKitMessageUtils.mediaMessageFactory(
+                autoContent.fileLocalPath,
+                type,
+                audioDuration: audioContent?.audioDuration ?? 0,
+              )
+              ..fileDownloadUrl = autoContent.fileDownloadUrl
+              ..fileName = autoContent.fileName
+              ..fileSize = autoContent.fileSize;
         break;
       case ZIMMessageType.custom:
         zim = ZIMCustomMessage(
@@ -230,16 +232,19 @@ extension ZIMImageMessageExtend on ZIMImageMessage {
 extension ZIMUserFullInfoExtend on ZIMUserFullInfo {
   Widget get icon {
     Widget placeholder = CircleAvatar(
-        child: Text(baseInfo.userName.isNotEmpty
+      child: Text(
+        baseInfo.userName.isNotEmpty
             ? baseInfo.userName[0]
-            : baseInfo.userID[0]));
+            : baseInfo.userID[0],
+      ),
+    );
 
     return baseInfo.userAvatarUrl.isEmpty
         ? placeholder
         : CachedNetworkImage(
             imageUrl: baseInfo.userAvatarUrl,
             fit: BoxFit.cover,
-            errorWidget: (context, _, __) => placeholder,
+            errorWidget: (context, _, _) => placeholder,
             placeholder: (context, url) => placeholder,
           );
   }
@@ -306,13 +311,15 @@ extension ZIMKitConversationExtend on ZIMKitConversation {
       case ZIMKitConversationType.peer:
         return ZIMKitAvatar(userID: id, name: name);
       case ZIMKitConversationType.room:
-        placeholder =
-            CircleAvatar(child: Text(name.isNotEmpty ? name[0] : id[0]));
+        placeholder = CircleAvatar(
+          child: Text(name.isNotEmpty ? name[0] : id[0]),
+        );
         break;
       case ZIMKitConversationType.group:
       case ZIMKitConversationType.communityChannel:
-        placeholder =
-            CircleAvatar(child: Text(name.isNotEmpty ? name[0] : id[0]));
+        placeholder = CircleAvatar(
+          child: Text(name.isNotEmpty ? name[0] : id[0]),
+        );
         break;
       case ZIMKitConversationType.unknown:
         break;
@@ -323,7 +330,7 @@ extension ZIMKitConversationExtend on ZIMKitConversation {
         : CachedNetworkImage(
             imageUrl: avatarUrl,
             fit: BoxFit.cover,
-            errorWidget: (context, _, __) => placeholder,
+            errorWidget: (context, _, _) => placeholder,
             placeholder: (context, url) => placeholder,
           );
   }
@@ -388,8 +395,8 @@ extension ZIMGroupExtension on ZIMGroup {
       ..type = ZIMKitConversationType.group
       ..notificationStatus =
           (notificationStatus == ZIMGroupMessageNotificationStatus.notify
-              ? ZIMConversationNotificationStatus.notify
-              : ZIMConversationNotificationStatus.doNotDisturb);
+          ? ZIMConversationNotificationStatus.notify
+          : ZIMConversationNotificationStatus.doNotDisturb);
   }
 
   String get id => baseInfo.groupID;

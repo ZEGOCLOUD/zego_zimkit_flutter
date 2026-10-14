@@ -22,9 +22,15 @@ class ZIMKitAudioMessage extends StatefulWidget {
     BuildContext context,
     ZIMKitMessage message,
     Function defaultAction,
-  )? onPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onLongPress;
+  )?
+  onPressed;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onLongPress;
 
   @override
   State<ZIMKitAudioMessage> createState() => _ZIMKitAudioMessageState();
@@ -32,11 +38,9 @@ class ZIMKitAudioMessage extends StatefulWidget {
 
 /// @nodoc
 class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
-  final localPlayStatusNotifier =
-      ValueNotifier<ZIMKitAudioPlayStatus>(ZIMKitAudioPlayStatus(
-    id: 0,
-    isPlaying: false,
-  ));
+  final localPlayStatusNotifier = ValueNotifier<ZIMKitAudioPlayStatus>(
+    ZIMKitAudioPlayStatus(id: 0, isPlaying: false),
+  );
 
   bool get isPlayingCurrent =>
       ZIMKitAudioInstance().data.playStatusNotifier.value.isPlaying &&
@@ -44,34 +48,30 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
           widget.message.info.messageID;
 
   SliderThemeData get sliderThemeData => SliderThemeData(
-        trackHeight: 2.0,
-        thumbColor: Colors.white,
-        thumbShape: const RoundSliderThumbShape(
-          enabledThumbRadius: 3.0,
-        ),
-        overlayShape: SliderComponentShape.noOverlay,
-        activeTrackColor: Colors.white,
-        inactiveTrackColor: Colors.white.withValues(alpha: 0.5),
-      );
+    trackHeight: 2.0,
+    thumbColor: Colors.white,
+    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 3.0),
+    overlayShape: SliderComponentShape.noOverlay,
+    activeTrackColor: Colors.white,
+    inactiveTrackColor: Colors.white.withValues(alpha: 0.5),
+  );
 
   @override
   void initState() {
     super.initState();
 
-    ZIMKitAudioInstance()
-        .data
-        .playStatusNotifier
-        .addListener(onPlayStatusUpdated);
+    ZIMKitAudioInstance().data.playStatusNotifier.addListener(
+      onPlayStatusUpdated,
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    ZIMKitAudioInstance()
-        .data
-        .playStatusNotifier
-        .removeListener(onPlayStatusUpdated);
+    ZIMKitAudioInstance().data.playStatusNotifier.removeListener(
+      onPlayStatusUpdated,
+    );
 
     if (ZIMKitAudioInstance().data.playStatusNotifier.value.id ==
         widget.message.info.messageID) {
@@ -84,40 +84,42 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
     return Flexible(
       child: GestureDetector(
         onTap: () async {
-          final defaultAction =
-              isPlayingCurrent ? defaultStopPressed : defaultPlayPressed;
+          final defaultAction = isPlayingCurrent
+              ? defaultStopPressed
+              : defaultPlayPressed;
           widget.onPressed != null
               ? widget.onPressed?.call(context, widget.message, defaultAction)
               : defaultAction();
         },
         onLongPressStart: (details) => widget.onLongPress != null
-            ? widget.onLongPress
-                ?.call(context, details, widget.message, defaultLongPress)
+            ? widget.onLongPress?.call(
+                context,
+                details,
+                widget.message,
+                defaultLongPress,
+              )
             : defaultLongPress,
-        child: LayoutBuilder(builder: (context, constraints) {
-          const minDisplayWidth = 100;
-          var durationWidth = widget.message.audioContent!.audioDuration * 5;
-          if (durationWidth > constraints.maxWidth - minDisplayWidth) {
-            durationWidth = constraints.maxWidth.toInt() - minDisplayWidth - 1;
-          }
-          return Container(
-            width: (minDisplayWidth + durationWidth).toDouble(),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Theme.of(context)
-                  .primaryColor
-                  .withValues(alpha: widget.message.isMine ? 1 : 0.1),
-            ),
-            child: Row(
-              children: [
-                ...state(),
-                process(),
-                duration(),
-              ],
-            ),
-          );
-        }),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            const minDisplayWidth = 100;
+            var durationWidth = widget.message.audioContent!.audioDuration * 5;
+            if (durationWidth > constraints.maxWidth - minDisplayWidth) {
+              durationWidth =
+                  constraints.maxWidth.toInt() - minDisplayWidth - 1;
+            }
+            return Container(
+              width: (minDisplayWidth + durationWidth).toDouble(),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Theme.of(context).primaryColor.withValues(
+                  alpha: widget.message.isMine ? 1 : 0.1,
+                ),
+              ),
+              child: Row(children: [...state(), process(), duration()]),
+            );
+          },
+        ),
       ),
     );
   }
@@ -151,9 +153,7 @@ class _ZIMKitAudioMessageState extends State<ZIMKitAudioMessage> {
           height: ZIMKitMessageStyle.iconSize / 2,
           child: const CircularProgressIndicator(),
         ),
-        const SizedBox(
-          width: 5,
-        ),
+        const SizedBox(width: 5),
       ];
     }
 

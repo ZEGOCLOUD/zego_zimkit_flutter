@@ -33,7 +33,7 @@ class HexUtils {
 /// Token information class for ZIM authentication
 class ZIMKitTokenInfo04 {
   /// Creates a token info instance
-  /// 
+  ///
   /// [appID] Application ID
   /// [userID] User ID
   /// [ctime] Creation time

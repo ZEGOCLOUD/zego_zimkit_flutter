@@ -23,22 +23,42 @@ class ZIMKitMessageWidget extends StatelessWidget {
   final ZIMKitMessage message;
 
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      avatarBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  avatarBuilder;
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      statusBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  statusBuilder;
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      timestampBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  timestampBuilder;
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      messageContentBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  messageContentBuilder;
   final void Function(
-          BuildContext context, ZIMKitMessage message, Function defaultAction)?
-      onPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onLongPress;
+    BuildContext context,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onPressed;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onLongPress;
 
   Widget buildMessageContent(BuildContext context) {
     late Widget defaultMessageContent;
@@ -46,23 +66,38 @@ class ZIMKitMessageWidget extends StatelessWidget {
     switch (message.type) {
       case ZIMMessageType.text:
         defaultMessageContent = ZIMKitTextMessage(
-            onLongPress: onLongPress, onPressed: onPressed, message: message);
+          onLongPress: onLongPress,
+          onPressed: onPressed,
+          message: message,
+        );
         break;
       case ZIMMessageType.audio:
         defaultMessageContent = ZIMKitAudioMessage(
-            onLongPress: onLongPress, onPressed: onPressed, message: message);
+          onLongPress: onLongPress,
+          onPressed: onPressed,
+          message: message,
+        );
         break;
       case ZIMMessageType.video:
         defaultMessageContent = ZIMKitVideoMessage(
-            onLongPress: onLongPress, onPressed: onPressed, message: message);
+          onLongPress: onLongPress,
+          onPressed: onPressed,
+          message: message,
+        );
         break;
       case ZIMMessageType.file:
         defaultMessageContent = ZIMKitFileMessage(
-            onLongPress: onLongPress, onPressed: onPressed, message: message);
+          onLongPress: onLongPress,
+          onPressed: onPressed,
+          message: message,
+        );
         break;
       case ZIMMessageType.image:
         defaultMessageContent = ZIMKitImageMessage(
-            onLongPress: onLongPress, onPressed: onPressed, message: message);
+          onLongPress: onLongPress,
+          onPressed: onPressed,
+          message: message,
+        );
         break;
       case ZIMMessageType.revoke:
         defaultMessageContent = const Text('Recalled a message.');
@@ -87,11 +122,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
 
   Widget buildStatus(BuildContext context) {
     final Widget defaultStatusWidget = ZIMKitMessageStatusDot(message);
-    return statusBuilder?.call(
-          context,
-          message,
-          defaultStatusWidget,
-        ) ??
+    return statusBuilder?.call(context, message, defaultStatusWidget) ??
         defaultStatusWidget;
   }
 
@@ -105,11 +136,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
       ),
     );
 
-    return avatarBuilder?.call(
-          context,
-          message,
-          defaultAvatarWidget,
-        ) ??
+    return avatarBuilder?.call(context, message, defaultAvatarWidget) ??
         defaultAvatarWidget;
   }
 
@@ -118,10 +145,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
-      children: [
-        buildMessageContent(context),
-        buildStatus(context),
-      ],
+      children: [buildMessageContent(context), buildStatus(context)],
     );
   }
 
@@ -138,10 +162,7 @@ class ZIMKitMessageWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              buildNickName(context),
-              buildMessageContent(context),
-            ],
+            children: [buildNickName(context), buildMessageContent(context)],
           ),
         ),
       ],
@@ -156,7 +177,9 @@ class ZIMKitMessageWidget extends StatelessWidget {
 
     return FutureBuilder(
       future: ZIMKit().queryGroupMemberInfo(
-          message.info.conversationID, message.info.senderUserID),
+        message.info.conversationID,
+        message.info.senderUserID,
+      ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final userInfo = snapshot.data!;
@@ -166,11 +189,10 @@ class ZIMKitMessageWidget extends StatelessWidget {
                 : userInfo.userName,
             textAlign: TextAlign.left,
             style: TextStyle(
-                color: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .color
-                    ?.withValues(alpha: 0.6)),
+              color: Theme.of(
+                context,
+              ).textTheme.bodyLarge!.color?.withValues(alpha: 0.6),
+            ),
           );
         } else {
           return const SizedBox.shrink();
@@ -199,8 +221,9 @@ class ZIMKitMessageWidget extends StatelessWidget {
       ),
       child: FractionallySizedBox(
         widthFactor: 1,
-        alignment:
-            message.isMine ? Alignment.centerRight : Alignment.centerLeft,
+        alignment: message.isMine
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
         child: message.isMine ? localMessage(context) : remoteMessage(context),
       ),
     );

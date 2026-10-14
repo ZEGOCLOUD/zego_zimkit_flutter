@@ -83,10 +83,7 @@ class ZIMKitAudioPlayStatus {
   ///
   /// [id] Unique identifier for audio playback
   /// [isPlaying] Whether the audio is currently playing
-  ZIMKitAudioPlayStatus({
-    required this.id,
-    required this.isPlaying,
-  });
+  ZIMKitAudioPlayStatus({required this.id, required this.isPlaying});
 
   /// milliseconds
   int id;
@@ -108,11 +105,9 @@ class ZIMKitAudioData {
 
   ZIMKitAudioPlayData? cachePlayingData;
   final playProcessNotifier = ValueNotifier<int>(0);
-  final playStatusNotifier =
-      ValueNotifier<ZIMKitAudioPlayStatus>(ZIMKitAudioPlayStatus(
-    id: -1,
-    isPlaying: false,
-  ));
+  final playStatusNotifier = ValueNotifier<ZIMKitAudioPlayStatus>(
+    ZIMKitAudioPlayStatus(id: -1, isPlaying: false),
+  );
 
   bool isInit = false;
   String absFileRoot = '';
@@ -156,12 +151,14 @@ class ZIMKitAudioData {
     ZIMConversationType conversationType,
     int maxDuration,
   ) {
-    recordingCache.add(ZIMKitAudioRecordData(
-      absFilePath: absFilePath,
-      conversationID: conversationID,
-      conversationType: conversationType,
-      maxDuration: maxDuration,
-    ));
+    recordingCache.add(
+      ZIMKitAudioRecordData(
+        absFilePath: absFilePath,
+        conversationID: conversationID,
+        conversationType: conversationType,
+        maxDuration: maxDuration,
+      ),
+    );
   }
 
   ZIMKitAudioRecordData getTopRecordedFile() {

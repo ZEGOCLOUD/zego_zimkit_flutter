@@ -15,10 +15,18 @@ class ZIMKitVideoMessage extends StatelessWidget {
 
   final ZIMKitMessage message;
   final void Function(
-          BuildContext context, ZIMKitMessage message, Function defaultAction)?
-      onPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onLongPress;
+    BuildContext context,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onPressed;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onLongPress;
 
   void _onPressed(BuildContext context, ZIMKitMessage msg) {
     void defaultAction() => playVideo(context);
@@ -61,8 +69,10 @@ class ZIMKitVideoMessage extends StatelessWidget {
   void playVideo(BuildContext context) {
     showBottomSheet(
       context: context,
-      builder: (context) => ZIMKitVideoMessagePlayer(message,
-          key: ValueKey(message.info.messageID)),
+      builder: (context) => ZIMKitVideoMessagePlayer(
+        message,
+        key: ValueKey(message.info.messageID),
+      ),
     ).closed.then((value) {
       ZIMKitLogger.logInfo('ZIMKitVideoMessage: playVideo end');
     });

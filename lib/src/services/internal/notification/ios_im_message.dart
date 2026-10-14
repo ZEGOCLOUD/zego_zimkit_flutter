@@ -53,9 +53,7 @@ class ZIMKitIOSIMMessageDataParser {
   ///   zego: {version: 1, zpns_request_id: 4855622119122677075}
   /// }
   ///
-  Future<ZIMKitIOSIMMessageData> parse(
-    ZPNsMessage message,
-  ) async {
+  Future<ZIMKitIOSIMMessageData> parse(ZPNsMessage message) async {
     final aps = message.extras['aps'] as Map<Object?, Object?>? ?? {};
     final alert = aps['alert'] as Map<Object?, Object?>? ?? {};
     final body = alert['body']?.toString() ?? '';
@@ -85,13 +83,9 @@ class ZIMKitIOSIMMessageDataParser {
     try {
       payloadMap = jsonDecode(payload) as Map<String, dynamic>? ?? {};
     } catch (e) {
-      ZIMKitLogger.logInfo(
-        'payload， json decode data exception:$e',
-      );
+      ZIMKitLogger.logInfo('payload， json decode data exception:$e');
     }
-    ZIMKitLogger.logInfo(
-      'payloadMap:$payloadMap',
-    );
+    ZIMKitLogger.logInfo('payloadMap:$payloadMap');
 
     return payloadMap;
   }

@@ -27,7 +27,7 @@ class ZIMKitVideoMessagePreview extends StatelessWidget {
                   key: ValueKey(message.info.messageID),
                   imageUrl: message.videoContent!.videoFirstFrameDownloadUrl,
                   fit: BoxFit.cover,
-                  errorWidget: (context, _, __) => const SizedBox(
+                  errorWidget: (context, _, _) => const SizedBox(
                     width: 160,
                     height: 90,
                     child: Icon(Icons.error),
@@ -46,12 +46,8 @@ class ZIMKitVideoMessagePreview extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.play_arrow,
-            size: 16,
-            color: Colors.white,
-          ),
-        )
+          child: const Icon(Icons.play_arrow, size: 16, color: Colors.white),
+        ),
       ],
     );
   }

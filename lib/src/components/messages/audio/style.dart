@@ -6,15 +6,15 @@ import 'package:flutter/widgets.dart';
 class SoundWavePainter extends CustomPainter {
   /// Current progress of the sound wave animation (0.0 to 1.0)
   final double progress;
-  
+
   /// Color of the sound wave
   final Color color;
-  
+
   /// Whether the animation is currently running
   final bool isAnimating;
 
   /// Creates a sound wave painter instance
-  /// 
+  ///
   /// [progress] Current progress of the sound wave animation (0.0 to 1.0)
   /// [color] Color of the sound wave
   /// [isAnimating] Whether the animation is currently running
@@ -38,7 +38,12 @@ class SoundWavePainter extends CustomPainter {
 
   // animating the opacity according to min radius and waves count.
   void circle(
-      Canvas canvas, Rect rect, double minRadius, int wave, int length) {
+    Canvas canvas,
+    Rect rect,
+    double minRadius,
+    int wave,
+    int length,
+  ) {
     Color paintColor;
     double radius;
     if (wave != 0) {

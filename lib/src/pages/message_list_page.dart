@@ -78,7 +78,7 @@ class ZIMKitMessageListPage extends StatefulWidget {
   // if you want customize the appBar, use appBarBuilder return your custom appBar
   // if you don't want use appBar, return null
   final AppBar? Function(BuildContext context, AppBar defaultAppBar)?
-      appBarBuilder;
+  appBarBuilder;
 
   /// To add your own action, use the [messageInputActions] parameter like this:
   ///
@@ -176,25 +176,43 @@ class ZIMKitMessageListPage extends StatefulWidget {
   final TextCapitalization? messageInputTextCapitalization;
 
   final void Function(
-          BuildContext context, ZIMKitMessage message, Function defaultAction)?
-      onMessageItemPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onMessageItemLongPress;
+    BuildContext context,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onMessageItemPressed;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onMessageItemLongPress;
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      messageItemBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  messageItemBuilder;
   final Widget Function(
-          BuildContext context, ZIMKitMessage message, Widget defaultWidget)?
-      messageContentBuilder;
+    BuildContext context,
+    ZIMKitMessage message,
+    Widget defaultWidget,
+  )?
+  messageContentBuilder;
   final Widget Function(BuildContext context, Widget defaultWidget)?
-      messageListErrorBuilder;
+  messageListErrorBuilder;
   final Widget Function(BuildContext context, Widget defaultWidget)?
-      messageListLoadingBuilder;
+  messageListLoadingBuilder;
   final Widget Function(BuildContext context, Widget defaultWidget)?
-      messageListBackgroundBuilder;
+  messageListBackgroundBuilder;
 
-  final void Function(BuildContext context, List<ZIMKitPlatformFile> files,
-      Function defaultAction)? onMediaFilesPicked;
+  final void Function(
+    BuildContext context,
+    List<ZIMKitPlatformFile> files,
+    Function defaultAction,
+  )?
+  onMediaFilesPicked;
 
   // theme
   final ThemeData? theme;
@@ -245,7 +263,8 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
     return Theme(
       data: widget.theme ?? Theme.of(context),
       child: Scaffold(
-        appBar: widget.appBarBuilder?.call(context, buildAppBar(context)) ??
+        appBar:
+            widget.appBarBuilder?.call(context, buildAppBar(context)) ??
             buildAppBar(context),
         body: SafeArea(
           child: Stack(
@@ -267,9 +286,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
       child: SizedBox(
         width: ZIMKitRecordStyle.lockerIconSize,
         height: ZIMKitRecordStyle.lockerIconSize,
-        child: ZIMKitRecordLocker(
-          processor: recordProcessor,
-        ),
+        child: ZIMKitRecordLocker(processor: recordProcessor),
       ),
     );
   }
@@ -282,10 +299,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
       bottom: widget.messageInputHeight ?? ZIMKitMessageStyle.height,
       child: ZIMKitMessageListView(
         key: ValueKey(
-          'ZIMKitMessageListView:${Object.hash(
-            widget.conversationID,
-            widget.conversationType,
-          )}',
+          'ZIMKitMessageListView:${Object.hash(widget.conversationID, widget.conversationType)}',
         ),
         conversationID: widget.conversationID,
         conversationType: widget.conversationType,
@@ -311,10 +325,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
         height: widget.messageInputHeight ?? ZIMKitMessageStyle.height,
         child: ZIMKitMessageInput(
           key: ValueKey(
-            'ZIMKitMessageInput:${Object.hash(
-              widget.conversationID,
-              widget.conversationType,
-            )}',
+            'ZIMKitMessageInput:${Object.hash(widget.conversationID, widget.conversationType)}',
           ),
           events: widget.events,
           recordStatus: recordProcessor,
@@ -370,16 +381,14 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
                 children: [
                   Text(
                     conversation.name,
-                    style: const TextStyle(
-                      fontSize: avatarNameFontSize,
-                    ),
+                    style: const TextStyle(fontSize: avatarNameFontSize),
                     overflow: TextOverflow.clip,
                   ),
                   // Text(conversation.id,
                   //     style: const TextStyle(fontSize: 12),
                   //     overflow: TextOverflow.clip)
                 ],
-              )
+              ),
             ],
           );
         },

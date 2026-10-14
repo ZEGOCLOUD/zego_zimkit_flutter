@@ -3,8 +3,11 @@ part of 'zimkit_services.dart';
 mixin ZIMKitGroupService {
   // return the new group's conversationID
   // If you specify an ID, the group will be created using the ID you specified.
-  Future<String?> createGroup(String name, List<String> inviteUserIDs,
-      {String id = ''}) async {
+  Future<String?> createGroup(
+    String name,
+    List<String> inviteUserIDs, {
+    String id = '',
+  }) async {
     return ZIMKitCore.instance.createGroup(name, inviteUserIDs, id: id);
   }
 
@@ -15,12 +18,16 @@ mixin ZIMKitGroupService {
 
   // Return error code. 0 means success.
   Future<int> addUersToGroup(
-      String conversationID, List<String> userIDs) async {
+    String conversationID,
+    List<String> userIDs,
+  ) async {
     return ZIMKitCore.instance.addUsersToGroup(conversationID, userIDs);
   }
 
   Future<int> removeUesrsFromGroup(
-      String conversationID, List<String> userIDs) async {
+    String conversationID,
+    List<String> userIDs,
+  ) async {
     return ZIMKitCore.instance.removeUsersFromGroup(conversationID, userIDs);
   }
 
@@ -44,7 +51,9 @@ mixin ZIMKitGroupService {
   }
 
   Future<ZIMGroupMemberInfo?> queryGroupMemberInfo(
-      String conversationID, String userID) async {
+    String conversationID,
+    String userID,
+  ) async {
     return ZIMKitCore.instance.queryGroupMemberInfo(conversationID, userID);
   }
 
@@ -66,10 +75,11 @@ mixin ZIMKitGroupService {
   //      2. You can also obtain the role update event separately by the getGroupMemberInfoUpdatedEventStream event.
   //
   // Return error code. 0 means success.
-  Future<int> setGroupMemberRole(
-      {required String conversationID,
-      required String userID,
-      required int role}) {
+  Future<int> setGroupMemberRole({
+    required String conversationID,
+    required String userID,
+    required int role,
+  }) {
     return ZIMKitCore.instance.setGroupMemberRole(conversationID, userID, role);
   }
 
@@ -83,7 +93,7 @@ mixin ZIMKitGroupService {
   }
 
   Stream<ZIMKitEventGroupAvatarUrlUpdated>
-      getGroupAvatarUrlUpdatedEventStream() {
+  getGroupAvatarUrlUpdatedEventStream() {
     return ZIMKitCore.instance.onGroupAvatarUrlUpdatedEventController.stream;
   }
 
@@ -92,17 +102,17 @@ mixin ZIMKitGroupService {
   }
 
   Stream<ZIMKitEventGroupAttributesUpdated>
-      getGroupAttributesUpdatedEventStream() {
+  getGroupAttributesUpdatedEventStream() {
     return ZIMKitCore.instance.onGroupAttributesUpdatedEventController.stream;
   }
 
   Stream<ZIMKitEventGroupMemberStateChanged>
-      getGroupMemberStateChangedEventStream() {
+  getGroupMemberStateChangedEventStream() {
     return ZIMKitCore.instance.onGroupMemberStateChangedEventController.stream;
   }
 
   Stream<ZIMKitEventGroupMemberInfoUpdated>
-      getGroupMemberInfoUpdatedEventStream() {
+  getGroupMemberInfoUpdatedEventStream() {
     return ZIMKitCore.instance.onGroupMemberInfoUpdatedEventController.stream;
   }
 }

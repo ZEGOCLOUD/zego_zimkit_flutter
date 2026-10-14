@@ -1,15 +1,6 @@
-enum ZIMKitRecordState {
-  idle,
-  recording,
-  cancel,
-  complete,
-}
+enum ZIMKitRecordState { idle, recording, cancel, complete }
 
-enum ZIMKitRecordLockerState {
-  idle,
-  testing,
-  locked,
-}
+enum ZIMKitRecordLockerState { idle, testing, locked }
 
 /// Style configuration class for audio recording components
 class ZIMKitRecordStyle {

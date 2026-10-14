@@ -3,7 +3,9 @@ part of 'zimkit_services.dart';
 mixin ZIMKitMessageService {
   // Event
   Future<ZIMKitMessageListNotifier> getMessageListNotifier(
-      String conversationID, ZIMConversationType type) {
+    String conversationID,
+    ZIMConversationType type,
+  ) {
     return ZIMKitCore.instance.getMessageListNotifier(conversationID, type);
   }
 
@@ -13,9 +15,13 @@ mixin ZIMKitMessageService {
 
   // API
   Future<int> loadMoreMessage(
-      String conversationID, ZIMConversationType conversationType) async {
-    return ZIMKitCore.instance
-        .loadMoreMessage(conversationID, conversationType);
+    String conversationID,
+    ZIMConversationType conversationType,
+  ) async {
+    return ZIMKitCore.instance.loadMoreMessage(
+      conversationID,
+      conversationType,
+    );
   }
 
   Future<void> sendTextMessage(
@@ -64,7 +70,8 @@ mixin ZIMKitMessageService {
     Function(ZIMKitMessage)? onMessageSent,
   }) async {
     ZIMKitLogger.logInfo(
-        'sendMediaMessage: ${DateTime.now().millisecondsSinceEpoch}');
+      'sendMediaMessage: ${DateTime.now().millisecondsSinceEpoch}',
+    );
     for (final file in files) {
       await ZIMKitCore.instance.sendMediaMessage(
         conversationID,
@@ -119,18 +126,26 @@ mixin ZIMKitMessageService {
   }
 
   Future<void> updateLocalExtendedData(
-      ZIMKitMessage message, String localExtendedData) {
-    return ZIMKitCore.instance
-        .updateLocalExtendedData(message, localExtendedData);
+    ZIMKitMessage message,
+    String localExtendedData,
+  ) {
+    return ZIMKitCore.instance.updateLocalExtendedData(
+      message,
+      localExtendedData,
+    );
   }
 
   Future<void> addMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     return ZIMKitCore.instance.addMessageReaction(message, reactionType);
   }
 
   Future<void> deleteMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     return ZIMKitCore.instance.deleteMessageReaction(message, reactionType);
   }
 

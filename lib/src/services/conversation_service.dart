@@ -35,12 +35,15 @@ mixin ZIMKitConversationService {
     bool isAlsoDeleteMessages = false,
   }) async {
     await ZIMKitCore.instance.deleteAllConversation(
-        isAlsoDeleteFromServer: isAlsoDeleteFromServer,
-        isAlsoDeleteMessages: isAlsoDeleteMessages);
+      isAlsoDeleteFromServer: isAlsoDeleteFromServer,
+      isAlsoDeleteMessages: isAlsoDeleteMessages,
+    );
   }
 
   Future<void> clearUnreadCount(
-      String conversationID, ZIMConversationType conversationType) async {
+    String conversationID,
+    ZIMConversationType conversationType,
+  ) async {
     ZIMKitCore.instance.clearUnreadCount(conversationID, conversationType);
   }
 

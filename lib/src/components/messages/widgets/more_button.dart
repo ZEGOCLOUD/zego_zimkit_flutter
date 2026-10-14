@@ -34,44 +34,49 @@ class ZIMKitMoreButton extends StatelessWidget {
         showModalBottomSheet(
           context: context,
           builder: (context) {
-            return SafeArea(child: Container(
-              constraints: BoxConstraints(
-                maxHeight: rowPadding * (maxRowCount - 1) +
-                    rowHeight * maxRowCount +
-                    padding.vertical * maxRowCount,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: GridView.builder(
-                      padding: padding,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: rowCount,
-                        childAspectRatio: 1.0,
-                        // column spacing
-                        mainAxisSpacing: rowPadding,
-                        // row spacing
-                        crossAxisSpacing: columnPadding,
+            return SafeArea(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight:
+                      rowPadding * (maxRowCount - 1) +
+                      rowHeight * maxRowCount +
+                      padding.vertical * maxRowCount,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        padding: padding,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: rowCount,
+                          childAspectRatio: 1.0,
+                          // column spacing
+                          mainAxisSpacing: rowPadding,
+                          // row spacing
+                          crossAxisSpacing: columnPadding,
+                        ),
+                        itemCount: buttons.length,
+                        itemBuilder: (context, index) {
+                          return buttons[index];
+                        },
                       ),
-                      itemCount: buttons.length,
-                      itemBuilder: (context, index) {
-                        return buttons[index];
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),);
+            );
           },
         );
       },
-      child: icon ??
+      child:
+          icon ??
           Icon(
             Icons.add,
             size: ZIMKitMessageStyle.iconSize,
-            color:
-                Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: 0.64),
+            color: Theme.of(
+              context,
+            ).textTheme.bodyLarge!.color!.withValues(alpha: 0.64),
           ),
     );
   }

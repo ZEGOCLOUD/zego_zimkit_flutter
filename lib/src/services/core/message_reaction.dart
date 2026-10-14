@@ -2,65 +2,83 @@ part of 'core.dart';
 
 extension ZIMKitCoreMessageReaction on ZIMKitCore {
   Future<void> addMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     if (reactionType.isEmpty) {
       ZIMKitLogger.logWarn("addMessageReaction: reactionType is empty");
       return Future.error(
-          PlatformException(code: '-1', message: 'reactionType is empty'));
+        PlatformException(code: '-1', message: 'reactionType is empty'),
+      );
     }
     ZIMKitLogger.logInfo(
-        'addMessageReaction: $reactionType, messageID:${message.info.messageID}');
+      'addMessageReaction: $reactionType, messageID:${message.info.messageID}',
+    );
 
     await ZIM
         .getInstance()!
         .addMessageReaction(reactionType: reactionType, message: message.zim)
         .then((result) {
-      ZIMKitLogger.logInfo(
-          'addMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
-    }).catchError((error) {
-      return checkNeedReloginOrNot(error).then((retryCode) {
-        if (retryCode == 0) {
-          ZIMKitLogger.logInfo('relogin success, retry addMessageReaction');
-        } else {
-          ZIMKitLogger.logError(
-              'addMessageReaction: failed, error:$error, $reactionType, messageID:${message.info.messageID}');
-          throw error;
-        }
-      });
-    });
+          ZIMKitLogger.logInfo(
+            'addMessageReaction: success, $reactionType, messageID:${message.info.messageID}',
+          );
+        })
+        .catchError((error) {
+          return checkNeedReloginOrNot(error).then((retryCode) {
+            if (retryCode == 0) {
+              ZIMKitLogger.logInfo('relogin success, retry addMessageReaction');
+            } else {
+              ZIMKitLogger.logError(
+                'addMessageReaction: failed, error:$error, $reactionType, messageID:${message.info.messageID}',
+              );
+              throw error;
+            }
+          });
+        });
   }
 
   Future<void> deleteMessageReaction(
-      ZIMKitMessage message, String reactionType) async {
+    ZIMKitMessage message,
+    String reactionType,
+  ) async {
     if (reactionType.isEmpty) {
       ZIMKitLogger.logWarn("deleteMessageReaction: reactionType is empty");
       return Future.error(
-          PlatformException(code: '-1', message: 'reactionType is empty'));
+        PlatformException(code: '-1', message: 'reactionType is empty'),
+      );
     }
     ZIMKitLogger.logInfo(
-        'deleteMessageReaction: $reactionType, messageID:${message.info.messageID}');
+      'deleteMessageReaction: $reactionType, messageID:${message.info.messageID}',
+    );
 
     await ZIM
         .getInstance()!
         .deleteMessageReaction(reactionType: reactionType, message: message.zim)
         .then((result) {
-      ZIMKitLogger.logInfo(
-          'deleteMessageReaction: success, $reactionType, messageID:${message.info.messageID}');
-    }).catchError((error) {
-      return checkNeedReloginOrNot(error).then((retryCode) {
-        if (retryCode == 0) {
-          ZIMKitLogger.logInfo('relogin success, retry deleteMessageReaction');
-        } else {
-          ZIMKitLogger.logError(
-              'deleteMessageReaction: failed, error:$error, $reactionType, messageID:${message.info.messageID}');
-          throw error;
-        }
-      });
-    });
+          ZIMKitLogger.logInfo(
+            'deleteMessageReaction: success, $reactionType, messageID:${message.info.messageID}',
+          );
+        })
+        .catchError((error) {
+          return checkNeedReloginOrNot(error).then((retryCode) {
+            if (retryCode == 0) {
+              ZIMKitLogger.logInfo(
+                'relogin success, retry deleteMessageReaction',
+              );
+            } else {
+              ZIMKitLogger.logError(
+                'deleteMessageReaction: failed, error:$error, $reactionType, messageID:${message.info.messageID}',
+              );
+              throw error;
+            }
+          });
+        });
   }
 
   void onMessageReactionsChanged(
-      ZIM zim, ZIMMessageReactionsChangedEventResult result) async {
+    ZIM zim,
+    ZIMMessageReactionsChangedEventResult result,
+  ) async {
     final reactions = result.reactions;
     ZIMKitLogger.logInfo('onMessageReactionsChanged: ${reactions.length}');
     if (reactions.isEmpty) return;
@@ -73,7 +91,8 @@ extension ZIMKitCoreMessageReaction on ZIMKitCore {
 
       if (messageList.notInited) {
         ZIMKitLogger.logInfo(
-            'onMessageReactionsChanged: notInited, loadMessageList first');
+          'onMessageReactionsChanged: notInited, loadMessageList first',
+        );
         await getMessageListNotifier(conversationID, conversationType);
       }
 

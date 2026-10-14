@@ -18,11 +18,13 @@ class ZIMKitPickMediaButton extends StatelessWidget {
       onTap: () {
         ZIMKit().pickFiles(type: ZIMKitFileType.media).then(onFilePicked);
       },
-      child: icon ??
+      child:
+          icon ??
           Icon(
             Icons.photo_library,
-            color:
-                Theme.of(context).textTheme.bodyLarge!.color!.withValues(alpha: 0.64),
+            color: Theme.of(
+              context,
+            ).textTheme.bodyLarge!.color!.withValues(alpha: 0.64),
           ),
     );
   }

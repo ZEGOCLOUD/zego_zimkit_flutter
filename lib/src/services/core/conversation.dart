@@ -8,31 +8,37 @@ extension ZIMKitCoreConversation on ZIMKitCore {
     }
 
     final config = ZIMConversationQueryConfig()..count = kDefaultLoadCount;
-    return ZIM.getInstance()!.queryConversationList(config).then((zimResult) {
-      ZIMKitLogger.logInfo(
-        'queryHistoryMessage: ${zimResult.conversationList.length}',
-      );
+    return ZIM
+        .getInstance()!
+        .queryConversationList(config)
+        .then((zimResult) {
+          ZIMKitLogger.logInfo(
+            'queryHistoryMessage: ${zimResult.conversationList.length}',
+          );
 
-      db.conversations.init(zimResult.conversationList);
-      if (zimResult.conversationList.isEmpty ||
-          zimResult.conversationList.length < config.count) {
-        db.conversations.noMore = true;
-      }
-      db.conversations.loading = false;
+          db.conversations.init(zimResult.conversationList);
+          if (zimResult.conversationList.isEmpty ||
+              zimResult.conversationList.length < config.count) {
+            db.conversations.noMore = true;
+          }
+          db.conversations.loading = false;
 
-      return db.conversations.notifier;
-    }).catchError((error) {
-      return checkNeedReloginOrNot(error).then((retryCode) {
-        db.conversations.loading = false;
-        if (retryCode == 0) {
-          ZIMKitLogger.logInfo('re-login success, retry loadConversationList');
-          return getConversationListNotifier();
-        } else {
-          ZIMKitLogger.logError('loadConversationList failed:$error');
-          throw error;
-        }
-      });
-    });
+          return db.conversations.notifier;
+        })
+        .catchError((error) {
+          return checkNeedReloginOrNot(error).then((retryCode) {
+            db.conversations.loading = false;
+            if (retryCode == 0) {
+              ZIMKitLogger.logInfo(
+                're-login success, retry loadConversationList',
+              );
+              return getConversationListNotifier();
+            } else {
+              ZIMKitLogger.logError('loadConversationList failed:$error');
+              throw error;
+            }
+          });
+        });
   }
 
   ValueNotifier<int> getTotalUnreadMessageCount() {
@@ -61,28 +67,34 @@ extension ZIMKitCoreConversation on ZIMKitCore {
     final config = ZIMConversationQueryConfig()
       ..count = kDefaultLoadCount
       ..nextConversation = db.conversations.notifier.value.last.value.toZIM();
-    return ZIM.getInstance()!.queryConversationList(config).then((zimResult) {
-      db.conversations.addAll(zimResult.conversationList);
-      db.conversations.loading = false;
-      if (zimResult.conversationList.isEmpty ||
-          zimResult.conversationList.length < config.count) {
-        db.conversations.noMore = true;
-      }
-      db.conversations.loading = false;
+    return ZIM
+        .getInstance()!
+        .queryConversationList(config)
+        .then((zimResult) {
+          db.conversations.addAll(zimResult.conversationList);
+          db.conversations.loading = false;
+          if (zimResult.conversationList.isEmpty ||
+              zimResult.conversationList.length < config.count) {
+            db.conversations.noMore = true;
+          }
+          db.conversations.loading = false;
 
-      return zimResult.conversationList.length;
-    }).catchError((error) {
-      return checkNeedReloginOrNot(error).then((retryCode) {
-        db.conversations.loading = false;
-        if (retryCode == 0) {
-          ZIMKitLogger.logInfo('re-login success, retry loadConversationList');
-          return loadMoreConversation();
-        } else {
-          ZIMKitLogger.logError('loadConversationList failed, $error');
-          throw error;
-        }
-      });
-    });
+          return zimResult.conversationList.length;
+        })
+        .catchError((error) {
+          return checkNeedReloginOrNot(error).then((retryCode) {
+            db.conversations.loading = false;
+            if (retryCode == 0) {
+              ZIMKitLogger.logInfo(
+                're-login success, retry loadConversationList',
+              );
+              return loadMoreConversation();
+            } else {
+              ZIMKitLogger.logError('loadConversationList failed, $error');
+              throw error;
+            }
+          });
+        });
   }
 
   Future<void> deleteAllConversation({
@@ -101,13 +113,18 @@ extension ZIMKitCoreConversation on ZIMKitCore {
                 ..isAlsoDeleteServerMessage = isAlsoDeleteFromServer,
             )
             .then((ZIMMessageDeletedResult result) {
-          debugPrint(
-              'deleteAllConversation, deleteAllMessage success, id:${conversation.value.id}');
-          db.messages(conversation.value.id, conversation.value.type).clear();
-        }).catchError((error) {
-          debugPrint(
-              'deleteAllConversation, deleteAllMessage failed: $error, id:${conversation.value.id}');
-        });
+              debugPrint(
+                'deleteAllConversation, deleteAllMessage success, id:${conversation.value.id}',
+              );
+              db
+                  .messages(conversation.value.id, conversation.value.type)
+                  .clear();
+            })
+            .catchError((error) {
+              debugPrint(
+                'deleteAllConversation, deleteAllMessage failed: $error, id:${conversation.value.id}',
+              );
+            });
       }
     }
 
@@ -118,11 +135,12 @@ extension ZIMKitCoreConversation on ZIMKitCore {
             ..isAlsoDeleteServerConversation = isAlsoDeleteFromServer,
         )
         .then((void _) {
-      debugPrint('deleteAllConversation, success');
-      db.conversations.deleteAll();
-    }).catchError((error) {
-      debugPrint('deleteAllConversation, failed: $error');
-    });
+          debugPrint('deleteAllConversation, success');
+          db.conversations.deleteAll();
+        })
+        .catchError((error) {
+          debugPrint('deleteAllConversation, failed: $error');
+        });
   }
 
   Future<void> deleteConversation(
@@ -143,10 +161,11 @@ extension ZIMKitCoreConversation on ZIMKitCore {
           .getInstance()!
           .deleteAllMessage(id, type, config)
           .then((ZIMMessageDeletedResult result) {
-        debugPrint('deleteAllMessage success');
-      }).catchError((error) {
-        debugPrint('deleteAllMessage failed: $error');
-      });
+            debugPrint('deleteAllMessage success');
+          })
+          .catchError((error) {
+            debugPrint('deleteAllMessage failed: $error');
+          });
     }
 
     db.conversations.delete(id, type);
@@ -156,22 +175,25 @@ extension ZIMKitCoreConversation on ZIMKitCore {
         .getInstance()!
         .deleteConversation(id, type, deleteConfig)
         .then((ZIMConversationDeletedResult result) {
-      debugPrint('deleteConversation success');
-    }).catchError((error) {
-      debugPrint('deleteConversation failed: $error');
-    });
+          debugPrint('deleteConversation success');
+        })
+        .catchError((error) {
+          debugPrint('deleteConversation failed: $error');
+        });
   }
 
   void clearUnreadCount(
-      String conversationID, ZIMKitConversationType conversationType) {
+    String conversationID,
+    ZIMKitConversationType conversationType,
+  ) {
     final conversation = db.conversations.get(conversationID, conversationType);
 
     try {
       if (conversation.value.unreadMessageCount > 0) {
         ZIM.getInstance()!.clearConversationUnreadMessageCount(
-              conversationID,
-              conversationType,
-            );
+          conversationID,
+          conversationType,
+        );
       }
     } catch (e) {
       ZIMKitLogger.logError('clearUnreadCount: $e');
@@ -185,24 +207,31 @@ extension ZIMKitCoreConversationEvent on ZIMKitCore {
     List<ZIMConversationChangeInfo> conversationChangeInfoList,
   ) {
     for (final changeInfo in conversationChangeInfoList) {
-      switch (changeInfo.event) {
-        case ZIMConversationEvent.added:
+      if (_isDisabledConversationChange(changeInfo)) {
+        db.conversations.disable(changeInfo.conversation!.toKIT());
+        continue;
+      }
+
+      switch (changeInfo.action) {
+        case ZIMConversationListChangeAction.added:
+        case ZIMConversationListChangeAction.updated:
           db.conversations.insertOrUpdate(changeInfo.conversation!.toKIT());
           break;
-        case ZIMConversationEvent.updated:
-          db.conversations.insertOrUpdate(changeInfo.conversation!.toKIT());
-          break;
-        case ZIMConversationEvent.disabled:
-          db.conversations.disable(changeInfo.conversation!.toKIT());
-          break;
-        case ZIMConversationEvent.deleted:
+        case ZIMConversationListChangeAction.deleted:
           db.conversations.remove(
-              changeInfo.conversation!.id,
-              ZIMKitConversationType
-                  .values[changeInfo.conversation!.type.index]);
+            changeInfo.conversation!.id,
+            ZIMKitConversationType.values[changeInfo.conversation!.type.index],
+          );
           break;
       }
     }
+  }
+
+  bool _isDisabledConversationChange(ZIMConversationChangeInfo changeInfo) {
+    // The replacement action enum has no disabled value, so preserve this
+    // legacy event until the SDK exposes an equivalent action.
+    // ignore: deprecated_member_use
+    return changeInfo.event == ZIMConversationEvent.disabled;
   }
 
   void onConversationTotalUnreadMessageCountUpdated(
@@ -210,7 +239,9 @@ extension ZIMKitCoreConversationEvent on ZIMKitCore {
     int totalUnreadMessageCount,
   ) {
     totalUnreadMessageCountNotifier.value = totalUnreadMessageCount;
-    ZIMKitLogger.logInfo('onConversationTotalUnreadMessageCountUpdated: '
-        '$totalUnreadMessageCount');
+    ZIMKitLogger.logInfo(
+      'onConversationTotalUnreadMessageCountUpdated: '
+      '$totalUnreadMessageCount',
+    );
   }
 }

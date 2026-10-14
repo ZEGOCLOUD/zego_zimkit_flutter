@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import 'package:intl/intl.dart';
 import 'package:zego_zim/zego_zim.dart';
@@ -37,44 +38,45 @@ class ZIMKitMessageListView extends StatefulWidget {
     BuildContext context,
     ZIMKitMessage message,
     Function defaultAction,
-  )? onPressed;
+  )?
+  onPressed;
   final void Function(
     BuildContext context,
     LongPressStartDetails details,
     ZIMKitMessage message,
     Function defaultAction,
-  )? onLongPress;
+  )?
+  onLongPress;
   final Widget Function(
     BuildContext context,
     ZIMKitMessage message,
     Widget defaultWidget,
-  )? itemBuilder;
+  )?
+  itemBuilder;
   final Widget Function(
     BuildContext context,
     ZIMKitMessage message,
     Widget defaultWidget,
-  )? messageContentBuilder;
-  final Widget Function(
-      BuildContext context,
-      ZIMKitMessage message,
-      Widget defaultWidget
-      )? avatarBuilder;
-  final Widget Function(
-      BuildContext context,
-      ZIMKitMessage message,
-      Widget defaultWidget)? statusBuilder;
+  )?
+  messageContentBuilder;
   final Widget Function(
     BuildContext context,
+    ZIMKitMessage message,
     Widget defaultWidget,
-  )? errorBuilder;
+  )?
+  avatarBuilder;
   final Widget Function(
     BuildContext context,
+    ZIMKitMessage message,
     Widget defaultWidget,
-  )? loadingBuilder;
-  final Widget Function(
-    BuildContext context,
-    Widget defaultWidget,
-  )? backgroundBuilder;
+  )?
+  statusBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  errorBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  loadingBuilder;
+  final Widget Function(BuildContext context, Widget defaultWidget)?
+  backgroundBuilder;
 
   // theme
   final ThemeData? theme;
@@ -130,23 +132,24 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
           if (snapshot.hasData) {
             return ValueListenableBuilder(
               valueListenable: snapshot.data!,
-              builder: (
-                BuildContext context,
-                List<ValueNotifier<ZIMKitMessage>> messageList,
-                Widget? child,
-              ) {
-                ZIMKit().clearUnreadCount(
-                  widget.conversationID,
-                  widget.conversationType,
-                );
+              builder:
+                  (
+                    BuildContext context,
+                    List<ValueNotifier<ZIMKitMessage>> messageList,
+                    Widget? child,
+                  ) {
+                    ZIMKit().clearUnreadCount(
+                      widget.conversationID,
+                      widget.conversationType,
+                    );
 
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  jumpToBottom();
-                  bottomOnLoadedNotifier.value = true;
-                });
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      jumpToBottom();
+                      bottomOnLoadedNotifier.value = true;
+                    });
 
-                return listview(messageList);
-              },
+                    return listview(messageList);
+                  },
             );
           } else if (snapshot.hasError) {
             // TODO 未实现加载失败
@@ -168,7 +171,8 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
             // customWidget
             return GestureDetector(
               onTap: () => setState(() {}),
-              child: widget.errorBuilder?.call(context, defaultWidget) ??
+              child:
+                  widget.errorBuilder?.call(context, defaultWidget) ??
                   defaultWidget,
             );
           } else {
@@ -200,7 +204,9 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
         _loadMoreCompleter = Completer();
         if (0 ==
             await ZIMKit().loadMoreMessage(
-                widget.conversationID, widget.conversationType)) {
+              widget.conversationID,
+              widget.conversationType,
+            )) {
           widget.scrollController.removeListener(scrollControllerListener);
         }
         _loadMoreCompleter!.complete();
@@ -208,111 +214,128 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
     }
   }
 
-  Widget listview(
-    List<ValueNotifier<ZIMKitMessage>> messageList,
-  ) {
-    return LayoutBuilder(builder: (context, BoxConstraints constraints) {
-      DateTime previousDateTime = messageList.isEmpty
-          ? DateTime.now()
-          : DateTime.fromMillisecondsSinceEpoch(
-              messageList[0].value.info.timestamp);
-      DateTime nowDateTime = DateTime.now();
-
-      return Stack(
-        children: [
-          SizedBox(
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-            child: widget.backgroundBuilder?.call(
-                  context,
-                  const SizedBox.shrink(),
-                ) ??
-                const SizedBox.shrink(),
-          ),
-          ListView.builder(
-            cacheExtent: constraints.maxHeight * 3,
-            controller: widget.scrollController,
-            itemCount: messageList.length,
-            dragStartBehavior: DragStartBehavior.down,
-            itemBuilder: (context, index) {
-              final messageNotifier = messageList[index];
-
-              return ValueListenableBuilder(
-                valueListenable: messageNotifier,
-                builder: (
-                  BuildContext context,
-                  ZIMKitMessage message,
-                  Widget? child,
-                ) {
-                  final currentDatetime = DateTime.fromMillisecondsSinceEpoch(
-                      message.info.timestamp);
-
-                  final nowDuration = nowDateTime.difference(currentDatetime);
-                  final previousDuration =
-                      currentDatetime.difference(previousDateTime);
-                  final isLastWeek = nowDuration.inDays > 7;
-                  final isToday = nowDuration.inDays <= 1;
-                  final isFiveMinutesBefore = previousDuration.inMinutes > 5;
-                  final isSameDayAsPrevious = previousDuration.inDays.abs() < 1;
-                  String formattedDateTime = '';
-                  if (isToday) {
-                    if (!isSameDayAsPrevious || isFiveMinutesBefore) {
-                      formattedDateTime =
-                          DateFormat('HH:mm').format(currentDatetime);
-                    }
-                  } else if (!isSameDayAsPrevious ||
-                      0 == index ||
-                      isFiveMinutesBefore) {
-                    if (isLastWeek) {
-                      formattedDateTime = DateFormat('yyyy/MM/dd HH:mm')
-                          .format(currentDatetime);
-                    } else {
-                      /// in week
-                      formattedDateTime =
-                          DateFormat('EEEE HH:mm').format(currentDatetime);
-                    }
-                  }
-                  previousDateTime = currentDatetime;
-
-                  // defaultWidget
-                  final defaultWidget = defaultMessageWidget(
-                    message: message,
-                    constraints: constraints,
-                  );
-
-                  return widget.itemBuilder?.call(
-                        context,
-                        message,
-                        defaultWidget,
-                      ) ??
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: formattedDateTime.isNotEmpty,
-                            child: Container(
-                              width: constraints.maxWidth,
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  formattedDateTime,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ),
-                          ),
-                          defaultWidget,
-                        ],
-                      );
-                },
+  Widget listview(List<ValueNotifier<ZIMKitMessage>> messageList) {
+    return LayoutBuilder(
+      builder: (context, BoxConstraints constraints) {
+        DateTime previousDateTime = messageList.isEmpty
+            ? DateTime.now()
+            : DateTime.fromMillisecondsSinceEpoch(
+                messageList[0].value.info.timestamp,
               );
-            },
-          ),
-          scrollMask(constraints),
-        ],
-      );
-    });
+        DateTime nowDateTime = DateTime.now();
+
+        return Stack(
+          children: [
+            SizedBox(
+              height: constraints.maxHeight,
+              width: constraints.maxWidth,
+              child:
+                  widget.backgroundBuilder?.call(
+                    context,
+                    const SizedBox.shrink(),
+                  ) ??
+                  const SizedBox.shrink(),
+            ),
+            ListView.builder(
+              scrollCacheExtent: const ScrollCacheExtent.viewport(3),
+              controller: widget.scrollController,
+              itemCount: messageList.length,
+              dragStartBehavior: DragStartBehavior.down,
+              itemBuilder: (context, index) {
+                final messageNotifier = messageList[index];
+
+                return ValueListenableBuilder(
+                  valueListenable: messageNotifier,
+                  builder:
+                      (
+                        BuildContext context,
+                        ZIMKitMessage message,
+                        Widget? child,
+                      ) {
+                        final currentDatetime =
+                            DateTime.fromMillisecondsSinceEpoch(
+                              message.info.timestamp,
+                            );
+
+                        final nowDuration = nowDateTime.difference(
+                          currentDatetime,
+                        );
+                        final previousDuration = currentDatetime.difference(
+                          previousDateTime,
+                        );
+                        final isLastWeek = nowDuration.inDays > 7;
+                        final isToday = nowDuration.inDays <= 1;
+                        final isFiveMinutesBefore =
+                            previousDuration.inMinutes > 5;
+                        final isSameDayAsPrevious =
+                            previousDuration.inDays.abs() < 1;
+                        String formattedDateTime = '';
+                        if (isToday) {
+                          if (!isSameDayAsPrevious || isFiveMinutesBefore) {
+                            formattedDateTime = DateFormat(
+                              'HH:mm',
+                            ).format(currentDatetime);
+                          }
+                        } else if (!isSameDayAsPrevious ||
+                            0 == index ||
+                            isFiveMinutesBefore) {
+                          if (isLastWeek) {
+                            formattedDateTime = DateFormat(
+                              'yyyy/MM/dd HH:mm',
+                            ).format(currentDatetime);
+                          } else {
+                            /// in week
+                            formattedDateTime = DateFormat(
+                              'EEEE HH:mm',
+                            ).format(currentDatetime);
+                          }
+                        }
+                        previousDateTime = currentDatetime;
+
+                        // defaultWidget
+                        final defaultWidget = defaultMessageWidget(
+                          message: message,
+                          constraints: constraints,
+                        );
+
+                        return widget.itemBuilder?.call(
+                              context,
+                              message,
+                              defaultWidget,
+                            ) ??
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Visibility(
+                                  visible: formattedDateTime.isNotEmpty,
+                                  child: Container(
+                                    width: constraints.maxWidth,
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        formattedDateTime,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                defaultWidget,
+                              ],
+                            );
+                      },
+                );
+              },
+            ),
+            scrollMask(constraints),
+          ],
+        );
+      },
+    );
   }
 
   Widget scrollMask(BoxConstraints constraints) {
@@ -324,7 +347,8 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
           child: SizedBox(
             height: constraints.maxHeight,
             width: constraints.maxWidth,
-            child: widget.backgroundBuilder?.call(
+            child:
+                widget.backgroundBuilder?.call(
                   context,
                   const SizedBox.shrink(),
                 ) ??

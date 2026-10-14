@@ -108,8 +108,12 @@ class ZIMKitMessageInput extends StatefulWidget {
   /// Called before a message is sent.
   final FutureOr<ZIMKitMessage> Function(ZIMKitMessage)? preMessageSending;
 
-  final void Function(BuildContext context, List<ZIMKitPlatformFile> files,
-      Function defaultAction)? onMediaFilesPicked;
+  final void Function(
+    BuildContext context,
+    List<ZIMKitPlatformFile> files,
+    Function defaultAction,
+  )?
+  onMediaFilesPicked;
 
   /// The TextField's decoration.
   final InputDecoration? inputDecoration;
@@ -202,12 +206,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     return Theme(
       data: widget.theme ?? Theme.of(context),
       child: Container(
-        padding: widget.containerPadding ??
-            const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-        decoration: widget.containerDecoration ??
+        padding:
+            widget.containerPadding ??
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration:
+            widget.containerDecoration ??
             BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
               boxShadow: [
@@ -251,7 +254,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           moreButton(),
           const SizedBox(width: 5),
           contentWidgets(),
-          ...buildActions(ZIMKitMessageInputActionLocation.right)
+          ...buildActions(ZIMKitMessageInputActionLocation.right),
         ],
       ),
     );
@@ -261,16 +264,15 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        decoration: widget.inputBackgroundDecoration ??
+        decoration:
+            widget.inputBackgroundDecoration ??
             BoxDecoration(
               color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(40),
             ),
         child: Row(
           children: [
-            ...buildActions(
-              ZIMKitMessageInputActionLocation.leftInside,
-            ),
+            ...buildActions(ZIMKitMessageInputActionLocation.leftInside),
             const SizedBox(width: 5),
             Expanded(
               child: TextField(
@@ -289,7 +291,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                 },
                 onSubmitted: (value) => sendTextMessage(),
                 controller: _editingController,
-                decoration: widget.inputDecoration ??
+                decoration:
+                    widget.inputDecoration ??
                     const InputDecoration(hintText: 'type message...'),
               ),
             ),
@@ -313,9 +316,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
                 children: [
                   pickMediaButton(),
                   pickFileButton(),
-                  ...buildActions(
-                    ZIMKitMessageInputActionLocation.rightInside,
-                  ),
+                  ...buildActions(ZIMKitMessageInputActionLocation.rightInside),
                 ],
               );
             }
@@ -335,9 +336,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitPickFileButton(
         icon: widget.pickFileButtonWidget,
-        onFilePicked: (
-          List<ZIMKitPlatformFile> files,
-        ) {
+        onFilePicked: (List<ZIMKitPlatformFile> files) {
           void defaultAction() {
             ZIMKit().sendFileMessage(
               widget.conversationID,
@@ -368,9 +367,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitPickMediaButton(
         icon: widget.pickMediaButtonWidget,
-        onFilePicked: (
-          List<ZIMKitPlatformFile> files,
-        ) {
+        onFilePicked: (List<ZIMKitPlatformFile> files) {
           void defaultAction() {
             ZIMKit().sendMediaMessage(
               widget.conversationID,
@@ -382,11 +379,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           }
 
           if (widget.onMediaFilesPicked != null) {
-            widget.onMediaFilesPicked!(
-              context,
-              files,
-              defaultAction,
-            );
+            widget.onMediaFilesPicked!(context, files, defaultAction);
           } else {
             defaultAction();
           }
@@ -404,9 +397,12 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       height: ZIMKitMessageStyle.iconSize,
       width: ZIMKitMessageStyle.iconSize,
       child: ZIMKitMoreButton(
-        buttons: widget.actions
-                ?.where((element) =>
-                    element.location == ZIMKitMessageInputActionLocation.more)
+        buttons:
+            widget.actions
+                ?.where(
+                  (element) =>
+                      element.location == ZIMKitMessageInputActionLocation.more,
+                )
                 .map((e) => e.child)
                 .toList() ??
             [],
@@ -447,7 +443,8 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
           : null,
       child: IconButton(
         padding: EdgeInsets.zero,
-        icon: widget.sendButtonWidget ??
+        icon:
+            widget.sendButtonWidget ??
             const Icon(Icons.send, size: 16, color: Colors.white),
         onPressed: text.isNotEmpty ? sendTextMessage : null,
       ),
@@ -513,9 +510,11 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
 
   bool get rightInsideActionsIsEmpty =>
       (widget.actions
-              ?.where((element) =>
-                  element.location ==
-                  ZIMKitMessageInputActionLocation.rightInside)
+              ?.where(
+                (element) =>
+                    element.location ==
+                    ZIMKitMessageInputActionLocation.rightInside,
+              )
               .isEmpty ??
           true) &&
       !widget.showPickFileButton &&
@@ -537,34 +536,19 @@ class ZIMKitMessageInputAction {
   ]);
 
   const ZIMKitMessageInputAction.left(Widget child)
-      : this(
-          child,
-          ZIMKitMessageInputActionLocation.left,
-        );
+    : this(child, ZIMKitMessageInputActionLocation.left);
 
   const ZIMKitMessageInputAction.right(Widget child)
-      : this(
-          child,
-          ZIMKitMessageInputActionLocation.right,
-        );
+    : this(child, ZIMKitMessageInputActionLocation.right);
 
   const ZIMKitMessageInputAction.leftInside(Widget child)
-      : this(
-          child,
-          ZIMKitMessageInputActionLocation.leftInside,
-        );
+    : this(child, ZIMKitMessageInputActionLocation.leftInside);
 
   const ZIMKitMessageInputAction.rightInside(Widget child)
-      : this(
-          child,
-          ZIMKitMessageInputActionLocation.rightInside,
-        );
+    : this(child, ZIMKitMessageInputActionLocation.rightInside);
 
   const ZIMKitMessageInputAction.more(Widget child)
-      : this(
-          child,
-          ZIMKitMessageInputActionLocation.more,
-        );
+    : this(child, ZIMKitMessageInputActionLocation.more);
 
   final Widget child;
   final ZIMKitMessageInputActionLocation location;

@@ -28,7 +28,8 @@ class ZIMKitAvatar extends StatelessWidget {
             return snapshot.data!.icon;
           } else {
             return CircleAvatar(
-                child: Text(name.isNotEmpty ? name[0] : userID[0]));
+              child: Text(name.isNotEmpty ? name[0] : userID[0]),
+            );
           }
         },
       ),

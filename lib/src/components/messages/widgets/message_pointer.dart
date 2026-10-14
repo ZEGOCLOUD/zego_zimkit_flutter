@@ -26,7 +26,9 @@ class ZIMKitTextMessagePointer extends StatelessWidget {
       height: messagePointerWidth,
       child: CustomPaint(
         painter: ZIMKitMessageTrianglePainter(
-          color: Theme.of(context).primaryColor.withValues(alpha: isMine ? 1 : 0.1),
+          color: Theme.of(
+            context,
+          ).primaryColor.withValues(alpha: isMine ? 1 : 0.1),
           isMine: isMine,
         ),
       ),
@@ -38,12 +40,12 @@ class ZIMKitTextMessagePointer extends StatelessWidget {
 class ZIMKitMessageTrianglePainter extends CustomPainter {
   /// Color of the triangle
   final Color color;
-  
+
   /// Whether the message is from the current user
   final bool isMine;
 
   /// Creates a message triangle painter instance
-  /// 
+  ///
   /// [color] Color of the triangle
   /// [isMine] Whether the message is from the current user
   ZIMKitMessageTrianglePainter({required this.color, required this.isMine});

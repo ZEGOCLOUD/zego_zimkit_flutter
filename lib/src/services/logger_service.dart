@@ -12,21 +12,21 @@ class ZIMKitLogger {
 
     try {
       await FlutterLogsYoer.initLogs(
-              logLevelsEnabled: [
-                LogLevel.INFO,
-                LogLevel.WARNING,
-                LogLevel.ERROR,
-                LogLevel.SEVERE
-              ],
-              timeStampFormat: TimeStampFormat.TIME_FORMAT_24_FULL,
-              directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
-              logTypesEnabled: ['device', 'network', 'errors'],
-              logFileExtension: LogFileExtension.LOG,
-              logsWriteDirectoryName: 'ZegoUIKits',
-              logsExportDirectoryName: 'ZegoUIKits/Exported',
-              debugFileOperations: true,
-              isDebuggable: true)
-          .then((value) {
+        logLevelsEnabled: [
+          LogLevel.INFO,
+          LogLevel.WARNING,
+          LogLevel.ERROR,
+          LogLevel.SEVERE,
+        ],
+        timeStampFormat: TimeStampFormat.TIME_FORMAT_24_FULL,
+        directoryStructure: DirectoryStructure.SINGLE_FILE_FOR_DAY,
+        logTypesEnabled: ['device', 'network', 'errors'],
+        logFileExtension: LogFileExtension.LOG,
+        logsWriteDirectoryName: 'ZegoUIKits',
+        logsExportDirectoryName: 'ZegoUIKits/Exported',
+        debugFileOperations: true,
+        isDebuggable: true,
+      ).then((value) {
         FlutterLogsYoer.setDebugLevel(0);
         FlutterLogsYoer.logInfo(
           'zimkit',

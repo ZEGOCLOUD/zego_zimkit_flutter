@@ -14,24 +14,28 @@ class ZIMKitTextMessage extends StatelessWidget {
 
   final ZIMKitMessage message;
   final void Function(
-          BuildContext context, ZIMKitMessage message, Function defaultAction)?
-      onPressed;
-  final void Function(BuildContext context, LongPressStartDetails details,
-      ZIMKitMessage message, Function defaultAction)? onLongPress;
+    BuildContext context,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onPressed;
+  final void Function(
+    BuildContext context,
+    LongPressStartDetails details,
+    ZIMKitMessage message,
+    Function defaultAction,
+  )?
+  onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
       child: GestureDetector(
         onTap: () => onPressed?.call(context, message, () {}),
-        onLongPressStart: (details) => onLongPress?.call(
-          context,
-          details,
-          message,
-          () {
-            Clipboard.setData(ClipboardData(text: message.textContent!.text));
-          },
-        ),
+        onLongPressStart: (details) =>
+            onLongPress?.call(context, details, message, () {
+              Clipboard.setData(ClipboardData(text: message.textContent!.text));
+            }),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,17 +44,21 @@ class ZIMKitTextMessage extends StatelessWidget {
             message.isMine
                 ? const SizedBox.shrink()
                 : ZIMKitTextMessagePointer(
-                    messageType: message.type, isMine: message.isMine),
+                    messageType: message.type,
+                    isMine: message.isMine,
+                  ),
             Flexible(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .primaryColor
-                      .withValues(alpha: message.isMine ? 1 : 0.1),
+                  color: Theme.of(
+                    context,
+                  ).primaryColor.withValues(alpha: message.isMine ? 1 : 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
                 child: Text(
                   message.textContent!.text,
                   textAlign: TextAlign.left,
@@ -64,7 +72,9 @@ class ZIMKitTextMessage extends StatelessWidget {
             ),
             message.isMine
                 ? ZIMKitTextMessagePointer(
-                    messageType: message.type, isMine: message.isMine)
+                    messageType: message.type,
+                    isMine: message.isMine,
+                  )
                 : const SizedBox.shrink(),
           ],
         ),

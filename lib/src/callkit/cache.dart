@@ -33,7 +33,8 @@ extension ZegoZIMKitOfflineMessageCacheInfoExtesion
       jsonMap = jsonDecode(jsonString) as Map<String, dynamic>?;
     } catch (e) {
       ZIMKitLogger.logInfo(
-          'parse offline cache message, data is not a json:$jsonString');
+        'parse offline cache message, data is not a json:$jsonString',
+      );
     } finally {
       if (jsonMap?.containsKey(messageConversationCacheID) ?? false) {
         conversationID = jsonMap![messageConversationCacheID]! as String? ?? '';
@@ -41,7 +42,7 @@ extension ZegoZIMKitOfflineMessageCacheInfoExtesion
       if (jsonMap?.containsKey(messageConversationCacheTypeIndex) ?? false) {
         conversationTypeIndex =
             jsonMap![messageConversationCacheTypeIndex]! as int? ??
-                (ZIMConversationType.unknown.index);
+            (ZIMConversationType.unknown.index);
       }
       if (jsonMap?.containsKey(messageConversationSenderID) ?? false) {
         senderID = jsonMap![messageConversationSenderID]! as String? ?? '';

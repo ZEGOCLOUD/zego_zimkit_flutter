@@ -6,12 +6,14 @@ import 'defines.dart';
 /// Status management class for audio recording
 class ZIMKitRecordStatus {
   /// Notifier for recording state changes
-  final stateNotifier =
-      ValueNotifier<ZIMKitRecordState>(ZIMKitRecordState.idle);
+  final stateNotifier = ValueNotifier<ZIMKitRecordState>(
+    ZIMKitRecordState.idle,
+  );
 
   /// Notifier for locker state changes
-  final lockerStateNotifier =
-      ValueNotifier<ZIMKitRecordLockerState>(ZIMKitRecordLockerState.idle);
+  final lockerStateNotifier = ValueNotifier<ZIMKitRecordLockerState>(
+    ZIMKitRecordLockerState.idle,
+  );
 
   void register() {
     stateNotifier.addListener(_onStateChanged);

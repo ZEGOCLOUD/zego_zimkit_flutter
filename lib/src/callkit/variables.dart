@@ -11,21 +11,21 @@ const String serializationKeyHandlerPrivateInfo = 'zim_message_handler';
 class ZimKitHandlerPrivateInfo {
   /// Notification channel ID
   String channelID;
-  
+
   /// Notification channel name
   String channelName;
-  
+
   /// Sound file name for notifications
   String sound;
-  
+
   /// Icon file name for notifications
   String icon;
-  
+
   /// Whether to enable vibration for notifications
   bool isVibrate;
 
   /// Creates a handler private info instance
-  /// 
+  ///
   /// [channelID] Notification channel ID
   /// [channelName] Notification channel name
   /// [sound] Sound file name, defaults to empty string

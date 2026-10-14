@@ -2,17 +2,18 @@ import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 
 import 'package:zego_zimkit/src/services/defines.dart';
 
+/// Configuration for ZIMKit push notifications.
 class ZegoZIMKitNotificationConfig {
-  /// The [resource id] for notification which same as [Zego Console](https://console.zegocloud.com/)
+  /// Resource ID configured in the [Zego Console](https://console.zegocloud.com/).
   String? resourceID;
 
-  ///
+  /// Whether offline messages should be delivered through push notifications.
   bool supportOfflineMessage;
 
-  ///
+  /// Android-specific push notification settings.
   ZegoZIMKitAndroidNotificationConfig? androidNotificationConfig;
 
-  ///
+  /// iOS-specific push notification settings.
   ZegoZIMKitIOSNotificationConfig? iosNotificationConfig;
 
   /// Creates a notification configuration instance
@@ -55,6 +56,7 @@ class ZegoZIMKitAndroidNotificationConfig {
   /// ${project_root}/android/app/src/main/res/raw/${sound}.mp3
   String? sound;
 
+  /// Whether the notification should trigger device vibration.
   bool vibrate;
 
   /// Whether to display a offline pop-up window.
@@ -87,6 +89,7 @@ class ZegoZIMKitIOSNotificationConfig {
   /// is iOS sandbox or not
   bool? isSandboxEnvironment;
 
+  /// Push certificate to use for iOS notifications.
   ZegoSignalingPluginMultiCertificate certificateIndex;
 
   /// Creates an iOS notification configuration instance
@@ -106,6 +109,7 @@ class ZegoZIMKitIOSNotificationConfig {
   }
 }
 
+/// Identifies an offline message conversation opened from a notification.
 class ZegoZIMKitOfflineMessageCacheInfo {
   const ZegoZIMKitOfflineMessageCacheInfo({
     required this.conversationID,
@@ -113,12 +117,19 @@ class ZegoZIMKitOfflineMessageCacheInfo {
     required this.senderID,
   });
 
+  /// ID of the conversation containing the offline message.
   final String conversationID;
+
+  /// Numeric conversation type value supplied by the notification payload.
   final int conversationTypeIndex;
+
+  /// ID of the user who sent the offline message.
   final String senderID;
 
+  /// Whether the payload contains the required conversation and sender IDs.
   bool get valid => conversationID.isNotEmpty && senderID.isNotEmpty;
 
+  /// Conversation type decoded from [conversationTypeIndex].
   ZIMKitConversationType get conversionType =>
       ZIMKitConversationType.values[conversationTypeIndex];
 

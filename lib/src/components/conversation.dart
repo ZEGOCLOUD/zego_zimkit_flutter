@@ -21,29 +21,27 @@ class ZIMKitConversationWidget extends StatelessWidget {
     BuildContext context,
     DateTime? messageTime,
     Widget defaultWidget,
-  )? lastMessageTimeBuilder;
+  )?
+  lastMessageTimeBuilder;
   final Widget Function(
     BuildContext context,
     ZIMKitMessage? message,
     Widget defaultWidget,
-  )? lastMessageBuilder;
+  )?
+  lastMessageBuilder;
 
   // event
   final Function(BuildContext context) onPressed;
-  final Function(
-    BuildContext context,
-    LongPressStartDetails longPressDetails,
-  ) onLongPress;
+  final Function(BuildContext context, LongPressStartDetails longPressDetails)
+  onLongPress;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () => onPressed(context),
-      onLongPressStart: (longPressDetails) => onLongPress(
-        context,
-        longPressDetails,
-      ),
+      onLongPressStart: (longPressDetails) =>
+          onLongPress(context, longPressDetails),
       child: InkWell(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -55,8 +53,11 @@ class ZIMKitConversationWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(25)),
-                child:
-                    SizedBox(width: 50, height: 50, child: conversation.icon),
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: conversation.icon,
+                ),
               ),
               if (screenWidth >= 100)
                 Expanded(
@@ -73,17 +74,19 @@ class ZIMKitConversationWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
-                        Builder(builder: (context) {
-                          final defaultWidget = defaultLastMessageBuilder(
-                            conversation.lastMessage,
-                          );
-                          return lastMessageBuilder?.call(
-                                context,
-                                conversation.lastMessage,
-                                defaultWidget,
-                              ) ??
-                              defaultWidget;
-                        }),
+                        Builder(
+                          builder: (context) {
+                            final defaultWidget = defaultLastMessageBuilder(
+                              conversation.lastMessage,
+                            );
+                            return lastMessageBuilder?.call(
+                                  context,
+                                  conversation.lastMessage,
+                                  defaultWidget,
+                                ) ??
+                                defaultWidget;
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -93,28 +96,32 @@ class ZIMKitConversationWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Builder(builder: (context) {
-                      final messageTime = conversation.lastMessage != null
-                          ? DateTime.fromMillisecondsSinceEpoch(
-                              conversation.lastMessage!.info.timestamp,
-                            )
-                          : null;
-                      final defaultWidget =
-                          defaultLastMessageTimeBuilder(messageTime);
-                      return lastMessageTimeBuilder?.call(
-                            context,
-                            messageTime,
-                            defaultWidget,
-                          ) ??
-                          defaultWidget;
-                    }),
+                    Builder(
+                      builder: (context) {
+                        final messageTime = conversation.lastMessage != null
+                            ? DateTime.fromMillisecondsSinceEpoch(
+                                conversation.lastMessage!.info.timestamp,
+                              )
+                            : null;
+                        final defaultWidget = defaultLastMessageTimeBuilder(
+                          messageTime,
+                        );
+                        return lastMessageTimeBuilder?.call(
+                              context,
+                              messageTime,
+                              defaultWidget,
+                            ) ??
+                            defaultWidget;
+                      },
+                    ),
                     const SizedBox(height: 8),
                     Badge(
                       alignment: AlignmentDirectional.bottomEnd,
                       backgroundColor: Colors.red,
                       isLabelVisible: conversation.unreadMessageCount != 0,
                       label: Text(
-                          '${conversation.unreadMessageCount > 9999 ? '9999+' : conversation.unreadMessageCount}'),
+                        '${conversation.unreadMessageCount > 9999 ? '9999+' : conversation.unreadMessageCount}',
+                      ),
                     ),
                   ],
                 ),

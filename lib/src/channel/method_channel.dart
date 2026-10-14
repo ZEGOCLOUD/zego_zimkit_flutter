@@ -42,7 +42,8 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
       /// set buttons callback
       methodChannel.setMethodCallHandler((call) async {
         ZIMKitLogger.logInfo(
-            'MethodCallHandler, method:${call.method}, arguments:${call.arguments}.');
+          'MethodCallHandler, method:${call.method}, arguments:${call.arguments}.',
+        );
 
         switch (call.method) {
           case 'onNotificationClicked':
@@ -66,9 +67,7 @@ class MethodChannelZegoCallPlugin extends ZegoZIMKitPluginPlatform {
       return;
     }
 
-    ZIMKitLogger.logInfo(
-      'createNotificationChannel:$config',
-    );
+    ZIMKitLogger.logInfo('createNotificationChannel:$config');
 
     try {
       await methodChannel.invokeMethod('createNotificationChannel', {

@@ -46,8 +46,9 @@ class ZIMKitTokenUtils {
     final iv = encrypt.IV.fromUtf8(ivStr);
 
     final key = encrypt.Key.fromUtf8(appSecret);
-    final encrypter =
-        encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
+    final encrypter = encrypt.Encrypter(
+      encrypt.AES(key, mode: encrypt.AESMode.cbc),
+    );
     final encrypted = encrypter.encrypt(tokenJson, iv: iv);
 
     final bytes1 = HexUtils.createUInt8ListFromInt(tokenInfo.expire);
@@ -65,7 +66,7 @@ class ZIMKitTokenUtils {
 /// Token information class for token generation
 class TokenInfo04 {
   /// Creates a token info instance
-  /// 
+  ///
   /// [appID] Application ID
   /// [userID] User ID
   /// [ctime] Creation time in seconds since epoch

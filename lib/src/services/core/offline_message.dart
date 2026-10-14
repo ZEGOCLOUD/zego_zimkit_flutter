@@ -14,39 +14,34 @@ mixin ZIMKitOfflineMessage {
   Future<void> initOfflineMessage({
     ZegoZIMKitNotificationConfig? notificationConfig,
   }) async {
-    ZIMKitLogger.logInfo(
-      'init offline message, config:$notificationConfig',
-    );
+    ZIMKitLogger.logInfo('init offline message, config:$notificationConfig');
 
     ZegoPluginAdapter().installPlugins([ZegoUIKitSignalingPlugin()]);
 
-    await ZegoPluginAdapter()
-        .signalingPlugin
+    await ZegoPluginAdapter().signalingPlugin
         ?.enableNotifyWhenAppRunningInBackgroundOrQuit(
           isIOSSandboxEnvironment:
               notificationConfig?.iosNotificationConfig?.isSandboxEnvironment,
           enableIOSVoIP: false,
           certificateIndex:
               notificationConfig?.iosNotificationConfig?.certificateIndex ??
-                  ZegoSignalingPluginMultiCertificate.firstCertificate,
+              ZegoSignalingPluginMultiCertificate.firstCertificate,
           appName: '',
           androidChannelID:
               notificationConfig?.androidNotificationConfig?.channelID ??
-                  defaultZIMKitMessageChannelID,
+              defaultZIMKitMessageChannelID,
           androidChannelName:
               notificationConfig?.androidNotificationConfig?.channelName ??
-                  defaultZIMKitMessageChannelName,
-          androidSound: (notificationConfig
-                      ?.androidNotificationConfig?.sound?.isEmpty ??
+              defaultZIMKitMessageChannelName,
+          androidSound:
+              (notificationConfig?.androidNotificationConfig?.sound?.isEmpty ??
                   true)
               ? ''
               : '/raw/${notificationConfig?.androidNotificationConfig?.sound}',
         )
-        .then(
-      (result) {
-        ZIMKitLogger.logInfo('enable notification result: $result');
-      },
-    );
+        .then((result) {
+          ZIMKitLogger.logInfo('enable notification result: $result');
+        });
 
     if (Platform.isAndroid) {
       ZIMKitLogger.logInfo(
@@ -55,9 +50,9 @@ mixin ZIMKitOfflineMessage {
 
       if (notificationConfig?.androidNotificationConfig?.enable ?? true) {
         await ZegoPluginAdapter().signalingPlugin?.setBackgroundMessageHandler(
-              onBackgroundMessageReceived,
-              key: 'zego_zimkit',
-            );
+          onBackgroundMessageReceived,
+          key: 'zego_zimkit',
+        );
       } else {
         ZIMKitLogger.logWarn(
           'offline message, android background message handler not registered',
@@ -67,9 +62,7 @@ mixin ZIMKitOfflineMessage {
       ///
     }
 
-    await initNotification(
-      notificationConfig: notificationConfig,
-    );
+    await initNotification(notificationConfig: notificationConfig);
   }
 
   Future<void> initNotification({
@@ -86,11 +79,12 @@ mixin ZIMKitOfflineMessage {
     await setPreferenceString(
       serializationKeyHandlerPrivateInfo,
       ZimKitHandlerPrivateInfo(
-        channelID: notificationConfig?.androidNotificationConfig?.channelID ??
+        channelID:
+            notificationConfig?.androidNotificationConfig?.channelID ??
             defaultZIMKitMessageChannelID,
         channelName:
             notificationConfig?.androidNotificationConfig?.channelName ??
-                defaultZIMKitMessageChannelName,
+            defaultZIMKitMessageChannelName,
         sound: notificationConfig?.androidNotificationConfig?.sound ?? '',
         icon: notificationConfig?.androidNotificationConfig?.icon ?? '',
         isVibrate:

@@ -41,8 +41,10 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
         (widget.message.videoContent!.fileLocalPath.endsWith('mp4') ||
             widget.message.videoContent!.fileLocalPath.endsWith('mov')) &&
         File(widget.message.videoContent!.fileLocalPath).existsSync()) {
-      ZIMKitLogger.logInfo('ZIMKitVideoMessagePlayer: initPlayer from local '
-          'file: ${widget.message.videoContent!.fileLocalPath}');
+      ZIMKitLogger.logInfo(
+        'ZIMKitVideoMessagePlayer: initPlayer from local '
+        'file: ${widget.message.videoContent!.fileLocalPath}',
+      );
       videoPlayerController = VideoPlayerController.file(
         File(
           /*Uri.encodeComponent*/
@@ -59,33 +61,34 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
       );
     }
 
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      looping: true,
-      showControlsOnInitialize: false,
-      customControls: const ZIMKitCustomControls(),
-      placeholder: Center(
-        child: ZIMKitVideoMessagePreview(
-          widget.message,
-          key: ValueKey(widget.message.info.messageID),
-        ),
-      ),
-    )
-      ..setVolume(1.0)
-      ..play();
+    chewieController =
+        ChewieController(
+            videoPlayerController: videoPlayerController,
+            looping: true,
+            showControlsOnInitialize: false,
+            customControls: const ZIMKitCustomControls(),
+            placeholder: Center(
+              child: ZIMKitVideoMessagePreview(
+                widget.message,
+                key: ValueKey(widget.message.info.messageID),
+              ),
+            ),
+          )
+          ..setVolume(1.0)
+          ..play();
 
     initing = videoPlayerController.initialize();
 
-    Future.delayed(const Duration(seconds: 4)).then(
-      (value) {
-        if (!chewieController.videoPlayerController.value.isInitialized) {
-          ZIMKitLogger.logError(
-              'videoPlayerController is not initialized, ${widget.message.videoContent!.fileLocalPath}');
-          ZIMKitLogger.logWarn(
-              "Seems Can't play this video, ${widget.message.videoContent!.fileLocalPath}");
-        }
-      },
-    );
+    Future.delayed(const Duration(seconds: 4)).then((value) {
+      if (!chewieController.videoPlayerController.value.isInitialized) {
+        ZIMKitLogger.logError(
+          'videoPlayerController is not initialized, ${widget.message.videoContent!.fileLocalPath}',
+        );
+        ZIMKitLogger.logWarn(
+          "Seems Can't play this video, ${widget.message.videoContent!.fileLocalPath}",
+        );
+      }
+    });
 
     super.initState();
   }
@@ -101,14 +104,16 @@ class _ZIMKitVideoMessagePlayerState extends State<ZIMKitVideoMessagePlayer> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 ZIMKitLogger.logInfo(
-                    'ZIMKitVideoMessagePlayer: videoPlayerController initialize done');
+                  'ZIMKitVideoMessagePlayer: videoPlayerController initialize done',
+                );
                 return Chewie(
                   key: ValueKey(widget.message.info.messageID),
                   controller: chewieController,
                 );
               } else {
                 ZIMKitLogger.logInfo(
-                    'ZIMKitVideoMessagePlayer: videoPlayerController initializing...');
+                  'ZIMKitVideoMessagePlayer: videoPlayerController initializing...',
+                );
                 return Chewie(
                   key: ValueKey(snapshot.hashCode),
                   controller: chewieController,

@@ -5,7 +5,7 @@ import 'dart:math' as math;
 class ZIMKitStringUtils {
   /// Random number generator instance
   static final _random = math.Random();
-  
+
   /// Default character pool for random string generation
   static const _defaultPool =
       'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
@@ -20,8 +20,10 @@ class ZIMKitStringUtils {
     return id;
   }
 
-  static Future<String> createRandomStringAsync(int size,
-      {String pool = _defaultPool}) async {
+  static Future<String> createRandomStringAsync(
+    int size, {
+    String pool = _defaultPool,
+  }) async {
     return createRandomString(size, pool: pool);
   }
 }

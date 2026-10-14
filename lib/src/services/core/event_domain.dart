@@ -114,7 +114,7 @@ class ZIMKitEventGroupMemberStateChanged {
 /// Event class for group member information updates
 class ZIMKitEventGroupMemberInfoUpdated {
   /// Creates a group member info updated event instance
-  /// 
+  ///
   /// [userInfo] List of updated user information
   /// [operatedInfo] Information about the operation
   /// [groupID] The group ID

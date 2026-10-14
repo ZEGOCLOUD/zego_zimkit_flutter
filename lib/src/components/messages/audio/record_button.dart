@@ -70,30 +70,24 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
       slideMaxOffsetX = MediaQuery.of(context).size.width / 5 * 2;
     });
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    )
-      ..addListener(
-        () {
-          setState(() {});
-        },
-      )
-      ..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed) {
-            _animationController.reverse();
-          } else if (status == AnimationStatus.dismissed) {
-            _animationController.forward();
-          }
-        },
-      );
+    _animationController =
+        AnimationController(
+            vsync: this,
+            duration: const Duration(milliseconds: 500),
+          )
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _animationController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              _animationController.forward();
+            }
+          });
 
     _animation = Tween<double>(begin: 0, end: 5).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.repeat();
 
@@ -101,34 +95,30 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
     onStateChanged();
     widget.status.stateNotifier.addListener(onStateChanged);
 
-    ZIMKitAudioInstance()
-        .data
-        .recordCountDownNotifier
-        .addListener(onRecordCountDown);
+    ZIMKitAudioInstance().data.recordCountDownNotifier.addListener(
+      onRecordCountDown,
+    );
 
     subscriptions
-      ..add(ZIMKitAudioInstance()
-          .data
-          .recordCompleteStreamCtrl
-          ?.stream
-          .asBroadcastStream()
-          .listen(onRecordCompleted))
-      ..add(ZIMKitAudioInstance()
-          .data
-          .recordFailedStreamCtrl
-          ?.stream
-          .asBroadcastStream()
-          .listen(onRecordError));
+      ..add(
+        ZIMKitAudioInstance().data.recordCompleteStreamCtrl?.stream
+            .asBroadcastStream()
+            .listen(onRecordCompleted),
+      )
+      ..add(
+        ZIMKitAudioInstance().data.recordFailedStreamCtrl?.stream
+            .asBroadcastStream()
+            .listen(onRecordError),
+      );
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    ZIMKitAudioInstance()
-        .data
-        .recordCountDownNotifier
-        .removeListener(onRecordCountDown);
+    ZIMKitAudioInstance().data.recordCountDownNotifier.removeListener(
+      onRecordCountDown,
+    );
 
     widget.status.stateNotifier.removeListener(onStateChanged);
     _animationController.dispose();
@@ -140,12 +130,7 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        button(),
-        lockerButton(),
-      ],
-    );
+    return Stack(children: [button(), lockerButton()]);
   }
 
   Widget lockerButton() {
@@ -202,7 +187,7 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
             // (horizontalDistance > -lockerIconRadius &&
             //     horizontalDistance < lockerIconRadius) &&
             (verticalDistance < 0 &&
-                verticalDistance > -ZIMKitRecordStyle.lockerIconSize);
+            verticalDistance > -ZIMKitRecordStyle.lockerIconSize);
         if (isInLocker) {
           widget.status.lockerStateNotifier.value =
               ZIMKitRecordLockerState.testing;
@@ -254,15 +239,14 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
               color: Colors.blue,
               isAnimating: isAnimating,
             ),
-            child: widget.icon ??
+            child:
+                widget.icon ??
                 Icon(
                   Icons.mic,
                   size: ZIMKitMessageStyle.iconSize,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .color!
-                      .withValues(alpha: 0.64),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge!.color!.withValues(alpha: 0.64),
                 ),
           );
         },
@@ -302,19 +286,20 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
 
     ZIMKitCore.instance
         .sendMediaMessage(
-      recordData.conversationID,
-      recordData.conversationType,
-      recordData.absFilePath,
-      ZIMMessageType.audio,
-      audioDuration: (recordData.duration / 1000).floor(),
-      onMessageSent: widget.onMessageSent,
-      preMessageSending: widget.preMessageSending,
-    )
+          recordData.conversationID,
+          recordData.conversationType,
+          recordData.absFilePath,
+          ZIMMessageType.audio,
+          audioDuration: (recordData.duration / 1000).floor(),
+          onMessageSent: widget.onMessageSent,
+          preMessageSending: widget.preMessageSending,
+        )
         .then((_) {
-      ZIMKitLogger.logInfo('audio button, send audio done');
-    }).catchError((e) {
-      ZIMKitLogger.logInfo('audio button, send audio error, $e');
-    });
+          ZIMKitLogger.logInfo('audio button, send audio done');
+        })
+        .catchError((e) {
+          ZIMKitLogger.logInfo('audio button, send audio error, $e');
+        });
   }
 
   void onRecordError(int errorCode) {

@@ -2,12 +2,14 @@ part of 'zimkit_services.dart';
 
 mixin ZIMKitHelperService {
   void registerAppLifecycleStateChangedListener(
-      ZegoPluginAdapterMessageHandler listener) {
+    ZegoPluginAdapterMessageHandler listener,
+  ) {
     ZegoPluginAdapter().service().registerMessageHandler(listener);
   }
 
   void unregisterAppLifecycleStateChangedListener(
-      ZegoPluginAdapterMessageHandler listener) {
+    ZegoPluginAdapterMessageHandler listener,
+  ) {
     ZegoPluginAdapter().service().unregisterMessageHandler(listener);
   }
 

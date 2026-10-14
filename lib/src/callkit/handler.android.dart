@@ -26,7 +26,8 @@ const backgroundMessageIsolatePortName = 'zimkit_bg_msg_isolate_port';
 /// Note: @pragma('vm:entry-point') must be placed on a function to indicate that it can be parsed, allocated, or called directly from native or VM code in AOT mode.
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(
-    ZegoSignalingPluginMessage message) async {
+  ZegoSignalingPluginMessage message,
+) async {
   debugPrint('onBackgroundMessageReceived wait init log...');
 
   await ZIMKitLogger().initLog();
@@ -43,15 +44,18 @@ Future<void> onBackgroundMessageReceived(
 
   if (!message.extras.containsKey('zego')) {
     ZIMKitLogger.logInfo(
-        '[onBackgroundMessageReceived] is not zego protocol, droped');
+      '[onBackgroundMessageReceived] is not zego protocol, droped',
+    );
     return;
   }
 
-  final registeredIsolatePort =
-      IsolateNameServer.lookupPortByName(backgroundMessageIsolatePortName);
+  final registeredIsolatePort = IsolateNameServer.lookupPortByName(
+    backgroundMessageIsolatePortName,
+  );
   final isAppRunning = null != registeredIsolatePort;
   ZIMKitLogger.logInfo(
-      'isolate:${registeredIsolatePort?.hashCode}, isAppRunning:$isAppRunning');
+    'isolate:${registeredIsolatePort?.hashCode}, isAppRunning:$isAppRunning',
+  );
   if (isAppRunning) {
     /// after app being screen-locked for more than 10 minutes, the app was not
     /// killed(suspended) but the zpns login timed out, so that's why receive
@@ -66,10 +70,9 @@ Future<void> onBackgroundMessageReceived(
       'isolate:app has another isolate(${registeredIsolatePort.hashCode}), '
       'send command to deal with this background message',
     );
-    registeredIsolatePort.send(jsonEncode({
-      'title': message.title,
-      'extras': message.extras,
-    }));
+    registeredIsolatePort.send(
+      jsonEncode({'title': message.title, 'extras': message.extras}),
+    );
     return;
   }
 
@@ -121,7 +124,8 @@ Future<void> _onBackgroundMessageReceived({
   final payloadMap = jsonDecode(payload) as Map<String, dynamic>? ?? {};
 
   final operationType = BackgroundMessageTypeExtension.fromText(
-      payloadMap[ZIMKitInvitationProtocolKey.operationType] as String? ?? '');
+    payloadMap[ZIMKitInvitationProtocolKey.operationType] as String? ?? '',
+  );
 
   if (BackgroundMessageType.textMessage != operationType &&
       BackgroundMessageType.mediaMessage != operationType) {
@@ -144,8 +148,9 @@ Future<void> _onBackgroundMessageReceived({
     'conversationTypeIndex:$conversationTypeIndex',
   );
 
-  final handlerInfoJson =
-      await getPreferenceString(serializationKeyHandlerPrivateInfo);
+  final handlerInfoJson = await getPreferenceString(
+    serializationKeyHandlerPrivateInfo,
+  );
   ZIMKitLogger.logInfo(
     'background message, '
     'parsing handler info:$handlerInfoJson',
@@ -173,9 +178,7 @@ Future<void> _onBackgroundMessageReceived({
             senderID: senderID,
           ),
         );
-        ZIMKitLogger.logInfo(
-          'background message, click offline message',
-        );
+        ZIMKitLogger.logInfo('background message, click offline message');
 
         await ZegoZIMKitPluginPlatform.instance.activeAppToForeground();
         await ZegoZIMKitPluginPlatform.instance.requestDismissKeyguard();
@@ -188,7 +191,5 @@ Future<void> _onBackgroundMessageReceived({
     'isolate: clear IsolateNameServer, port:${backgroundPort.hashCode}',
   );
   backgroundPort.close();
-  IsolateNameServer.removePortNameMapping(
-    backgroundMessageIsolatePortName,
-  );
+  IsolateNameServer.removePortNameMapping(backgroundMessageIsolatePortName);
 }
