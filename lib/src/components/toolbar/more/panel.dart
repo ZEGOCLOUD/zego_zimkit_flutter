@@ -72,10 +72,6 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
                   (widget) =>
                       SizedBox(width: 55.zW, height: 55.zH, child: widget),
                 ),
-                ...extraActions.map(
-                  (widget) =>
-                      SizedBox(width: 55.zW, height: 55.zH, child: widget),
-                ),
               ]
             : [
                 ...configuredButtons!,

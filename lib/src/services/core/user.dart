@@ -97,11 +97,10 @@ extension ZIMKitCoreUser on ZIMKitCore {
     ZIMKitLogger.logInfo('logout.');
     currentToken = '';
     clear();
-    ZegoUIKitSignalingPlugin().disconnectUser().then((result) {
-      if (result.timeout) {
-        ZIMKitLogger.logWarn('logout timeout');
-      }
-    });
+    final result = await ZegoUIKitSignalingPlugin().disconnectUser();
+    if (result.timeout) {
+      ZIMKitLogger.logWarn('logout timeout');
+    }
   }
 
   Future<int> renewToken(String token) async {
