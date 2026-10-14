@@ -5,7 +5,7 @@
 Pod::Spec.new do |s|
   s.name             = 'zego_zimkit'
   # zego_zimkit:
-  s.version          = '2.0.0'
+  s.version          = '2.0.0' # zego_zimkit:
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC
 A new Flutter project.
