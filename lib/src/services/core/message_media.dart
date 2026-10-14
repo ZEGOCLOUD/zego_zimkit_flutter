@@ -1,5 +1,53 @@
 part of 'core.dart';
 
+/// Dimensions decoded from a local image before it is attached to the chat.
+class ZIMKitImageDimensions {
+  const ZIMKitImageDimensions({required this.width, required this.height});
+
+  final int width;
+  final int height;
+
+  /// Fills image dimensions only when the SDK message does not have them yet.
+  void applyTo(ZIMMessage message) {
+    if (message is! ZIMImageMessage) {
+      return;
+    }
+
+    if (message.originalImageWidth <= 0) {
+      message.originalImageWidth = width;
+    }
+    if (message.originalImageHeight <= 0) {
+      message.originalImageHeight = height;
+    }
+  }
+}
+
+/// Reads image dimensions from the encoded file without decoding its pixels.
+Future<ZIMKitImageDimensions?> readZIMKitImageDimensions(String path) async {
+  ui.ImmutableBuffer? buffer;
+  ui.ImageDescriptor? descriptor;
+  try {
+    buffer = await ui.ImmutableBuffer.fromFilePath(path);
+    descriptor = await ui.ImageDescriptor.encoded(buffer);
+    if (descriptor.width <= 0 || descriptor.height <= 0) {
+      return null;
+    }
+
+    return ZIMKitImageDimensions(
+      width: descriptor.width,
+      height: descriptor.height,
+    );
+  } catch (error) {
+    await ZIMKitLogger.logWarn(
+      'readZIMKitImageDimensions failed for $path: $error',
+    );
+    return null;
+  } finally {
+    descriptor?.dispose();
+    buffer?.dispose();
+  }
+}
+
 extension ZIMKitCoreMessageMedia on ZIMKitCore {
   Future<void> sendMediaMessage(
     String conversationID,
@@ -21,6 +69,10 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
       ZIMKitLogger.logWarn('sendCustomMessage: conversationID is empty');
       return;
     }
+
+    final localImageDimensions = messageType == ZIMMessageType.image
+        ? await readZIMKitImageDimensions(mediaPath)
+        : null;
 
     // 1. create message
     var kitMessage = ZIMKitMessageUtils.mediaMessageFactory(
@@ -78,6 +130,7 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
           sendConfig,
           ZIMMessageSendNotification(
             onMessageAttached: (zimMessage) {
+              localImageDimensions?.applyTo(zimMessage);
               ZIMKitLogger.logInfo(
                 'sendMediaMessage.onMessageAttached: '
                 '${(zimMessage as ZIMMediaMessage).fileName}',
@@ -117,6 +170,7 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
         )
         .then<void>((result) {
           ZIMKitLogger.logInfo('sendMediaMessage: success, $mediaPath}');
+          localImageDimensions?.applyTo(result.message);
           kitMessageNotifier.value = result.message.toKIT();
           onMessageSent?.call(kitMessageNotifier.value);
         })
