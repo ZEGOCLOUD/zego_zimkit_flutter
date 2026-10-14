@@ -344,16 +344,26 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
   }
 
   Widget _buildTextModeButton() {
-    return _buildToolbarButton(icon: Icons.keyboard, onTap: _showTextInputMode);
+    return ValueListenableBuilder<ZIMKitRecordLockerState>(
+      valueListenable: widget.recordStatus.lockerStateNotifier,
+      builder: (context, lockState, _) {
+        return _buildToolbarButton(
+          icon: Icons.keyboard,
+          enabled: lockState != ZIMKitRecordLockerState.locked,
+          onTap: _showTextInputMode,
+        );
+      },
+    );
   }
 
   Widget _buildToolbarButton({
     required IconData icon,
     bool isActive = false,
+    bool enabled = true,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         width: 40.zW,
         height: 40.zH,
@@ -361,7 +371,9 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         child: Icon(
           icon,
           size: 28.zW,
-          color: isActive ? Theme.of(context).primaryColor : Colors.grey[600],
+          color: enabled
+              ? (isActive ? Theme.of(context).primaryColor : Colors.grey[600])
+              : Colors.grey[400],
         ),
       ),
     );

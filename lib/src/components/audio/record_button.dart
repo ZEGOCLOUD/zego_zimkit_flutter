@@ -322,6 +322,8 @@ class _ZIMKitRecordButtonState extends State<ZIMKitRecordButton>
   }
 
   void onRecordError(int errorCode) {
+    widget.status.stateNotifier.value = ZIMKitRecordState.idle;
+    widget.status.lockerStateNotifier.value = ZIMKitRecordLockerState.idle;
     widget.events?.onFailed?.call(errorCode);
   }
 }

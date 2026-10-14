@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zego_zimkit/src/audio/core.dart';
+import 'package:zego_zimkit/src/components/audio/defines.dart';
 import 'package:zego_zimkit/src/components/audio/status.dart';
 import 'package:zego_zimkit/src/components/messages/input/configs.dart';
 import 'package:zego_zimkit/src/components/messages/input/widget.dart';
@@ -153,6 +155,81 @@ void main() {
     expect(audioCalls, isEmpty);
     expect(find.byType(TextField), findsNothing);
     expect(find.text('Hold to talk'), findsOneWidget);
+  });
+
+  testWidgets('locked recording cannot switch back to text mode', (
+    tester,
+  ) async {
+    final recordStatus = ZIMKitRecordStatus()..register();
+    addTearDown(recordStatus.unregister);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ZIMKitMessageInput(
+            conversationID: 'peer-1',
+            recordStatus: recordStatus,
+            inputConfig: ZIMKitInputConfig(
+              smallButtons: const [ZIMKitInputButtonName.audio],
+              expandButtons: const [],
+            ),
+            config: const ZIMKitMessageInputConfigs(showMoreButton: false),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.mic_none));
+    await tester.pumpAndSettle();
+    recordStatus.lockerStateNotifier.value = ZIMKitRecordLockerState.locked;
+    await tester.pump();
+
+    await tester.tap(find.byIcon(Icons.keyboard));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TextField), findsNothing);
+    expect(find.text('Hold to talk'), findsOneWidget);
+  });
+
+  testWidgets('failed locked recording releases the voice mode switch', (
+    tester,
+  ) async {
+    final recordStatus = ZIMKitRecordStatus()..register();
+    addTearDown(recordStatus.unregister);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ZIMKitMessageInput(
+            conversationID: 'peer-1',
+            recordStatus: recordStatus,
+            inputConfig: ZIMKitInputConfig(
+              smallButtons: const [ZIMKitInputButtonName.audio],
+              expandButtons: const [],
+            ),
+            config: const ZIMKitMessageInputConfigs(showMoreButton: false),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.mic_none));
+    await tester.pumpAndSettle();
+    recordStatus.stateNotifier.value = ZIMKitRecordState.recording;
+    recordStatus.lockerStateNotifier.value = ZIMKitRecordLockerState.locked;
+    await tester.pump();
+
+    ZIMKitAudioInstance().onRecorderFailed(1001);
+    await tester.pump();
+
+    expect(recordStatus.stateNotifier.value, ZIMKitRecordState.idle);
+    expect(
+      recordStatus.lockerStateNotifier.value,
+      ZIMKitRecordLockerState.idle,
+    );
+    await tester.tap(find.byIcon(Icons.keyboard));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsOneWidget);
   });
 
   testWidgets('voice mode preserves custom toolbar buttons', (tester) async {
