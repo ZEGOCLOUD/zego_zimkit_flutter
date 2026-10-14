@@ -149,6 +149,19 @@ class ZIMKitInnerTextZhCN extends ZIMKitInnerText {
         /// 录音相关
         slideToCancelText: '滑动取消',
         holdToTalkText: '按住说话',
+        releaseToSendText: '松开发送',
+        slideLeftToCancelText: '左滑取消',
+        slideUpToLockText: '上滑锁定',
+        releaseToLockText: '松开锁定',
+        releaseToCancelText: '松开取消',
+        recordingLockedText: '录音已锁定',
+        recordingStartingText: '正在启动录音…',
+        discardRecordingText: '丢弃',
+        discardRecordingLabelText: '丢弃当前录音',
+        sendRecordingText: '发送',
+        startVoiceRecordingLabelText: '开始语音录制',
+        startVoiceRecordingHintText: '点按后开始并锁定录音，完成后选择发送或丢弃。',
+        recordingStartFailedText: '录音启动失败，请重试。',
 
         /// 更多操作面板
         takePhotoText: '拍摄',

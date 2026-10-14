@@ -24,6 +24,9 @@ class ZIMKitAudioRecordData {
     required this.conversationType,
     this.duration = 0,
     this.maxDuration = 60 * 1000,
+    this.onStarted,
+    this.onCompleted,
+    this.onFailed,
   });
 
   static ZIMKitAudioRecordData empty() {
@@ -40,6 +43,22 @@ class ZIMKitAudioRecordData {
   String absFilePath;
   String conversationID;
   ZIMConversationType conversationType;
+  final Future<void> Function(ZIMKitAudioRecordData recordData)? onCompleted;
+  final void Function()? onStarted;
+  final void Function(int errorCode)? onFailed;
+  final terminalCompleter = Completer<void>();
+  bool hasStarted = false;
+  bool cancelWhenStarted = false;
+
+  void markStarted() {
+    hasStarted = true;
+  }
+
+  void markTerminal() {
+    if (!terminalCompleter.isCompleted) {
+      terminalCompleter.complete();
+    }
+  }
 
   @override
   String toString() {
@@ -83,10 +102,7 @@ class ZIMKitAudioPlayStatus {
   ///
   /// [id] Unique identifier for audio playback
   /// [isPlaying] Whether the audio is currently playing
-  ZIMKitAudioPlayStatus({
-    required this.id,
-    required this.isPlaying,
-  });
+  ZIMKitAudioPlayStatus({required this.id, required this.isPlaying});
 
   /// milliseconds
   int id;
@@ -108,11 +124,9 @@ class ZIMKitAudioData {
 
   ZIMKitAudioPlayData? cachePlayingData;
   final playProcessNotifier = ValueNotifier<int>(0);
-  final playStatusNotifier =
-      ValueNotifier<ZIMKitAudioPlayStatus>(ZIMKitAudioPlayStatus(
-    id: -1,
-    isPlaying: false,
-  ));
+  final playStatusNotifier = ValueNotifier<ZIMKitAudioPlayStatus>(
+    ZIMKitAudioPlayStatus(id: -1, isPlaying: false),
+  );
 
   bool isInit = false;
   String absFileRoot = '';
@@ -134,6 +148,10 @@ class ZIMKitAudioData {
   }
 
   void uninit() {
+    recordingCache.clear();
+    recordDurationNotifier.value = 0;
+    recordCountDownNotifier.value = 0;
+
     if (!isInit) {
       return;
     }
@@ -150,18 +168,26 @@ class ZIMKitAudioData {
     return '$absFileRoot${Platform.pathSeparator}${DateTime.now().millisecondsSinceEpoch.toString()}.mp3';
   }
 
-  void addRecording(
+  ZIMKitAudioRecordData addRecording(
     String absFilePath,
     String conversationID,
     ZIMConversationType conversationType,
-    int maxDuration,
-  ) {
-    recordingCache.add(ZIMKitAudioRecordData(
+    int maxDuration, {
+    void Function()? onStarted,
+    Future<void> Function(ZIMKitAudioRecordData recordData)? onCompleted,
+    void Function(int errorCode)? onFailed,
+  }) {
+    final recording = ZIMKitAudioRecordData(
       absFilePath: absFilePath,
       conversationID: conversationID,
       conversationType: conversationType,
       maxDuration: maxDuration,
-    ));
+      onStarted: onStarted,
+      onCompleted: onCompleted,
+      onFailed: onFailed,
+    );
+    recordingCache.add(recording);
+    return recording;
   }
 
   ZIMKitAudioRecordData getTopRecordedFile() {
@@ -182,5 +208,12 @@ class ZIMKitAudioData {
     var data = recordingCache.removeFirst();
     data.duration = recordDurationNotifier.value;
     return data;
+  }
+
+  /// Removes a failed recording request without affecting a newer session.
+  void removeRecordingByFilePath(String absFilePath) {
+    recordingCache.removeWhere(
+      (recording) => recording.absFilePath == absFilePath,
+    );
   }
 }

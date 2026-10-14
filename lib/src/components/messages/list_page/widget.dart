@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_zim/zego_zim.dart';
 
 import 'package:zego_zimkit/src/components/audio/style.dart';
+import 'package:zego_zimkit/src/components/audio/record_overlay.dart';
 import 'package:zego_zimkit/src/config.defines.dart';
 import 'package:zego_zimkit/src/components/messages/style.dart';
 import 'package:zego_zimkit/src/components/components.dart';
@@ -125,6 +126,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
 
   @override
   void dispose() {
+    recordStatus.cancelIfRecording();
     recordStatus.unregister();
     _repliedMessageNotifier.dispose();
 
@@ -143,31 +145,49 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
       builder: (context, child) {
         return Theme(
           data: widget.style?.theme ?? Theme.of(context),
-          child: Scaffold(
-            appBar:
-                widget.style?.appBarBuilder?.call(
-                  context,
-                  buildAppBar(context),
-                ) ??
-                buildAppBar(context),
-            body: SafeArea(
-              bottom: false,
-              child: ValueListenableBuilder<ZIMKitMessageListMultiModeData>(
-                valueListenable:
-                    ZIMKitMessageListMultiSelectProcessor().modeNotifier,
-                builder: (context, multiSelectModeData, child) {
-                  return ZIMKitMessageListPageLayout(
-                    inputHeight:
-                        widget.config?.messageInput?.height ??
-                        ZIMKitMessageStyle.inputHeight,
-                    isMultiMode: multiSelectModeData.isMultiMode,
-                    messageList: messageListView(),
-                    messageInput: messageInput(),
-                    recordLocker: messageRecordLocker(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Scaffold(
+                appBar:
+                    widget.style?.appBarBuilder?.call(
+                      context,
+                      buildAppBar(context),
+                    ) ??
+                    buildAppBar(context),
+                body: SafeArea(
+                  bottom: false,
+                  child: ValueListenableBuilder<ZIMKitMessageListMultiModeData>(
+                    valueListenable:
+                        ZIMKitMessageListMultiSelectProcessor().modeNotifier,
+                    builder: (context, multiSelectModeData, child) {
+                      return ZIMKitMessageListPageLayout(
+                        inputHeight:
+                            widget.config?.messageInput?.height ??
+                            ZIMKitMessageStyle.inputHeight,
+                        isMultiMode: multiSelectModeData.isMultiMode,
+                        messageList: messageListView(),
+                        messageInput: messageInput(),
+                        recordLocker: messageRecordLocker(),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              ValueListenableBuilder<ZIMKitRecordState>(
+                valueListenable: recordStatus.stateNotifier,
+                builder: (context, recordState, _) {
+                  if (recordState != ZIMKitRecordState.recording) {
+                    return const SizedBox.shrink();
+                  }
+                  return ZIMKitRecordOverlay(
+                    status: recordStatus,
+                    onSend: recordStatus.sendRecording,
+                    onDiscard: recordStatus.cancelRecording,
                   );
                 },
               ),
-            ),
+            ],
           ),
         );
       },

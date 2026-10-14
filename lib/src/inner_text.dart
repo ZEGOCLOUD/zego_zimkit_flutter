@@ -162,6 +162,19 @@ class ZIMKitInnerText {
     /// Voice Recording Related
     String? slideToCancelText,
     String? holdToTalkText,
+    String? releaseToSendText,
+    String? slideLeftToCancelText,
+    String? slideUpToLockText,
+    String? releaseToLockText,
+    String? releaseToCancelText,
+    String? recordingLockedText,
+    String? recordingStartingText,
+    String? discardRecordingText,
+    String? discardRecordingLabelText,
+    String? sendRecordingText,
+    String? startVoiceRecordingLabelText,
+    String? startVoiceRecordingHintText,
+    String? recordingStartFailedText,
 
     /// More Operation Panel
     String? takePhotoText,
@@ -328,6 +341,25 @@ class ZIMKitInnerText {
        /// Voice Recording Related
        slideToCancelText = slideToCancelText ?? 'slide to cancel',
        holdToTalkText = holdToTalkText ?? 'Hold to talk',
+       releaseToSendText = releaseToSendText ?? 'Release to send',
+       slideLeftToCancelText = slideLeftToCancelText ?? 'Slide left to cancel',
+       slideUpToLockText = slideUpToLockText ?? 'Slide up to lock',
+       releaseToLockText = releaseToLockText ?? 'Release to lock',
+       releaseToCancelText = releaseToCancelText ?? 'Release to cancel',
+       recordingLockedText = recordingLockedText ?? 'Recording locked',
+       recordingStartingText = recordingStartingText ?? 'Starting recording…',
+       discardRecordingText = discardRecordingText ?? 'Discard',
+       discardRecordingLabelText =
+           discardRecordingLabelText ?? 'Discard current recording',
+       sendRecordingText = sendRecordingText ?? 'Send',
+       startVoiceRecordingLabelText =
+           startVoiceRecordingLabelText ?? 'Start voice recording',
+       startVoiceRecordingHintText =
+           startVoiceRecordingHintText ??
+           'Starts a locked recording. Use Send or Discard when finished.',
+       recordingStartFailedText =
+           recordingStartFailedText ??
+           'Recording could not start. Please try again.',
 
        /// More Operation Panel
        takePhotoText = takePhotoText ?? 'Take Photo',
@@ -655,6 +687,45 @@ class ZIMKitInnerText {
 
   /// Label shown on the hold-to-talk recording button
   final String holdToTalkText;
+
+  /// Hint shown while holding to send the recording.
+  final String releaseToSendText;
+
+  /// Hint shown for the left-swipe cancel gesture.
+  final String slideLeftToCancelText;
+
+  /// Hint shown for the upward lock gesture.
+  final String slideUpToLockText;
+
+  /// Hint shown when the pointer is over the lock target.
+  final String releaseToLockText;
+
+  /// Hint shown while the cancel gesture is active.
+  final String releaseToCancelText;
+
+  /// Status shown while a recording is locked.
+  final String recordingLockedText;
+
+  /// Status shown while the native recorder is starting.
+  final String recordingStartingText;
+
+  /// Short action label that discards the current recording.
+  final String discardRecordingText;
+
+  /// Accessible label that explains which recording will be discarded.
+  final String discardRecordingLabelText;
+
+  /// Action that sends the current recording.
+  final String sendRecordingText;
+
+  /// Accessible label for starting a voice recording.
+  final String startVoiceRecordingLabelText;
+
+  /// Accessible instructions for completing an accessible voice recording.
+  final String startVoiceRecordingHintText;
+
+  /// Message shown when the native recorder cannot start.
+  final String recordingStartFailedText;
 
   /// ========== More Operation Panel ==========
 
