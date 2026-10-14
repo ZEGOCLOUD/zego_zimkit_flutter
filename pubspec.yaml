@@ -22,7 +22,7 @@ dependencies:
 
   cupertino_icons: ^1.0.6
   equatable: ^2.0.5
-  cached_network_image: ^3.4.1
+  cached_network_image: ^4.0.4
   permission_handler: ^13.0.2
   encrypt: ^5.0.3
   flutter_logs_yoer: ^2.2.8
