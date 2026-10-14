@@ -214,6 +214,9 @@ class ZIMKitConversationList {
 
   void sort() {
     notifier.sort((a, b) {
+      if (a.value.isPinned != b.value.isPinned) {
+        return a.value.isPinned ? -1 : 1;
+      }
       return b.value.orderKey.compareTo(a.value.orderKey);
     });
   }
