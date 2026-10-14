@@ -52,6 +52,55 @@ class ZIMKitMessageListPage extends StatefulWidget {
   State<ZIMKitMessageListPage> createState() => _ZIMKitMessageListPageState();
 }
 
+/// Lays out the message list above the input, following the input's actual height.
+class ZIMKitMessageListPageLayout extends StatelessWidget {
+  /// Creates a message list layout with an optional bottom input.
+  const ZIMKitMessageListPageLayout({
+    super.key,
+    required this.inputHeight,
+    required this.isMultiMode,
+    required this.messageList,
+    required this.messageInput,
+    required this.recordLocker,
+  });
+
+  /// Minimum height reserved for the message input.
+  final double inputHeight;
+
+  /// Whether the page is in message multi-select mode.
+  final bool isMultiMode;
+
+  /// Message list widget.
+  final Widget messageList;
+
+  /// Message input widget.
+  final Widget messageInput;
+
+  /// Recording lock overlay.
+  final Widget recordLocker;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Column(
+            children: [
+              Expanded(child: messageList),
+              if (!isMultiMode)
+                ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: inputHeight),
+                  child: messageInput,
+                ),
+            ],
+          ),
+        ),
+        if (!isMultiMode) recordLocker,
+      ],
+    );
+  }
+}
+
 /// @nodoc
 class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
   final recordStatus = ZIMKitRecordStatus();
@@ -106,14 +155,14 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
                 valueListenable:
                     ZIMKitMessageListMultiSelectProcessor().modeNotifier,
                 builder: (context, multiSelectModeData, child) {
-                  return Stack(
-                    children: [
-                      messageListView(multiSelectModeData),
-                      if (!multiSelectModeData.isMultiMode) ...[
-                        messageInput(),
-                        messageRecordLocker(),
-                      ],
-                    ],
+                  return ZIMKitMessageListPageLayout(
+                    inputHeight:
+                        widget.config?.messageInput?.height ??
+                        ZIMKitMessageStyle.inputHeight,
+                    isMultiMode: multiSelectModeData.isMultiMode,
+                    messageList: messageListView(),
+                    messageInput: messageInput(),
+                    recordLocker: messageRecordLocker(),
                   );
                 },
               ),
@@ -231,81 +280,65 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
     );
   }
 
-  Widget messageListView(ZIMKitMessageListMultiModeData multiModeData) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: multiModeData.isMultiMode
-          ? 0
-          : (widget.config?.messageInput?.height ??
-                ZIMKitMessageStyle.inputHeight),
-      child: GestureDetector(
-        onTap: () {
-          // Hide keyboard when tapping message list
-          inputFocusNode.unfocus();
-          // Close emoji/more panels when tapping message list
-          _closePanelNotifier.value++;
-        },
-        child: ZIMKitMessageListView(
-          key: ValueKey(
-            'ZIMKitMessageListView:${Object.hash(widget.conversationID, widget.conversationType)}',
-          ),
-          conversationID: widget.conversationID,
-          conversationType: widget.conversationType,
-          config: ZIMKitMessageListConfigs(
-            scrollController: listScrollController,
-            inputFocusNode: inputFocusNode,
-          ),
-          events: (widget.events?.messageList ?? ZIMKitMessageListEvents())
-              .copyWith(
-                onReplyMessageTap: scrollToMessage,
-                onReplyMessage: setReplyMessage,
-              ),
-          style: (widget.style?.messageList ?? ZIMKitMessageListStyles())
-              .copyWith(theme: widget.style?.theme),
+  Widget messageListView() {
+    return GestureDetector(
+      onTap: () {
+        // Hide keyboard when tapping message list
+        inputFocusNode.unfocus();
+        // Close emoji/more panels when tapping message list
+        _closePanelNotifier.value++;
+      },
+      child: ZIMKitMessageListView(
+        key: ValueKey(
+          'ZIMKitMessageListView:${Object.hash(widget.conversationID, widget.conversationType)}',
         ),
+        conversationID: widget.conversationID,
+        conversationType: widget.conversationType,
+        config: ZIMKitMessageListConfigs(
+          scrollController: listScrollController,
+          inputFocusNode: inputFocusNode,
+        ),
+        events: (widget.events?.messageList ?? ZIMKitMessageListEvents())
+            .copyWith(
+              onReplyMessageTap: scrollToMessage,
+              onReplyMessage: setReplyMessage,
+            ),
+        style: (widget.style?.messageList ?? ZIMKitMessageListStyles())
+            .copyWith(theme: widget.style?.theme),
       ),
     );
   }
 
   Widget messageInput() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: ValueListenableBuilder<ZIMKitMessage?>(
-        valueListenable: _repliedMessageNotifier,
-        builder: (context, repliedMessage, child) {
-          return ZIMKitMessageInput(
-            recordStatus: recordStatus,
-            conversationID: widget.conversationID,
-            conversationType: widget.conversationType,
-            inputConfig:
-                ZIMKitCore.instance.config?.inputConfig ?? ZIMKitInputConfig(),
-            config:
-                (widget.config?.messageInput ??
-                        const ZIMKitMessageInputConfigs())
-                    .copyWith(
-                      inputFocusNode: inputFocusNode,
-                      listScrollController: listScrollController,
-                      closePanelNotifier: _closePanelNotifier,
-                      repliedMessage: repliedMessage,
-                    ),
-            events:
-                (widget.events?.messageInput ??
-                        const ZIMKitMessageInputEvents())
-                    .copyWith(
-                      onReplyCancelled: () {
-                        _repliedMessageNotifier.value = null;
-                      },
-                    ),
-            style:
-                (widget.style?.messageInput ?? const ZIMKitMessageInputStyles())
-                    .copyWith(theme: widget.style?.theme),
-          );
-        },
-      ),
+    return ValueListenableBuilder<ZIMKitMessage?>(
+      valueListenable: _repliedMessageNotifier,
+      builder: (context, repliedMessage, child) {
+        return ZIMKitMessageInput(
+          recordStatus: recordStatus,
+          conversationID: widget.conversationID,
+          conversationType: widget.conversationType,
+          inputConfig:
+              ZIMKitCore.instance.config?.inputConfig ?? ZIMKitInputConfig(),
+          config:
+              (widget.config?.messageInput ?? const ZIMKitMessageInputConfigs())
+                  .copyWith(
+                    inputFocusNode: inputFocusNode,
+                    listScrollController: listScrollController,
+                    closePanelNotifier: _closePanelNotifier,
+                    repliedMessage: repliedMessage,
+                  ),
+          events:
+              (widget.events?.messageInput ?? const ZIMKitMessageInputEvents())
+                  .copyWith(
+                    onReplyCancelled: () {
+                      _repliedMessageNotifier.value = null;
+                    },
+                  ),
+          style:
+              (widget.style?.messageInput ?? const ZIMKitMessageInputStyles())
+                  .copyWith(theme: widget.style?.theme),
+        );
+      },
     );
   }
 
