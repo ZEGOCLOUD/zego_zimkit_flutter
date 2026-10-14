@@ -128,7 +128,7 @@ class ZIMKitConversationList {
         ZIMKit().queryUser(id).then((ZIMUserFullInfo zimResult) {
           final newConversation = ret!.value.clone()
             ..name = zimResult.baseInfo.userName
-            ..avatarUrl = zimResult.userAvatarUrl;
+            ..avatarUrl = zimResult.baseInfo.userAvatarUrl;
           ret.value = newConversation;
         });
       } else if (type == ZIMKitConversationType.group) {
@@ -357,8 +357,6 @@ extension ZIMKitMessageExtension on ZIMKitMessage {
         return audioContent;
       case ZIMMessageType.video:
         return videoContent;
-      case ZIMMessageType.system:
-        return systemContent;
       case ZIMMessageType.text:
         return textContent;
       case ZIMMessageType.custom:

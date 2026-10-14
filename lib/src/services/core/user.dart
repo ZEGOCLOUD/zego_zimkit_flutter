@@ -26,9 +26,9 @@ extension ZIMKitCoreUser on ZIMKitCore {
       baseInfo: ZIMUserInfo(
         userID: id,
         userName: name.isNotEmpty ? name : id,
+        userAvatarUrl: '',
+        userExtendedData: '',
       ),
-      userAvatarUrl: '',
-      extendedData: '',
     );
 
     ZIMKitLogger.logInfo('ready to login..');
@@ -155,7 +155,7 @@ extension ZIMKitCoreUser on ZIMKitCore {
     if (avatarUrl.isNotEmpty) {
       return ZIM.getInstance()!.updateUserAvatarUrl(avatarUrl).then((value) {
         ZIMKitLogger.logInfo('updateUserAvatarUrl success: $avatarUrl');
-        currentUser?.userAvatarUrl = avatarUrl;
+        currentUser?.baseInfo.userAvatarUrl = avatarUrl;
 
         return 0;
       }).catchError((error) {

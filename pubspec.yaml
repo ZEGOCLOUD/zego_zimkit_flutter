@@ -7,22 +7,22 @@ screenshots:
     path: images/img_chat.png
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.12.0 <4.0.0"
   flutter: ">=3.44.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  zego_plugin_adapter: ^2.14.0
-  zego_uikit_signaling_plugin: ^2.8.20
-  zego_zim: ^2.28.0
+  zego_plugin_adapter: ^2.14.2
+  zego_uikit_signaling_plugin: ^2.8.23
+  zego_zim: ^3.2.0
   zego_zim_audio: ^1.0.0+1
   zego_zpns: ^2.8.0
 
   cupertino_icons: ^1.0.6
   equatable: ^2.0.5
-  cached_network_image: ^3.4.1
+  cached_network_image: ^4.0.4
   permission_handler: ^13.0.2
   encrypt: ^5.0.3
   flutter_logs_yoer: ^2.2.1

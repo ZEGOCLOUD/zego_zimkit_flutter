@@ -1,5 +1,7 @@
 # ZegoZIMKit Architecture
 
+> 基准：1.20.1 / 2026-10-14
+
 > IM 即时通讯套件 - 聊天功能
 
 ## Overview
@@ -431,9 +433,9 @@ await ZIMKit().messageService.sendImageMessage(
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `zego_zim` | ^2.21.1+1 | 核心 IM SDK |
+| `zego_zim` | ^3.2.0 | 核心 IM SDK |
 | `zego_zpns` | ^2.8.0 | 推送通知 |
-| `zego_uikit_signaling_plugin` | ^2.8.20 | 信令/通话 |
+| `zego_uikit_signaling_plugin` | ^2.8.23 | 信令/通话 |
 | `provider` | - | 状态管理 |
 | `emoji_picker_flutter` | - | 表情选择 |
 | `file_picker` | - | 文件选择 |

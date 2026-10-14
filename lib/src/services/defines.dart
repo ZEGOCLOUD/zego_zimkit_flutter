@@ -103,7 +103,7 @@ extension ZIMMessageExtensionString on ZIMMessage {
         'sentStatus:$sentStatus, '
         'conversationType:$conversationType, '
         'timestamp:$timestamp, '
-        'conversationSeq:$conversationSeq, '
+        'messageSeq:$messageSeq, '
         'orderKey:$orderKey, '
         'isUserInserted:$isUserInserted, '
         'receiptStatus:$receiptStatus, '
