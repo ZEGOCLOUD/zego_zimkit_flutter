@@ -112,8 +112,6 @@ class ZIMKitImageMessage extends StatelessWidget {
                                                   Icons.image_outlined,
                                                 );
                                               },
-                                          placeholder: (context, url) =>
-                                              const Icon(Icons.image_outlined),
                                           memCacheHeight: constraints.maxHeight
                                               .floor(),
                                           memCacheWidth: constraints.maxWidth
@@ -140,8 +138,6 @@ class ZIMKitImageMessage extends StatelessWidget {
                                       );
                                       return const Icon(Icons.image_outlined);
                                     },
-                                placeholder: (context, url) =>
-                                    const Icon(Icons.image_outlined),
                                 memCacheHeight: constraints.maxHeight.floor(),
                                 memCacheWidth: constraints.maxWidth.floor(),
                               ),
