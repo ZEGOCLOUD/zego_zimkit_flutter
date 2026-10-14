@@ -185,6 +185,8 @@ extension ZIMKitCoreConversationEvent on ZIMKitCore {
     List<ZIMConversationChangeInfo> conversationChangeInfoList,
   ) {
     for (final changeInfo in conversationChangeInfoList) {
+      // `action` has no disabled value, so retain the event for this behavior.
+      // ignore: deprecated_member_use
       switch (changeInfo.event) {
         case ZIMConversationEvent.added:
           db.conversations.insertOrUpdate(changeInfo.conversation!.toKIT());

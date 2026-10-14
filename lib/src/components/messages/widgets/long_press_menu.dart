@@ -47,7 +47,7 @@ class ZIMKitMessageOptionsMenuWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).pop(),
           child: Container(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
           ),
         ),
         // Menu
@@ -363,7 +363,7 @@ class _AnimatedEmojiButtonState extends State<_AnimatedEmojiButton>
           padding: EdgeInsets.symmetric(horizontal: 8.zW, vertical: 4.zH),
           decoration: BoxDecoration(
             color: widget.hasReacted
-                ? Colors.blue.withOpacity(0.2)
+                ? Colors.blue.withValues(alpha: 0.2)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12.zR),
             border: Border.all(

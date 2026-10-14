@@ -127,23 +127,22 @@ class _ZIMKitSingleChatDetailPageState
                     ? ZIMConversationNotificationStatus.doNotDisturb
                     : ZIMConversationNotificationStatus.notify,
               );
+              if (!mounted || !context.mounted) return;
               _isNotDisturb.value = value;
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      value
-                          ? ZIMKitCore.instance.innerText.notDisturbEnabledToast
-                          : ZIMKitCore
-                              .instance.innerText.notDisturbDisabledToast,
-                    ),
-                    duration: const Duration(seconds: 1),
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    value
+                        ? ZIMKitCore.instance.innerText.notDisturbEnabledToast
+                        : ZIMKitCore
+                            .instance.innerText.notDisturbDisabledToast,
                   ),
-                );
-              }
+                  duration: const Duration(seconds: 1),
+                ),
+              );
             } catch (e) {
               debugPrint('Update notification status error: $e');
-              if (mounted) {
+              if (mounted && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -271,7 +270,7 @@ class _ZIMKitSingleChatDetailPageState
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF3478F6),
+            activeThumbColor: const Color(0xFF3478F6),
           ),
         ],
       ),

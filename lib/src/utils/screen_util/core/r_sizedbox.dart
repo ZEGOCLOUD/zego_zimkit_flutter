@@ -6,41 +6,40 @@ import 'package:zego_zimkit/src/utils/screen_util/core/size_extension.dart';
 /// @nodoc
 class ZIMRSizedBox extends SizedBox {
   const ZIMRSizedBox({
-    Key? key,
-    double? height,
-    double? width,
-    Widget? child,
-  })  : _square = false,
-        super(key: key, child: child, width: width, height: height);
+    super.key,
+    super.height,
+    super.width,
+    super.child,
+  })  : _square = false;
 
   const ZIMRSizedBox.zVertical(
     double? height, {
-    Key? key,
-    Widget? child,
+    super.key,
+    super.child,
   })  : _square = false,
-        super(key: key, child: child, height: height);
+        super(height: height);
 
   const ZIMRSizedBox.zHorizontal(
     double? width, {
-    Key? key,
-    Widget? child,
+    super.key,
+    super.child,
   })  : _square = false,
-        super(key: key, child: child, width: width);
+        super(width: width);
 
   const ZIMRSizedBox.zSquare({
-    Key? key,
+    super.key,
     double? height,
-    double? dimension,
-    Widget? child,
+    super.dimension,
+    super.child,
   })  : _square = true,
-        super.square(key: key, child: child, dimension: dimension);
+        super.square();
 
   ZIMRSizedBox.fromSize({
-    Key? key,
-    Size? size,
-    Widget? child,
+    super.key,
+    super.size,
+    super.child,
   })  : _square = false,
-        super.fromSize(key: key, child: child, size: size);
+        super.fromSize();
 
   @override
   RenderConstrainedBox createRenderObject(BuildContext context) {

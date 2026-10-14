@@ -115,6 +115,8 @@ class _ZIMKitConversationListViewState
                     return LayoutBuilder(
                       builder: (context, BoxConstraints constraints) {
                         return ListView.builder(
+                          // Keep cacheExtent for the declared Flutter 3.38 minimum.
+                          // ignore: deprecated_member_use
                           cacheExtent: constraints.maxHeight * 3,
                           controller: _scrollController,
                           itemCount: conversationList.length,

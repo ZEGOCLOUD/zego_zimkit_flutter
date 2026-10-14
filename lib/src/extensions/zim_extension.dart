@@ -298,7 +298,7 @@ extension ZIMUserFullInfoExtend on ZIMUserFullInfo {
         : CachedNetworkImage(
             imageUrl: baseInfo.userAvatarUrl,
             fit: BoxFit.cover,
-            errorWidget: (context, _, __) => placeholder,
+            errorWidget: (context, _, _) => placeholder,
             placeholder: (context, url) => placeholder,
           );
   }
@@ -383,7 +383,7 @@ extension ZIMKitConversationExtend on ZIMKitConversation {
         : CachedNetworkImage(
             imageUrl: avatarUrl,
             fit: BoxFit.cover,
-            errorWidget: (context, _, __) => placeholder,
+            errorWidget: (context, _, _) => placeholder,
             placeholder: (context, url) => placeholder,
           );
   }

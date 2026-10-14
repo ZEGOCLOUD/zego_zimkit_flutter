@@ -31,7 +31,7 @@ class ZIMKitVideoMessagePreview extends StatelessWidget {
                   key: ValueKey(message.info.messageID),
                   imageUrl: message.videoContent!.videoFirstFrameDownloadUrl,
                   fit: BoxFit.cover,
-                  errorWidget: (context, _, __) => SizedBox(
+                  errorWidget: (context, _, _) => SizedBox(
                     width: 160.zW,
                     height: 90.zH,
                     child: const Icon(Icons.error),

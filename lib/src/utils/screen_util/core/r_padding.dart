@@ -9,10 +9,10 @@ class ZIMRPadding extends SingleChildRenderObjectWidget {
   ///
   /// The [padding] argument must not be null.
   const ZIMRPadding({
-    Key? key,
-    required Widget child,
+    super.key,
+    required Widget super.child,
     required this.padding,
-  }) : super(key: key, child: child);
+  });
 
   /// The amount of space by which to inset the child.
   final EdgeInsets padding;

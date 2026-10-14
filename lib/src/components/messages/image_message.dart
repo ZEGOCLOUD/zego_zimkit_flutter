@@ -95,7 +95,7 @@ class ZIMKitImageMessage extends StatelessWidget {
                                             : message.imageContent!
                                                 .largeImageDownloadUrl,
                                         fit: BoxFit.cover,
-                                        errorWidget: (context, _, __) =>
+                                        errorWidget: (context, _, _) =>
                                             const Icon(Icons
                                                 .image_not_supported_outlined),
                                         placeholder: (context, url) =>
@@ -112,7 +112,7 @@ class ZIMKitImageMessage extends StatelessWidget {
                                   ? message.imageContent!.fileDownloadUrl
                                   : message.imageContent!.largeImageDownloadUrl,
                               fit: BoxFit.cover,
-                              errorWidget: (context, _, __) => const Icon(
+                              errorWidget: (context, _, _) => const Icon(
                                   Icons.image_not_supported_outlined),
                               placeholder: (context, url) =>
                                   const Icon(Icons.image_outlined),

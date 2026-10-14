@@ -33,11 +33,11 @@ abstract class ZIMRebuildFactors {
     return old != data;
   }
 
-  static bool always(MediaQueryData _, MediaQueryData __) {
+  static bool always(MediaQueryData _, MediaQueryData _) {
     return true;
   }
 
-  static bool none(MediaQueryData _, MediaQueryData __) {
+  static bool none(MediaQueryData _, MediaQueryData _) {
     return false;
   }
 }
@@ -68,7 +68,7 @@ abstract class ZIMFontSizeResolvers {
 class ZIMScreenUtilInit extends StatefulWidget {
   /// A helper widget that initializes [ZIMScreenUtil]
   const ZIMScreenUtilInit({
-    Key? key,
+    super.key,
     this.builder,
     this.child,
     this.rebuildFactor = ZIMRebuildFactors.size,
@@ -79,7 +79,7 @@ class ZIMScreenUtilInit extends StatefulWidget {
     this.ensureScreenSize,
     this.responsiveWidgets,
     this.fontSizeResolver = ZIMFontSizeResolvers.width,
-  }) : super(key: key);
+  });
 
   final ZIMScreenUtilInitBuilder? builder;
   final Widget? child;

@@ -48,6 +48,7 @@ class ZIMKitForwardSelectPage extends StatelessWidget {
                   conversation,
                 );
 
+                if (!context.mounted) return;
                 if (confirmed == true) {
                   // Forward messages
                   await _forwardMessages(context, conversation);
@@ -133,7 +134,7 @@ class ZIMKitForwardSelectPage extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '${ZIMKitCore.instance.innerText.operationFailedFormat.replaceFirst('%s', '$e')}',
+              ZIMKitCore.instance.innerText.operationFailedFormat.replaceFirst('%s', '$e'),
             ),
           ),
         );

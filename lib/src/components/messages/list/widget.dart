@@ -227,6 +227,8 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
                   ),
             ),
             ListView.builder(
+              // Keep cacheExtent for the declared Flutter 3.38 minimum.
+              // ignore: deprecated_member_use
               cacheExtent: constraints.maxHeight * 3,
               controller: _scrollController,
               itemCount: messageList.length,
@@ -358,7 +360,7 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
       LongPressStartDetails details,
       ZIMKitMessage message,
       Function defaultAction,
-    )? _wrapOnLongPress(
+    )? wrapOnLongPress(
       void Function(
         BuildContext context,
         LongPressStartDetails details,
@@ -397,7 +399,7 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
                   widget.events?.onPressed?.call(context, msg, defaultAction);
                 }
               },
-        onLongPress: _wrapOnLongPress(
+        onLongPress: wrapOnLongPress(
           widget.events?.onLongPress ?? longPressEvent.onMessageItemLongPress,
         ),
         onReplyMessageTap: (messageID) {

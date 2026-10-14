@@ -22,13 +22,13 @@ class RoundBlueCheckbox extends StatelessWidget {
             color: Colors.grey,
             width: 2.zR,
           ),
-          fillColor: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.selected)) {
+          fillColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
               return Colors.blue;
             }
             return null;
           }),
-          checkColor: MaterialStateProperty.all(Colors.white),
+          checkColor: WidgetStateProperty.all(Colors.white),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ),
