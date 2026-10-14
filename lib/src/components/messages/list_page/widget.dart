@@ -151,6 +151,7 @@ class _ZIMKitMessageListPageState extends State<ZIMKitMessageListPage> {
                 ) ??
                 buildAppBar(context),
             body: SafeArea(
+              bottom: false,
               child: ValueListenableBuilder<ZIMKitMessageListMultiModeData>(
                 valueListenable:
                     ZIMKitMessageListMultiSelectProcessor().modeNotifier,
