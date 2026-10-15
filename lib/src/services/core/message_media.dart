@@ -237,7 +237,7 @@ extension ZIMKitCoreMessageMedia on ZIMKitCore {
 
     final downloadTypes = <ZIMMediaFileType>[];
 
-    switch (kitMessageNotifier.value.zim.runtimeType) {
+    switch (kitMessageNotifier.value.zim) {
       case ZIMVideoMessage _:
         if ((kitMessageNotifier.value.zim as ZIMVideoMessage)
             .videoFirstFrameLocalPath

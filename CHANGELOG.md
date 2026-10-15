@@ -1,6 +1,7 @@
 ## 2.0.1
 
 - Handle camera controller errors completing after picker disposal to prevent an Android crash after confirming a photo.
+- Fix received audio messages staying in the loading state because their media download was not started.
 - Keep the message input send button visible while the text is empty and disable it until non-whitespace text is entered.
 - Refine hold-to-talk feedback with an animated wave-shaped panel edge, a timer in the bottom panel, a slide-left-to-cancel hint, and distinct cancel and locked states.
 - Cancel recordings shorter than 500 ms; enable sending from the locked recording panel once the recording reaches 500 ms.
