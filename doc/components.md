@@ -83,6 +83,8 @@ ZIMKitConversationListView(
 
 A page widget that displays a chat conversation with message list and input box.
 
+When opened, the message list starts at the newest loaded message.
+
 ### Parameters
 
 | Name | Description | Type | Default Value |

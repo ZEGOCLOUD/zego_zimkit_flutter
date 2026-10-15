@@ -339,11 +339,13 @@ class _ZIMKitMessageListViewState extends State<ZIMKitMessageListView> {
           child: SizedBox(
             height: constraints.maxHeight,
             width: constraints.maxWidth,
-            child: widget.style?.backgroundBuilder?.call(
-                  context,
-                  const SizedBox.shrink(),
-                ) ??
+            child: ColoredBox(
+              color: ZIMKitMessageStyle.messageListBackgroundColor,
+              child: widget.style?.backgroundBuilder?.call(
+                context,
                 const SizedBox.shrink(),
+              ),
+            ),
           ),
         );
       },

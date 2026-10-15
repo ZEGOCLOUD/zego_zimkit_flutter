@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 import 'package:zego_uikit_signaling_plugin/src/internal/core.dart';
 import 'package:zego_zim/zego_zim.dart';
+
 import 'package:zego_zimkit/src/components/audio/status.dart';
 import 'package:zego_zimkit/src/components/messages/input/widget.dart';
+import 'package:zego_zimkit/src/components/messages/list/configs.dart';
+import 'package:zego_zimkit/src/components/messages/list/styles.dart';
+import 'package:zego_zimkit/src/components/messages/list/widget.dart';
+import 'package:zego_zimkit/src/components/messages/style.dart';
 import 'package:zego_zimkit/src/components/toolbar/more/panel.dart';
 import 'package:zego_zimkit/src/config.defines.dart';
+import 'package:zego_zimkit/src/defines.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 import 'package:zego_zimkit/src/utils/screen_util/core/screen_util.dart';
 
@@ -21,6 +28,117 @@ void main() {
     signalingCore.currentUser = null;
     signalingCore.eventCenter.connectionState = ZIMConnectionState.disconnected;
   });
+
+  testWidgets(
+    'chat message list hides history until initial scroll completes',
+    (tester) async {
+      const conversationID = 'peer-message-list';
+      const messageCount = 12;
+      final previousUser = core.currentUser;
+      final scrollController = ScrollController();
+      final messages =
+          core.db.messages(conversationID, ZIMConversationType.peer)
+            ..inited = true
+            ..noMore = true
+            ..notifier.value = List.generate(messageCount, (index) {
+              final textContent = ZIMKitMessageTextContent()
+                ..text = 'message-$index';
+              final message = ZIMKitMessage()
+                ..type = ZIMMessageType.text
+                ..textContent = textContent
+                ..info.timestamp =
+                    DateTime.now().millisecondsSinceEpoch + index * 60000;
+              return ValueNotifier<ZIMKitMessage>(message);
+            });
+
+      core.currentUser = ZIMUserFullInfo(
+        baseInfo: ZIMUserInfo()..userID = 'current-user',
+      );
+      core.db.conversations.init([
+        ZIMConversation()
+          ..conversationID = conversationID
+          ..type = ZIMConversationType.peer,
+      ]);
+      expect(messages.notifier.value.length, messageCount);
+
+      try {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SizedBox(
+                width: 300,
+                height: 300,
+                child: ZIMKitMessageListView(
+                  conversationID: conversationID,
+                  config: ZIMKitMessageListConfigs(
+                    scrollController: scrollController,
+                  ),
+                  style: ZIMKitMessageListStyles(
+                    itemBuilder: (context, message, _) => SizedBox(
+                      height: 80,
+                      child: Text(message.textContent!.text),
+                    ),
+                    backgroundBuilder: (context, defaultWidget) => Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        const ColoredBox(color: Colors.transparent),
+                        const Center(child: Text('custom-background-marker')),
+                        defaultWidget,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.pump();
+
+        final maskFinder = find.byType(Visibility);
+        final mask = tester.widget<Visibility>(maskFinder);
+        expect(mask.visible, isTrue);
+        expect(tester.getSize(maskFinder), const Size(300, 300));
+        expect(
+          find.descendant(
+            of: maskFinder,
+            matching: find.text('custom-background-marker'),
+          ),
+          findsOneWidget,
+        );
+        final maskColors = tester
+            .widgetList<ColoredBox>(
+              find.descendant(
+                of: maskFinder,
+                matching: find.byType(ColoredBox),
+              ),
+            )
+            .map((coloredBox) => coloredBox.color)
+            .toList();
+        expect(
+          maskColors,
+          contains(ZIMKitMessageStyle.messageListBackgroundColor),
+        );
+
+        await tester.pump();
+
+        expect(tester.widget<Visibility>(maskFinder).visible, isFalse);
+        final latestMessage = find.text('message-${messageCount - 1}');
+        expect(latestMessage, findsOneWidget);
+        expect(
+          tester
+              .getRect(latestMessage)
+              .overlaps(tester.getRect(find.byType(ListView))),
+          isTrue,
+        );
+        expect(scrollController.offset, greaterThan(0));
+      } finally {
+        await tester.pumpWidget(const SizedBox.shrink());
+        scrollController.dispose();
+        core.currentUser = previousUser;
+      }
+    },
+  );
 
   testWidgets('fallback more panel shows each extra action once', (
     tester,
