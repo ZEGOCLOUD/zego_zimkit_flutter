@@ -1,6 +1,6 @@
 # Components
 
-基准：ZIMKit Flutter v2.0.0（2026-10-14 与源码核对）
+基准：ZIMKit Flutter v2.0.0（2026-10-15 与源码核对）
 
 This document describes the main UI components (Widgets) in ZIMKit.
 
@@ -491,6 +491,8 @@ Toolbar widget for multi-select mode in message list.
 ## ZIMKitMessageInputConfigs
 
 Configuration for the message input widget.
+
+The default send button stays visible when the input is empty and uses a disabled gray appearance. It becomes active when the input contains non-whitespace text.
 
 | Name | Description | Type | Default Value |
 | :--- | :--- | :--- | :--- |

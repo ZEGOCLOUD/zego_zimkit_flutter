@@ -228,11 +228,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         ValueListenableBuilder<TextEditingValue>(
           valueListenable: _editingController,
           builder: (context, textValue, child) {
-            if (textValue.text.trim().isNotEmpty) {
-              return _buildSendButton();
-            } else {
-              return SizedBox(width: 36.zW, height: 36.zH);
-            }
+            return _buildSendButton(enabled: textValue.text.trim().isNotEmpty);
           },
         ),
       ],
@@ -379,20 +375,28 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
     );
   }
 
-  Widget _buildSendButton() {
-    return GestureDetector(
-      onTap: _sendTextMessage,
-      child: Container(
-        width: 36.zW,
-        height: 36.zH,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          shape: BoxShape.circle,
+  Widget _buildSendButton({required bool enabled}) {
+    final sendButtonWidget = widget.style?.sendButtonWidget;
+    return IgnorePointer(
+      ignoring: !enabled,
+      child: GestureDetector(
+        onTap: enabled ? _sendTextMessage : null,
+        child: Container(
+          width: 36.zW,
+          height: 36.zH,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: enabled ? Theme.of(context).primaryColor : Colors.grey[300],
+            shape: BoxShape.circle,
+          ),
+          child: sendButtonWidget == null
+              ? Icon(
+                  Icons.send,
+                  color: enabled ? Colors.white : Colors.grey[700],
+                  size: 20.zW,
+                )
+              : Opacity(opacity: enabled ? 1 : 0.6, child: sendButtonWidget),
         ),
-        child:
-            widget.style?.sendButtonWidget ??
-            Icon(Icons.send, color: Colors.white, size: 20.zW),
       ),
     );
   }
