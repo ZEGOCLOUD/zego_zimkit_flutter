@@ -24,6 +24,11 @@ class ZIMKitRecordStatus {
 
   bool get isRecordingReady => recorderReadyNotifier.value;
 
+  /// Whether the recording has reached the minimum sendable duration.
+  bool get canSendRecording =>
+      isRecordingReady &&
+      ZIMKitAudioInstance().data.recordDurationNotifier.value >= 500;
+
   void register() {
     stateNotifier.addListener(_onStateChanged);
   }
@@ -120,12 +125,25 @@ class ZIMKitRecordStatus {
       return ZIMKitRecordFinishResult.locked;
     }
 
+    if (!canSendRecording) {
+      cancelRecording();
+      return ZIMKitRecordFinishResult.canceled;
+    }
+
     sendRecording();
     return ZIMKitRecordFinishResult.sent;
   }
 
   /// Sends the active recording, including from the locked recording UI.
   void sendRecording() {
+    if (!isRecordingReady) {
+      return;
+    }
+    if (!canSendRecording) {
+      cancelRecording();
+      return;
+    }
+
     _finishRecording(ZIMKitRecordState.complete);
   }
 

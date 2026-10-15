@@ -76,39 +76,19 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Align(
-                              alignment: const Alignment(0, -0.16),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                ),
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 520,
-                                  ),
-                                  child: _recordingCard(
-                                    isLocked: isLocked,
-                                    isCancelPreview: isCancelPreview,
-                                    isRecordingReady: isRecordingReady,
-                                  ),
-                                ),
-                              ),
-                            ),
                             Positioned(
-                              left: 20,
-                              right: 20,
-                              bottom:
-                                  MediaQuery.of(context).padding.bottom + 18,
-                              child: isLocked
-                                  ? _lockedActions(
-                                      isRecordingReady: isRecordingReady,
-                                    )
-                                  : _holdingActions(
-                                      isCancelPreview: isCancelPreview,
-                                      isLockCandidate:
-                                          lockerState ==
-                                          ZIMKitRecordLockerState.testing,
-                                    ),
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              height: _actionPanelHeight(context),
+                              child: _actionPanel(
+                                isLocked: isLocked,
+                                isCancelPreview: isCancelPreview,
+                                isRecordingReady: isRecordingReady,
+                                isLockCandidate:
+                                    lockerState ==
+                                    ZIMKitRecordLockerState.testing,
+                              ),
                             ),
                           ],
                         ),
@@ -124,113 +104,112 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
     );
   }
 
-  Widget _recordingCard({
+  double _actionPanelHeight(BuildContext context) {
+    final viewport = MediaQuery.sizeOf(context);
+    final height = math.min(viewport.width * 0.55, viewport.height * 0.34);
+    final safeBottom = MediaQuery.paddingOf(context).bottom;
+    final isCompact = viewport.height < 680;
+    final controlsHeight = isCompact ? 46.0 + 4 + 28 : 52.0 + 8 + 32;
+    final minHeight = math.max(
+      156.0,
+      (safeBottom + 8 + controlsHeight + 22 + 8) / 0.85,
+    );
+    return height.clamp(minHeight, math.max(240.0, minHeight)).toDouble();
+  }
+
+  Widget _actionPanel({
     required bool isLocked,
     required bool isCancelPreview,
     required bool isRecordingReady,
+    required bool isLockCandidate,
   }) {
-    final innerText = ZIMKitCore.instance.innerText;
-    final isCanceling = isCancelPreview && !isLocked;
-    final backgroundColor = isCanceling
-        ? const Color(0xFFF44747)
-        : const Color(0xFFD9E6FF);
-    final foregroundColor = isCanceling
+    final panelColor = isLocked
+        ? const Color(0xFF2863D8)
+        : isCancelPreview
+        ? const Color(0xFF35363A)
+        : const Color(0xFFE9EDF2);
+    final timerColor = isLocked || isCancelPreview
         ? Colors.white
-        : const Color(0xFF26364F);
-    final waveColor = isCanceling ? Colors.white : const Color(0xFF2863D8);
+        : const Color(0xFF353B45);
+    final isCompact = MediaQuery.sizeOf(context).height < 680;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom + 8;
+    final panelHeight = _actionPanelHeight(context);
 
-    return Container(
-      constraints: const BoxConstraints(minHeight: 148),
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 18),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+    return AnimatedBuilder(
+      animation: _waveController,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Row(
-            children: [
-              if (isLocked) ...[
-                Icon(Icons.lock, size: 18, color: foregroundColor),
-                const SizedBox(width: 8),
-                Text(
-                  isRecordingReady
-                      ? innerText.recordingLockedText
-                      : innerText.recordingStartingText,
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ] else if (isCanceling) ...[
-                const Icon(Icons.delete_outline, size: 18),
-                const SizedBox(width: 8),
-                Text(
-                  innerText.releaseToCancelText,
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ] else ...[
-                Icon(Icons.mic, size: 18, color: foregroundColor),
-                const SizedBox(width: 8),
-                Text(
-                  innerText.holdToTalkText,
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-              const Spacer(),
-              ValueListenableBuilder<int>(
-                valueListenable:
-                    ZIMKitAudioInstance().data.recordDurationNotifier,
-                builder: (context, duration, _) {
-                  return Text(
-                    formatAudioRecordDuration(duration),
-                    style: TextStyle(
-                      color: foregroundColor,
-                      fontSize: 15,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  );
-                },
-              ),
-            ],
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+            color: panelColor,
           ),
-          const SizedBox(height: 18),
-          AnimatedBuilder(
-            animation: _waveController,
-            builder: (context, _) {
-              return SizedBox(
-                height: 44,
-                width: double.infinity,
-                child: CustomPaint(
-                  painter: _RecordWaveformPainter(
-                    progress: _reduceMotion ? 0.42 : _waveController.value,
-                    color: waveColor,
+          Positioned(
+            left: 0,
+            right: 0,
+            top: panelHeight * 0.15,
+            child: ValueListenableBuilder<int>(
+              valueListenable:
+                  ZIMKitAudioInstance().data.recordDurationNotifier,
+              builder: (context, duration, _) {
+                return Text(
+                  formatAudioRecordDuration(duration),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: timerColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    fontFeatures: const [FontFeature.tabularFigures()],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
+          ),
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: bottomPadding,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: isLocked
+                  ? _lockedActions(
+                      isRecordingReady: isRecordingReady,
+                      isCompact: isCompact,
+                    )
+                  : _holdingActions(
+                      isCancelPreview: isCancelPreview,
+                      isLockCandidate: isLockCandidate,
+                      isCompact: isCompact,
+                    ),
+            ),
           ),
         ],
       ),
+      builder: (context, child) {
+        return ClipPath(
+          clipBehavior: Clip.antiAlias,
+          clipper: _RecordActionPanelClipper(
+            progress: _reduceMotion ? 0.42 : _waveController.value,
+          ),
+          child: child,
+        );
+      },
     );
   }
 
   Widget _holdingActions({
     required bool isCancelPreview,
     required bool isLockCandidate,
+    required bool isCompact,
   }) {
     final innerText = ZIMKitCore.instance.innerText;
-    final foregroundColor = isCancelPreview ? Colors.white : Colors.white70;
+    final foregroundColor = isCancelPreview
+        ? Colors.white
+        : const Color(0xFF353B45);
+    final lockLabelColor = isCancelPreview || isLockCandidate
+        ? Colors.white
+        : const Color(0xFF353B45);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -238,69 +217,65 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
         AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           curve: Curves.easeOut,
-          height: isLockCandidate ? 66 : 58,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: isCompact ? 46 : 52,
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           decoration: BoxDecoration(
-            color: isLockCandidate
+            color: isCancelPreview
+                ? Colors.white.withValues(alpha: 0.14)
+                : isLockCandidate
                 ? const Color(0xFF2863D8)
-                : Colors.white.withValues(alpha: 0.16),
-            borderRadius: BorderRadius.circular(24),
+                : Colors.white,
+            borderRadius: BorderRadius.circular(26),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.46),
-              width: 1,
+              color: isCancelPreview
+                  ? Colors.white38
+                  : isLockCandidate
+                  ? const Color(0xFF2863D8)
+                  : const Color(0xFFD7DCE3),
             ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                isLockCandidate ? Icons.lock : Icons.lock_outline,
-                color: Colors.white,
-                size: 22,
+                isCancelPreview
+                    ? Icons.delete_outline
+                    : isLockCandidate
+                    ? Icons.lock
+                    : Icons.lock_outline,
+                color: lockLabelColor,
+                size: 20,
               ),
               const SizedBox(width: 10),
               Text(
-                isLockCandidate
+                isCancelPreview
+                    ? innerText.releaseToCancelText
+                    : isLockCandidate
                     ? innerText.releaseToLockText
                     : innerText.slideUpToLockText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
+                style: TextStyle(
+                  color: lockLabelColor,
+                  fontSize: isCompact ? 14 : 15,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 14),
-        Text(
-          isCancelPreview
-              ? innerText.releaseToCancelText
-              : '${innerText.releaseToSendText}  ·  ← ${innerText.slideLeftToCancelText}',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: foregroundColor,
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.17),
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white38),
-          ),
-          alignment: Alignment.center,
-          child: const Icon(Icons.mic, color: Colors.white, size: 30),
+        SizedBox(height: isCompact ? 4 : 8),
+        Icon(
+          Icons.mic_none,
+          color: foregroundColor.withValues(alpha: 0.72),
+          size: isCompact ? 28 : 32,
         ),
       ],
     );
   }
 
-  Widget _lockedActions({required bool isRecordingReady}) {
+  Widget _lockedActions({
+    required bool isRecordingReady,
+    required bool isCompact,
+  }) {
     final innerText = ZIMKitCore.instance.innerText;
     return Row(
       children: [
@@ -317,10 +292,10 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
                 label: Text(innerText.discardRecordingText),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(56),
+                  minimumSize: Size.fromHeight(isCompact ? 48 : 56),
                   side: const BorderSide(color: Colors.white70),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
               ),
@@ -329,19 +304,26 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: FilledButton.icon(
-            key: const ValueKey('record-send-button'),
-            onPressed: isRecordingReady ? widget.onSend : null,
-            icon: const Icon(Icons.send),
-            label: Text(innerText.sendRecordingText),
-            style: FilledButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: const Color(0xFF2863D8),
-              minimumSize: const Size.fromHeight(56),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-            ),
+          child: ValueListenableBuilder<int>(
+            valueListenable: ZIMKitAudioInstance().data.recordDurationNotifier,
+            builder: (context, _, _) {
+              return FilledButton.icon(
+                key: const ValueKey('record-send-button'),
+                onPressed: widget.status.canSendRecording
+                    ? widget.onSend
+                    : null,
+                icon: const Icon(Icons.send),
+                label: Text(innerText.sendRecordingText),
+                style: FilledButton.styleFrom(
+                  foregroundColor: const Color(0xFF2863D8),
+                  backgroundColor: Colors.white,
+                  minimumSize: Size.fromHeight(isCompact ? 48 : 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -349,44 +331,37 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
   }
 }
 
-class _RecordWaveformPainter extends CustomPainter {
-  const _RecordWaveformPainter({required this.progress, required this.color});
+class _RecordActionPanelClipper extends CustomClipper<Path> {
+  const _RecordActionPanelClipper({required this.progress});
 
   final double progress;
-  final Color color;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    const barCount = 13;
-    const barWidth = 4.0;
-    const gap = 6.0;
-    const maxHeight = 34.0;
-    const minHeight = 8.0;
-    final totalWidth = barCount * barWidth + (barCount - 1) * gap;
-    final startX = (size.width - totalWidth) / 2;
-    final centerY = size.height / 2;
-    final paint = Paint()..color = color;
+  Path getClip(Size size) {
+    const sampleCount = 160;
+    final edgeY = size.height * 0.3;
+    final phase = progress * math.pi * 2;
+    final pulse = (math.sin(phase) + 1) / 2;
+    final amplitude = size.height * (0.025 + pulse * 0.035);
+    final path = Path()..moveTo(0, edgeY);
 
-    for (var index = 0; index < barCount; index++) {
-      final phase = progress * math.pi * 2 + index * 0.72;
-      final strength = (math.sin(phase) + 1) / 2;
-      final height = minHeight + (maxHeight - minHeight) * strength;
-      final rect = Rect.fromCenter(
-        center: Offset(
-          startX + index * (barWidth + gap) + barWidth / 2,
-          centerY,
-        ),
-        width: barWidth,
-        height: height,
-      );
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(3)),
-        paint,
-      );
+    for (var index = 1; index <= sampleCount; index++) {
+      final position = index / sampleCount;
+      final envelope = math.sin(math.pi * position);
+      final baseY = edgeY - envelope * (edgeY - amplitude);
+      final ripple =
+          amplitude * envelope * math.sin(position * math.pi * 12 + phase);
+      final y = (baseY + ripple).clamp(0.0, size.height).toDouble();
+      path.lineTo(size.width * position, y);
     }
+
+    return path
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
   }
 
   @override
-  bool shouldRepaint(_RecordWaveformPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.color != color;
+  bool shouldReclip(_RecordActionPanelClipper oldClipper) =>
+      oldClipper.progress != progress;
 }

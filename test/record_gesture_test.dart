@@ -1,8 +1,19 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zego_zimkit/src/audio/core.dart';
 import 'package:zego_zimkit/src/components/audio/defines.dart';
 import 'package:zego_zimkit/src/components/audio/status.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (call) async => '/tmp',
+        );
+  });
+
   group('resolveRecordGestureAction', () {
     const cancelThreshold = 100.0;
     const lockThreshold = 80.0;
@@ -113,6 +124,11 @@ void main() {
     });
 
     test('send action in locked state completes the recording', () {
+      final durationNotifier =
+          ZIMKitAudioInstance().data.recordDurationNotifier;
+      addTearDown(() => durationNotifier.value = 0);
+      durationNotifier.value = 500;
+
       final status = ZIMKitRecordStatus();
       final generation = status.startRecording();
       status.markRecordingStarted(generation);
@@ -137,6 +153,10 @@ void main() {
 
       expect(status.markRecordingStarted(generation), isTrue);
       expect(status.isRecordingReady, isTrue);
+      final durationNotifier =
+          ZIMKitAudioInstance().data.recordDurationNotifier;
+      addTearDown(() => durationNotifier.value = 0);
+      durationNotifier.value = 500;
       status.sendRecording();
 
       expect(status.stateNotifier.value, ZIMKitRecordState.idle);
