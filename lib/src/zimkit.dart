@@ -55,6 +55,7 @@ part 'services/dialogs_service.dart';
 /// {@category APIs}
 /// {@category Events}
 /// {@category Configs}
+/// {@category Migration_v2.x}
 class ZIMKit
     with
         ZIMKitConversationService,

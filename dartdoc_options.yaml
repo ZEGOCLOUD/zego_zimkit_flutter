@@ -13,6 +13,8 @@ dartdoc:
       markdown: doc/defines.md
     "Events":
       markdown: doc/events.md
+    "Migration_v2.x":
+      markdown: doc/MigrateGuide_v2.x.md
   categoryOrder:
     - "Get started"
     - "APIs"
@@ -20,6 +22,7 @@ dartdoc:
     - "Configs"
     - "Defines"
     - "Events"
+    - "Migration_v2.x"
   showUndocumentedCategories: true
   ignore:
     - broken-link
