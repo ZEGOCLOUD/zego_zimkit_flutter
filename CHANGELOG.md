@@ -1,3 +1,10 @@
+## 2.0.1
+
+- Keep the message input send button visible while the text is empty and disable it until non-whitespace text is entered.
+- Refine hold-to-talk feedback with an animated wave-shaped panel edge, a timer in the bottom panel, a slide-left-to-cancel hint, and distinct cancel and locked states.
+- Cancel recordings shorter than 500 ms; enable sending from the locked recording panel once the recording reaches 500 ms.
+- Publish the updated 1.x to 2.x migration guide in the API documentation.
+
 ## 2.0.0
 
 - Add `ZIMKitGroupDetailPage` for group information, member management, and conversation settings.
