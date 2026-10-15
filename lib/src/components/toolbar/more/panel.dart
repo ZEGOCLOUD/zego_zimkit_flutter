@@ -8,6 +8,7 @@ import 'package:zego_zimkit/src/utils/screen_util/screen_util.dart';
 import 'package:zego_zimkit/src/services/core/core.dart';
 
 import 'defines.dart';
+import 'zimkit_camera_picker_state.dart';
 
 /// More actions panel providing additional message input options
 /// Includes take photo, pick images, pick files, and call functions
@@ -89,6 +90,7 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
       final AssetEntity? entity = await CameraPicker.pickFromCamera(
         context,
         pickerConfig: const CameraPickerConfig(),
+        createPickerState: ZIMKitCameraPickerState.new,
       );
 
       if (entity != null) {

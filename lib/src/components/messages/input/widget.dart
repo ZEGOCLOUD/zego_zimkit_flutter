@@ -9,6 +9,7 @@ import 'package:zego_zim/zego_zim.dart';
 import 'package:zego_zimkit/src/components/components.dart';
 import 'package:zego_zimkit/src/components/emoji/picker_widget.dart';
 import 'package:zego_zimkit/src/components/toolbar/more/panel.dart';
+import 'package:zego_zimkit/src/components/toolbar/more/zimkit_camera_picker_state.dart';
 import 'package:zego_zimkit/src/components/reply/input_reply_widget.dart';
 import 'package:zego_zimkit/src/config.defines.dart';
 import 'package:zego_zimkit/src/defines.dart';
@@ -569,6 +570,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
       final asset = await CameraPicker.pickFromCamera(
         context,
         pickerConfig: const CameraPickerConfig(),
+        createPickerState: ZIMKitCameraPickerState.new,
       );
       if (asset != null) await _sendAsset(asset);
       if (mounted) setState(() => _currentPanel = ZIMKitInputPanelType.none);
