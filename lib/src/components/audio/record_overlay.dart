@@ -109,7 +109,9 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
     final height = math.min(viewport.width * 0.55, viewport.height * 0.34);
     final safeBottom = MediaQuery.paddingOf(context).bottom;
     final isCompact = viewport.height < 680;
-    final controlsHeight = isCompact ? 46.0 + 4 + 28 : 52.0 + 8 + 32;
+    final controlsHeight = isCompact
+        ? 46.0 + 2 + 16 + 2 + 28
+        : 52.0 + 4 + 17 + 4 + 32;
     final minHeight = math.max(
       156.0,
       (safeBottom + 8 + controlsHeight + 22 + 8) / 0.85,
@@ -262,7 +264,19 @@ class _ZIMKitRecordOverlayState extends State<ZIMKitRecordOverlay>
             ],
           ),
         ),
-        SizedBox(height: isCompact ? 4 : 8),
+        if (!isCancelPreview) ...[
+          SizedBox(height: isCompact ? 2 : 4),
+          Text(
+            innerText.slideLeftToCancelText,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: foregroundColor.withValues(alpha: 0.82),
+              fontSize: isCompact ? 13 : 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: isCompact ? 2 : 4),
+        ],
         Icon(
           Icons.mic_none,
           color: foregroundColor.withValues(alpha: 0.72),
