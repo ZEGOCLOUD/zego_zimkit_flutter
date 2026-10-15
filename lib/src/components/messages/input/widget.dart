@@ -571,6 +571,7 @@ class _ZIMKitMessageInputState extends State<ZIMKitMessageInput> {
         context,
         pickerConfig: const CameraPickerConfig(),
         createPickerState: ZIMKitCameraPickerState.new,
+        locale: Localizations.maybeLocaleOf(context),
       );
       if (asset != null) await _sendAsset(asset);
       if (mounted) setState(() => _currentPanel = ZIMKitInputPanelType.none);

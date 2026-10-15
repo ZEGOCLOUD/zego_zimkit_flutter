@@ -1,6 +1,6 @@
 # Components
 
-基准：ZIMKit Flutter v2.0.0（2026-10-15 与源码核对）
+基准：ZIMKit Flutter v2.0.1（2026-10-15 与源码核对）
 
 This document describes the main UI components (Widgets) in ZIMKit.
 
@@ -346,6 +346,8 @@ ZIMKitAvatar(
 ## ZIMKitMessageInput
 
 Input widget for composing and sending messages.
+
+The built-in camera picker uses the current Flutter `Localizations` locale to select its text delegate. This applies to the camera buttons in both the input toolbar and the more actions panel. Locales without a matching delegate use the picker package's Chinese fallback.
 
 ### Parameters
 

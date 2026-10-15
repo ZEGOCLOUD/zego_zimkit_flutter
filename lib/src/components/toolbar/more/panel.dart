@@ -91,6 +91,7 @@ class ZIMKitMoreActionsPanelWidget extends StatelessWidget {
         context,
         pickerConfig: const CameraPickerConfig(),
         createPickerState: ZIMKitCameraPickerState.new,
+        locale: Localizations.maybeLocaleOf(context),
       );
 
       if (entity != null) {
